@@ -4,10 +4,9 @@ import HelloScreen from './components/HelloScreen.vue'
 import { state } from './auth.js'
 
 function deauthAndNavigate(navigate, event) {
-  state.deauthorize();
-  navigate(event);
+  state.deauthorize()
+  navigate(event)
 }
-
 </script>
 
 <template>
@@ -20,13 +19,13 @@ function deauthAndNavigate(navigate, event) {
         <RouterLink to="/shipments" class="link">Отправления</RouterLink>
         <RouterLink to="/settings" class="link">Настройки</RouterLink>
         <RouterLink to="/" custom v-slot="{ href, navigate }">
-            <a :href="href" @click="deauthAndNavigate(navigate, $event)" class="link">Выход</a>
+          <a :href="href" @click="deauthAndNavigate(navigate, $event)" class="link">Выход</a>
         </RouterLink>
       </nav>
       <nav v-if="!state.authorized">
-        <RouterLink to="/" class="link">Войти</RouterLink>
-        <RouterLink to="/register" class="link">Зарегистрироваться</RouterLink>
-        <RouterLink to="/recover" class="link">Восстановить пароль</RouterLink>
+        <RouterLink to="/" class="link">Вход</RouterLink>
+        <RouterLink to="/register" class="link">Регистрация</RouterLink>
+        <RouterLink to="/recover" class="link">Восстановление пароля</RouterLink>
       </nav>
     </div>
   </header>
