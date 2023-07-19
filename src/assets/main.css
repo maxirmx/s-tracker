@@ -9,6 +9,12 @@
 }
 
 a,
+.orange {
+  text-decoration: none;
+  color:#EF7D00;
+  transition: 0.4s;
+}
+
 .green {
   text-decoration: none;
   color: hsla(160, 100%, 37%, 1);
@@ -17,7 +23,8 @@ a,
 
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    color:#975102;
+    background-color:#fcf5ed;
   }
 }
 
