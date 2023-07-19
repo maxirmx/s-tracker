@@ -1,9 +1,9 @@
 <script setup>
-import Shipments from '../components/Shipments.vue'
+import CustShipments from '../components/CustShipments.vue'
 </script>
 
 <template>
   <main>
-    <Shipments />
+    <CustShipments />
   </main>
 </template>

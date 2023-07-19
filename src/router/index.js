@@ -1,21 +1,37 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ShipmentsView from '../views/ShipmentsView.vue'
+import LoginView from '../views/LoginView.vue'
+import RecoverView from '../views/RecoverView.vue'
+import RegisterView from '../views/RegisterView.vue'
+import CustShipmentsView from '../views/ShipmentsView.vue'
+import SettingsView from '../views/SettingsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'shipments',
-      component: ShipmentsView
+      name: 'Вход',
+      component: LoginView
+    },
+    {
+      path: '/recover',
+      name: 'Восстановление пароля',
+      component: RecoverView
+    },
+    {
+      path: '/register',
+      name: 'Регистрация',
+      component: RegisterView
+    },
+    {
+      path: '/shipments',
+      name: 'Отправления',
+      component: CustShipmentsView
     },
     {
       path: '/settings',
       name: 'Настройки',
-      // route level code-splitting
-      // this generates a separate chunk (Settings.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/SettingsView.vue')
+      component: SettingsView
     }
   ]
 })

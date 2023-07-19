@@ -8,11 +8,80 @@
   font-weight: normal;
 }
 
+.settings {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin-top: 2rem;
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.label {
+  width: 35%;
+  display: inline-block;
+}
+
+.input {
+  width: 60%;
+  display: inline-block;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+  border: none;
+  background-color: #f5f5f5;
+  color: #333;
+  font-size: 1rem;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+}
+
+.input:focus {
+  outline: none;
+  box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
+}
+
+.input::placeholder {
+  color: #999;
+}
+
+.password {
+  width: 50%;
+}
+
+.button {
+  text-decoration: none;
+  padding: 0.8rem;
+  border-radius: 0.25rem;
+  border: none;
+  background-color: #EF7D00;
+  color: white;
+  font-size: 0.9rem;
+  box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+  cursor: pointer;
+  width: 45%;
+  align-self: center;
+  margin-top: 2rem;
+}
+
+.button-s {
+  width: 10%;
+  align-self: right;
+  margin-top: 0rem;
+}
+}
+
+
 a,
 .orange {
   text-decoration: none;
   color:#EF7D00;
   transition: 0.4s;
+}
+
+.link {
+  font-size: 1.2rem;
 }
 
 .green {
@@ -25,6 +94,18 @@ a,
   a:hover {
     color:#975102;
     background-color:#fcf5ed;
+  }
+
+  button:hover {
+    background-color: #EF7D00;
+  }
+
+}
+
+@media (focus: focus) {
+  button:focus {
+    outline: none;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
   }
 }
 

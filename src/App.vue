@@ -1,6 +1,13 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloScreen from './components/HelloScreen.vue'
+import { state } from './auth.js'
+
+function deauthAndNavigate(navigate, event) {
+  state.deauthorize();
+  navigate(event);
+}
+
 </script>
 
 <template>
@@ -9,9 +16,17 @@ import HelloScreen from './components/HelloScreen.vue'
       <HelloScreen msg="Личный кабинет" />
       <img alt="Сargo Management" class="logo" src="@/assets/logo.svg" width="250" height="125" />
 
-      <nav>
-        <RouterLink to="/">Отправления</RouterLink>
-        <RouterLink to="/settings">Настройки</RouterLink>
+      <nav v-if="state.authorized">
+        <RouterLink to="/shipments" class="link">Отправления</RouterLink>
+        <RouterLink to="/settings" class="link">Настройки</RouterLink>
+        <RouterLink to="/" custom v-slot="{ href, navigate }">
+            <a :href="href" @click="deauthAndNavigate(navigate, $event)" class="link">Выход</a>
+        </RouterLink>
+      </nav>
+      <nav v-if="!state.authorized">
+        <RouterLink to="/" class="link">Войти</RouterLink>
+        <RouterLink to="/register" class="link">Зарегистрироваться</RouterLink>
+        <RouterLink to="/recover" class="link">Восстановить пароль</RouterLink>
       </nav>
     </div>
   </header>

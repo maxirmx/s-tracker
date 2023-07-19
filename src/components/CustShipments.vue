@@ -8,6 +8,7 @@ import SupportIcon from './icons/IconSupport.vue'
 </script>
 
 <template>
+    <h1 class="title orange">Отправления</h1>
   <ShipmentItem>
     <template #icon>
       <DocumentationIcon />
