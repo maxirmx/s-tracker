@@ -20,7 +20,7 @@
     </div>
     <button
       class="button"
-      @click="state.authorize();$router.push('shipments')"
+      @click="state.authorize(); $router.push('shipments')"
     >
       Войти
     </button>

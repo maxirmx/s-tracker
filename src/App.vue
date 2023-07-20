@@ -1,28 +1,32 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import router from './router'
 import HelloScreen from './components/HelloScreen.vue'
 import { state } from './auth.js'
 
-function deauthAndNavigate(navigate, event) {
+function deauth() {
   state.deauthorize()
-  navigate(event)
+  router.push('')
 }
+
+deauth()
+
 </script>
 
 <template>
   <header>
     <div class="wrapper">
-      <HelloScreen msg="Личный кабинет" />
+      <HelloScreen msg="Личный кабинет" width="250"/>
       <img alt="Сargo Management" class="logo" src="@/assets/logo.svg" width="250" height="125" />
 
-      <nav v-if="state.authorized">
+      <nav v-if="state.authorized" width="250">
         <RouterLink to="/shipments" class="link">Отправления</RouterLink>
         <RouterLink to="/settings" class="link">Настройки</RouterLink>
-        <RouterLink to="/" custom v-slot="{ href, navigate }">
-          <a :href="href" @click="deauthAndNavigate(navigate, $event)" class="link">Выход</a>
+        <RouterLink to="/" custom v-slot="{ href }">
+          <a :href="href" @click="deauth()" class="link">Выход</a>
         </RouterLink>
       </nav>
-      <nav v-if="!state.authorized">
+      <nav v-if="!state.authorized" width="250">
         <RouterLink to="/" class="link">Вход</RouterLink>
         <RouterLink to="/register" class="link">Регистрация</RouterLink>
         <RouterLink to="/recover" class="link">Восстановление пароля</RouterLink>

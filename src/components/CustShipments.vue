@@ -19,16 +19,8 @@
 
 <script>
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
-
-const statuses = [
-  'Заявка на перевозку зарегистрирована',
-  'Груз забран у отправителя',
-  'Груз прибыл на склад',
-  'Груз убыл со склада',
-  'Начало таможенного оформления',
-  'Окончание таможенного оформления',
-  'Груз прибыл в пункт назначения'
-]
+import router from '../router'
+import { status } from '../status.js'
 
 export default {
   components: {
@@ -37,11 +29,11 @@ export default {
   methods: {
     getStatus(item) {
       var statusCode = item['selectable']['statusCode']
-      return statusCode < statuses.length ? statuses[statusCode] : 'Не известно (ошибка)'
+      return status.getName(statusCode)
     },
     viewHistory(item) {
       var number = item['selectable']['number']
-      console.log('--->' + number)
+      router.push('shipment/' + number)
     }
   },
 

@@ -71,6 +71,10 @@ const showPassword2 = ref(false)
         <i :class="showPassword2 ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
       </button>
     </div>
+    <div class="form-group">
+      <label for="organization" class="label">Ваша организация:</label>
+      <span id="organization"><em>ООО "Братан-Турбодизель"</em>.</span>
+    </div>
     <button class="button">{{ button }}</button>
   </div>
 </template>

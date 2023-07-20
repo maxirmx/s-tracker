@@ -3,6 +3,7 @@ import LoginView from '../views/LoginView.vue'
 import RecoverView from '../views/RecoverView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import CustShipmentsView from '../views/ShipmentsView.vue'
+import CustShipmentView from '../views/ShipmentView.vue'
 import SettingsView from '../views/SettingsView.vue'
 
 const router = createRouter({
@@ -27,6 +28,12 @@ const router = createRouter({
       path: '/shipments',
       name: 'Отправления',
       component: CustShipmentsView
+    },
+    {
+      path: '/shipment/:number',
+      name: 'Отправлениe',
+      component: CustShipmentView,
+      props: true
     },
     {
       path: '/settings',
