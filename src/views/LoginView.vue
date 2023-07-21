@@ -18,22 +18,21 @@
         <i :class="showPassword ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
       </button>
     </div>
-    <button
-      class="button"
-      @click="state.authorize(); $router.push('shipments')"
-    >
-      Войти
-    </button>
+    <button class="button" @click="authorize()">Войти</button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { state } from '../auth.js'
+import router from '../router'
 
 const showPassword = ref(false)
 const email = ref('')
 const password = ref('')
-</script>
 
-<style></style>
+function authorize() {
+  state.authorize()
+  router.push('shipments')
+}
+</script>

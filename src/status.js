@@ -11,7 +11,7 @@ import DeliveredIcon from './components/icons/IconDelivered.vue'
 import UnknownIcon from './components/icons/IconUnknown.vue'
 
 export const status = reactive({
-names: [
+  names: [
     'Заявка на перевозку зарегистрирована',
     'Груз забран у отправителя',
     'Груз прибыл на склад',
@@ -29,10 +29,10 @@ names: [
     markRaw(CustomsEndIcon),
     markRaw(DeliveredIcon)
   ],
-getName(code) {
+  getName(code) {
     return code < this.names.length ? this.names[code] : 'Не известно (ошибка)'
-},
-getIcon(code) {
-  return code < this.names.length ? this.icons[code] : UnknownIcon
-}
+  },
+  getIcon(code) {
+    return code < this.names.length ? this.icons[code] : UnknownIcon
+  }
 })

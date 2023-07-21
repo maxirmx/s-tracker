@@ -14,6 +14,25 @@
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon size="small" class="fa fa-eye" @click="viewHistory(item)"> </v-icon>
     </template>
+
+    <template v-slot:bottom>
+      <div class="text-center pt-2">
+        <v-pagination
+          v-model="page"
+          :length="pageCount"
+        ></v-pagination>
+        <v-text-field
+          :model-value="itemsPerPage"
+          class="pa-2"
+          label="На странице"
+          type="number"
+          min="-1"
+          max="15"
+          hide-details
+          @update:model-value="itemsPerPage = parseInt($event, 10)"
+        ></v-text-field>
+        </div>
+      </template>
   </v-data-table>
 </template>
 

@@ -4,6 +4,6 @@ import CustSettings from '../components/CustSettings.vue'
 
 <template>
   <main>
-    <CustSettings title="Персональные настройки" button="Сохранить" />
+    <CustSettings :register="false" />
   </main>
 </template>

@@ -1,21 +1,12 @@
 <script setup>
 import HistoryItem from './HistoryItem.vue'
-import CustomsStartIcon from './icons/IconCustomsStart.vue'
-import CustomsEndIcon from './icons/IconCustomsEnd.vue'
-import OutOfStorageIcon from './icons/IconOutOfStorage.vue'
-import InStorageIcon from './icons/IconInStorage.vue'
-import RegisteredIcon from './icons/IconRegistered.vue'
-import CollectedIcon from './icons/IconCollected.vue'
-import DeliveredIcon from './icons/IconDelivered.vue'
-
 import { status } from '../status.js'
-
 </script>
 
 <template>
-    <h1  class="orange">История отправления {{  $route.params.number }} </h1>
+  <h1 class="orange">История отправления {{ $route.params.number }}</h1>
 
-    <HistoryItem>
+  <HistoryItem>
     <template #icon>
       <component :is="status.getIcon(6)"></component>
     </template>
@@ -39,7 +30,7 @@ import { status } from '../status.js'
     20/07/2023&nbsp;&nbsp;&nbsp;Псков, РФ
   </HistoryItem>
 
-    <HistoryItem>
+  <HistoryItem>
     <template #icon>
       <component :is="status.getIcon(5)"></component>
     </template>
@@ -117,6 +108,5 @@ import { status } from '../status.js'
     </template>
     <template #heading> {{ status.getName(0) }} </template>
     10/07/2023&nbsp;&nbsp;&nbsp;Montreal, CA
-
   </HistoryItem>
 </template>

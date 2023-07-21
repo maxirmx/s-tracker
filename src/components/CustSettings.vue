@@ -1,13 +1,9 @@
 <script setup>
 import { ref } from 'vue'
 
-defineProps({
-  title: {
-    type: String,
-    required: true
-  },
-  button: {
-    type: String,
+const props = defineProps({
+  register: {
+    type: Boolean,
     required: true
   }
 })
@@ -19,11 +15,24 @@ const email = ref('petrov@example.com')
 const password = ref('пароль')
 const showPassword = ref(false)
 const showPassword2 = ref(false)
+
+function isRegister() {
+  return props.register
+}
+
+function getTitle() {
+  return isRegister() ? "Регистрация": "Настройки"
+}
+
+function getButton() {
+  return isRegister() ? "Зарегистрироваться": "Сохранить"
+}
+
 </script>
 
 <template>
   <div class="settings">
-    <h1 class="title orange">{{ title }}</h1>
+    <h1 class="title orange">{{ getTitle() }}</h1>
     <div class="form-group">
       <label for="firstName" class="label">Фамилия:</label>
       <input v-model="firstName" class="input" id="firstName" placeholder="Введите фамилию" />
@@ -71,11 +80,11 @@ const showPassword2 = ref(false)
         <i :class="showPassword2 ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
       </button>
     </div>
-    <div class="form-group">
+    <div  v-if="!isRegister()" class="form-group">
       <label for="organization" class="label">Ваша организация:</label>
       <span id="organization"><em>ООО "Братан-Турбодизель"</em>.</span>
     </div>
-    <button class="button">{{ button }}</button>
+    <button class="button">{{ getButton() }}</button>
   </div>
 </template>
 

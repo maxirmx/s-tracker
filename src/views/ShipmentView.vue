@@ -4,6 +4,6 @@ import CustShipment from '../components/CustShipment.vue'
 
 <template>
   <main>
-    <CustShipment/>
+    <CustShipment />
   </main>
 </template>
