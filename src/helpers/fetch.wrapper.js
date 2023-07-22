@@ -23,38 +23,58 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import '@fortawesome/fontawesome-free/css/all.css'
-import './assets/main.css'
+import { useAuthStore } from '@/stores/auth.store.js'
 
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
+export const fetchWrapper = {
+  get: request('GET'),
+  post: request('POST'),
+  put: request('PUT'),
+  delete: request('DELETE')
+}
 
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
-import { VDataTable } from 'vuetify/lib/labs/components.mjs'
-
-import App from './App.vue'
-import router from './router'
-
-// setup fake backend
-import { fakeBackend } from '@/helpers/demo.backend.js'
-fakeBackend()
-
-const vuetify = createVuetify({
-  components,
-  directives
-})
-
-const app = createApp(App)
-
-app.use(createPinia())
-app.use(router)
-app.use(vuetify, {
-  components: {
-    VDataTable
+function request(method) {
+  return (url, body) => {
+    const requestOptions = {
+      method,
+      headers: authHeader(url)
+    }
+    if (body) {
+      requestOptions.headers['Content-Type'] = 'application/json'
+      requestOptions.body = JSON.stringify(body)
+    }
+    return fetch(url, requestOptions).then(handleResponse)
   }
-})
+}
 
-app.mount('#app')
+// helper functions
+
+function authHeader(url) {
+  // return auth header with jwt if user is logged in and request is to the api url
+  const { user } = useAuthStore()
+  const isLoggedIn = !!user?.token
+  const isApiUrl = url.startsWith(import.meta.env.VITE_API_URL)
+  if (isLoggedIn && isApiUrl) {
+    return { Authorization: `Bearer ${user.token}` }
+  } else {
+    return {}
+  }
+}
+
+function handleResponse(response) {
+  return response.text().then((text) => {
+    const data = text && JSON.parse(text)
+
+    if (!response.ok) {
+      const { user, logout } = useAuthStore()
+      if ([401, 403].includes(response.status) && user) {
+        // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
+        logout()
+      }
+
+      const error = (data && data.message) || response.statusText
+      return Promise.reject(error)
+    }
+
+    return data
+  })
+}

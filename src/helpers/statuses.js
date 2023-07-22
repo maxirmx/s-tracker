@@ -12,7 +12,7 @@
 //    documentation and/or other materials provided with the distribution.
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-//# ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+// ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 // TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 // PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS
 // BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
@@ -35,13 +35,13 @@ import DeliveredIcon from '@/components/icons/IconDelivered.vue'
 import UnknownIcon from '@/components/icons/IconUnknown.vue'
 
 export const statuses = reactive({
-  REGISTERED:0,
-  COLLECTED:1,
-  IN_STORAGE:2,
-  OUT_OF_STORAGE:3,
-  CUSTOMS_START:4,
-  CUSTOMS_END:5,
-  DELIVERED:6,
+  REGISTERED: 0,
+  COLLECTED: 1,
+  IN_STORAGE: 2,
+  OUT_OF_STORAGE: 3,
+  CUSTOMS_START: 4,
+  CUSTOMS_END: 5,
+  DELIVERED: 6,
   names: [
     'Заявка на перевозку зарегистрирована',
     'Груз забран у отправителя',

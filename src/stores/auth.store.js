@@ -1,5 +1,4 @@
-<script setup>
-// Copyright (C) 2023 Maxim [maxirmx] Samsonov (www.sw.consulting)
+// Copyright (C) 2023 Maxim [maxirmx] Samsonov  (www.sw.consulting)
 // All rights reserved.
 // This file is a part of s-tracker applcation
 //
@@ -7,10 +6,10 @@
 // modification, are permitted provided that the following conditions
 // are met:
 // 1. Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
+//    notice, this list of conditions and the following disclaimer.
 // 2. Redistributions in binary form must reproduce the above copyright
-// notice, this list of conditions and the following disclaimer in the
-// documentation and/or other materials provided with the distribution.
+//    notice, this list of conditions and the following disclaimer in the
+//    documentation and/or other materials provided with the distribution.
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
@@ -24,11 +23,31 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import CustSettings from '../components/CustSettings.vue'
-</script>
+import { defineStore } from 'pinia'
+import { fetchWrapper } from '@/helpers/fetch.wrapper.js'
 
-<template>
-  <main>
-    <CustSettings :register="false" />
-  </main>
-</template>
+const baseUrl = `${import.meta.env.VITE_API_URL}/users`
+
+export const useAuthStore = defineStore({
+  id: 'auth',
+  state: () => ({
+    // initialize state from local storage to enable user to stay logged in
+    user: JSON.parse(localStorage.getItem('user')),
+    returnUrl: null
+  }),
+  actions: {
+    async login(email, password) {
+      const user = await fetchWrapper.post(`${baseUrl}/authenticate`, { email, password })
+
+      // update pinia state
+      this.user = user
+
+      // store user details and jwt in local storage to keep user logged in between page refreshes
+      localStorage.setItem('user', JSON.stringify(user))
+    },
+    logout() {
+      this.user = null
+      localStorage.removeItem('user')
+    }
+  }
+})

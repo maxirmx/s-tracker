@@ -24,29 +24,34 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.store.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
+      redirect: '/login'
+    },
+    {
+      path: '/login',
       name: 'Вход',
-      component: () => import('@/views/LoginView.vue'),
+      component: () => import('@/views/LoginView.vue')
     },
     {
       path: '/recover',
       name: 'Восстановление пароля',
-      component: () => import('@/views/RecoverView.vue'),
+      component: () => import('@/views/RecoverView.vue')
     },
     {
       path: '/register',
       name: 'Регистрация',
-      component: () => import('@/views/RegisterView.vue'),
+      component: () => import('@/views/RegisterView.vue')
     },
     {
       path: '/shipments',
       name: 'Отправления',
-      component: () => import('@/views/ShipmentsView.vue'),
+      component: () => import('@/views/ShipmentsView.vue')
     },
     {
       path: '/shipment/:number',
@@ -57,9 +62,20 @@ const router = createRouter({
     {
       path: '/settings',
       name: 'Настройки',
-      component: () => import('@/views/SettingsView.vue'),
+      component: () => import('@/views/SettingsView.vue')
     }
   ]
+})
+
+router.beforeEach(async (to) => {
+  // redirect to login page if not logged in and trying to access a restricted page
+  const publicPages = ['/login', '/recover', '/register']
+  const authRequired = !publicPages.includes(to.path)
+  const auth = useAuthStore()
+    if (authRequired && !auth.user) {
+        auth.returnUrl = to.fullPath;
+        return '/login';
+    }
 })
 
 export default router

@@ -1,4 +1,5 @@
-// Copyright (C) 2023 Maxim [maxirmx] Samsonov  (www.sw.consulting)
+<script setup>
+// Copyright (C) 2023 Maxim [maxirmx] Samsonov (www.sw.consulting)
 // All rights reserved.
 // This file is a part of s-tracker applcation
 //
@@ -6,10 +7,10 @@
 // modification, are permitted provided that the following conditions
 // are met:
 // 1. Redistributions of source code must retain the above copyright
-//    notice, this list of conditions and the following disclaimer.
+// notice, this list of conditions and the following disclaimer.
 // 2. Redistributions in binary form must reproduce the above copyright
-//    notice, this list of conditions and the following disclaimer in the
-//    documentation and/or other materials provided with the distribution.
+// notice, this list of conditions and the following disclaimer in the
+// documentation and/or other materials provided with the distribution.
 //
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
@@ -23,14 +24,15 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-<script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import router from './router'
-import HelloScreen from './components/HelloScreen.vue'
-import { state } from './auth.js'
+import router from '@/router'
+import HelloScreen from '@/components/HelloScreen.vue'
+
+import { useAuthStore } from '@/stores/auth.store.js'
+const authStore = useAuthStore()
 
 function deauth() {
-  state.deauthorize()
+  authStore.logout()
   router.push('')
 }
 
@@ -42,15 +44,15 @@ deauth()
     <div class="wrapper">
       <HelloScreen appName="Личный кабинет" />
 
-      <nav v-if="state.authorized">
+      <nav v-if="authStore.user">
         <RouterLink to="/shipments" class="link">Отправления</RouterLink>
         <RouterLink to="/settings" class="link">Настройки</RouterLink>
-        <RouterLink to="/" custom v-slot="{ href }">
+        <RouterLink to="/login" custom v-slot="{ href }">
           <a :href="href" @click="deauth()" class="link">Выход</a>
         </RouterLink>
       </nav>
-      <nav v-if="!state.authorized">
-        <RouterLink to="/" class="link">Вход</RouterLink>
+      <nav v-if="!authStore.user">
+        <RouterLink to="/login" class="link">Вход</RouterLink>
         <RouterLink to="/register" class="link">Регистрация</RouterLink>
         <RouterLink to="/recover" class="link">Восстановление пароля</RouterLink>
       </nav>
