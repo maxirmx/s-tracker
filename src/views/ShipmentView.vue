@@ -1,5 +1,5 @@
 <script setup>
-import CustShipment from '../components/CustShipment.vue'
+import CustShipment from '@/components/CustShipment.vue'
 </script>
 
 <template>

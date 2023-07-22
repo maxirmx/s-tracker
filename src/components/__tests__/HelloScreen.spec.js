@@ -5,7 +5,7 @@ import HelloScreen from '../HelloScreen.vue'
 
 describe('HelloScreen', () => {
   it('renders properly', () => {
-    const wrapper = mount(HelloScreen, { props: { msg: 'Hello Vitest' } })
-    expect(wrapper.text()).toContain('Hello Vitest')
+    const wrapper = mount(HelloScreen, { props: { appName: 'Hello S-Tracker' } })
+    expect(wrapper.text()).toContain('Hello S-Tracker')
   })
 })

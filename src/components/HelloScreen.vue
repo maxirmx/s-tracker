@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-  msg: {
+  appName: {
     type: String,
     required: true
   }
@@ -9,7 +9,7 @@ defineProps({
 
 <template>
   <div class="greetings">
-    <h1 class="orange">{{ msg }}</h1>
+    <h1 class="orange">{{ appName }}</h1>
     <img alt="Сargo Management" class="logo" src="@/assets/logo.svg" width="250" height="125" />
   </div>
 </template>

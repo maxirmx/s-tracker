@@ -21,13 +21,12 @@ function isRegister() {
 }
 
 function getTitle() {
-  return isRegister() ? "Регистрация": "Настройки"
+  return isRegister() ? 'Регистрация' : 'Настройки'
 }
 
 function getButton() {
-  return isRegister() ? "Зарегистрироваться": "Сохранить"
+  return isRegister() ? 'Зарегистрироваться' : 'Сохранить'
 }
-
 </script>
 
 <template>
@@ -80,7 +79,7 @@ function getButton() {
         <i :class="showPassword2 ? 'fa fa-eye-slash' : 'fa fa-eye'"></i>
       </button>
     </div>
-    <div  v-if="!isRegister()" class="form-group">
+    <div v-if="!isRegister()" class="form-group">
       <label for="organization" class="label">Ваша организация:</label>
       <span id="organization"><em>ООО "Братан-Турбодизель"</em>.</span>
     </div>
