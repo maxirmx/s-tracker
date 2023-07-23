@@ -28,7 +28,7 @@ import '@fortawesome/fontawesome-free/css/all.css'
 
 import HistoryItem from '@/components/HistoryItem.vue'
 import { statuses } from '@/helpers/statuses.js'
-import { shipment } from '@/helpers/demo.shipment.js'
+import { shipment } from '@/stores/demo.shipment.js'
 
 import { useAuthStore } from '@/stores/auth.store.js'
 const authStore = useAuthStore()
@@ -56,46 +56,4 @@ const authStore = useAuthStore()
   </HistoryItem>
 </template>
 
-<style>
-.hr {
-  position: relative;
-  top: 20px;
-  border: none;
-  height: 4px;
-  background: #ef7d00;
-  margin-bottom: 50px;
-}
-
-.btn-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.btn {
-  float: right;
-  margin-left: 0.5rem;
-  text-decoration: none;
-  color: #ef7d00;
-  transition: 0.4s;
-}
-
-.anti-btn {
-  float: right;
-  margin-left: 0.5rem;
-  text-decoration: none;
-  color: rgb(30, 30, 30);
-  transition: 0.4s;
-}
-
-@media (hover: hover) {
-  .btn:hover {
-    color: rgb(30, 30, 30);
-    background-color: white;
-  }
-  .anti-btn:hover {
-    color: #ef7d00;
-    background-color: white;
-  }
-}
-</style>
+<style></style>

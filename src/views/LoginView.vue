@@ -25,23 +25,28 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { ref } from 'vue'
-import router from '../router'
+import { Form, Field } from 'vee-validate'
+import * as Yup from 'yup'
+import router from '@/router'
 import { useAuthStore } from '@/stores/auth.store.js'
 
+const schema = Yup.object().shape({
+  email: Yup.string()
+    .required('Необходимо указать электронную почту')
+    .email('Неверный формат электронной почты'),
+  password: Yup.string()
+    .required('Необходимо указать пароль')
+    .min(4, 'Пароль не может быть короче 4 симоволов')
+})
+
 const showPassword = ref(false)
-const email = ref('')
-const password = ref('')
-const errors = ref({})
 
-function setErrors(err) {
-  errors.value = err
-  console.log(err)
-}
-
-function authorize() {
+function onSubmit(values, { setErrors }) {
   const authStore = useAuthStore()
-  authStore
-    .login(email.value, password.value)
+  const { email, password } = values
+
+  return authStore
+    .login(email, password)
     .then(() => {
       router.push('/shipments')
     })
@@ -51,26 +56,47 @@ function authorize() {
 
 <template>
   <div class="settings">
-    <h1 class="title orange">Вход</h1>
-    <div class="form-group">
-      <label for="email" class="label">Адрес электронной почты:</label>
-      <input v-model="email" class="input" id="email" placeholder="Адрес электронной почты" />
-    </div>
-    <div class="form-group">
-      <label for="password" class="label">Пароль:</label>
-      <input
-        :type="showPassword ? 'text' : 'password'"
-        v-model="password"
-        placeholder="Пароль"
-        class="input password"
-        id="password"
-      />
-      <button
-        @click="showPassword = !showPassword"
-        :class="showPassword ? 'button button-s fa fa-eye-slash' : 'button button-s fa fa-eye'"
-      ></button>
-    </div>
-    <button class="button" @click="authorize()">Войти</button>
-    <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{ errors.apiError }}</div>
+    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
+      <h1 class="orange">Вход</h1>
+      <hr class="hr" />
+      <div class="form-group">
+        <label for="email" class="label">Адрес электронной почты:</label>
+        <Field
+          name="email"
+          type="text"
+          class="form-control input"
+          :class="{ 'is-invalid': errors.email }"
+          placeholder="Адрес электронной почты"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password" class="label">Пароль:</label>
+        <Field
+          name="password"
+          :type="showPassword ? 'text' : 'password'"
+          class="form-control input password"
+          :class="{ 'is-invalid': errors.password }"
+          placeholder="Пароль"
+        />
+        <button
+          @click="
+            (event) => {
+              event.preventDefault()
+              showPassword = !showPassword
+            }
+          "
+          :class="showPassword ? 'button button-s fa fa-eye-slash' : 'button button-s fa fa-eye'"
+        ></button>
+      </div>
+      <div class="form-group">
+        <button class="button" :disabled="isSubmitting">
+          <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+          Войти
+        </button>
+      </div>
+      <div v-if="errors.email" class="alert alert-danger mt-3 mb-0">{{ errors.email }}</div>
+      <div v-if="errors.password" class="alert alert-danger mt-3 mb-0">{{ errors.password }}</div>
+      <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{ errors.apiError }}</div>
+    </Form>
   </div>
 </template>

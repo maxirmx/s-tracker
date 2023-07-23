@@ -47,37 +47,16 @@ export default {
     return {
       itemsPerPage: 5,
       headers: [
-        { title: 'Номер', align: 'start', key: 'number' },
-        { title: 'Место', align: 'center', key: 'location' },
-        { title: 'Статус', align: 'center', key: 'statuses' },
-        { title: 'Дата', align: 'center', key: 'date' },
+        { title: 'Номер', align: 'start', key: 'id' },
+        { title: 'Фамилия', align: 'start', key: 'lastName' },
+        { title: 'Имя', align: 'start', key: 'firstName' },
+        { title: 'Отчество', align: 'start', key: 'patronimic' },
+        { title: 'Эл. почта', align: 'start', key: 'email' },
+        { title: 'Организация', align: 'start', key: 'organization' },
+        { title: 'Права', align: 'start', key: 'credentials', sortable: 'false' },
         { title: '', align: 'center', key: 'actions', sortable: 'false' }
       ],
-      shipments: [
-        {
-          number: '1234A1',
-          location: 'Kuala Lumpur, ML',
-          statusCode: 1,
-          date: '12/07/2023'
-        },
-        {
-          number: '2234A1',
-          location: 'Тикси, РФ',
-          statusCode: 0,
-          date: '14/07/2023'
-        },
-        {
-          number: '2274A1',
-          location: 'Струги Красные, РФ',
-          statusCode: 3,
-          date: '15/07/2023'
-        },
-        {
-          number: '2274A4',
-          location: 'Лесосибирск, РФ',
-          statusCode: 6,
-          date: '15/07/2023'
-        }
+      users: [
       ]
     }
   }
@@ -85,20 +64,15 @@ export default {
 </script>
 
 <template>
-      <h1 class="orange">Отправления</h1>
-      <hr class="hr" />
+  <h1 class="orange">Пользователи</h1>
+  <hr class="hr" />
 
   <v-data-table
     v-model:items-per-page="itemsPerPage"
     :headers="headers"
-    :items="shipments"
-    item-value="name"
+    :items="users"
     class="elevation-1"
   >
-    <template v-slot:[`item.statuses`]="{ item }">
-      {{ getStatus(item) }}
-    </template>
-
     <template v-slot:[`item.actions`]="{ item }">
       <v-icon size="small" class="fa fa-eye" @click="viewHistory(item)"> </v-icon>
     </template>

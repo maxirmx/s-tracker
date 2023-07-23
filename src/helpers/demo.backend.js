@@ -33,6 +33,7 @@ function fakeBackend() {
       password: 'admin',
       firstName: 'Иван',
       patronimic: 'Иванович',
+      organization: 0,
       lastName: 'Иванов',
       isAdmin: true,
       isManager: true
@@ -41,9 +42,10 @@ function fakeBackend() {
       id: 1,
       email: 'manager@example.com',
       password: 'manager',
-      firstName: 'Пётр',
+      firstName: 'Роман',
       patronimic: 'Петрович',
-      lastName: 'Петров',
+      organization: 0,
+      lastName: 'Ойра-Ойра',
       isAdmin: false,
       isManager: true
     },
@@ -53,7 +55,19 @@ function fakeBackend() {
       password: 'user',
       firstName: 'Михаил',
       patronimic: 'Владленович',
+      organization: 1,
       lastName: 'Сидоров',
+      isAdmin: false,
+      isManager: false
+    },
+    {
+      id: 3,
+      email: 'individual@example.com',
+      password: 'individual',
+      firstName: 'Янус',
+      patronimic: 'Полуэктович',
+      organization: -1,
+      lastName: 'Невструев',
       isAdmin: false,
       isManager: false
     }
@@ -70,6 +84,12 @@ function fakeBackend() {
             return authenticate()
           case url.endsWith('/users') && opts.method === 'GET':
             return getUsers()
+          case url.match(/\/users\/\d+$/) && opts.method === 'GET':
+              return getUserById();
+          case url.match(/\/users\/\d+$/) && opts.method === 'PUT':
+              return updateUser();
+          case url.match(/\/users\/\d+$/) && opts.method === 'DELETE':
+              return deleteUser();
           default:
             // pass through any requests not handled above
             return realFetch(url, opts)
@@ -94,6 +114,7 @@ function fakeBackend() {
           patronimic: user.patronimic,
           isAdmin: user.isAdmin,
           isManager: user.isManager,
+          organization: user.organization,
           token: 'fake-jwt-token-' + user.id
         })
       }
@@ -103,7 +124,46 @@ function fakeBackend() {
         return ok(users)
       }
 
+      function getUserById() {
+        if (!isAuthenticated()) return unauthorized();
+        const user = users.find(x => x.id === idFromUrl());
+        return ok(basicDetails(user));
+    }
+
+      function updateUser() {
+        if (!isAuthenticated()) return unauthorized();
+
+        let params = body();
+        let user = users.find(x => x.id === idFromUrl());
+
+        // only update password if entered
+        if (!params.password) {
+            delete params.password;
+        }
+
+        // if email changed check if taken
+        if (params.email !== user.email && users.find(x => x.email === params.email)) {
+            return error('Пользователь с электронной почтой "' + params.email + '" уже зарегистрирован')
+        }
+
+        // update and save user
+        Object.assign(user, params);
+
+        return ok();
+    }
+
+    function deleteUser() {
+        if (!isAuthenticated()) return unauthorized();
+
+        users = users.filter(x => x.id !== idFromUrl());
+        return ok();
+    }
+
       // helper functions
+      function idFromUrl() {
+        const urlParts = url.split('/');
+        return parseInt(urlParts[urlParts.length - 1]);
+      }
 
       function ok(body) {
         resolve({ ok: true, text: () => Promise.resolve(JSON.stringify(body)) })
@@ -123,7 +183,12 @@ function fakeBackend() {
       function isAuthenticated() {
         return opts.headers['Authorization'].startsWith('Bearer fake-jwt-token')
       }
-/*
+
+      function basicDetails(user) {
+        const { id, firstName, patronimic, lastName, email, isAdmin, isManager, organization } = user;
+        return { id, firstName, patronimic, lastName, email, isAdmin, isManager, organization };
+      }
+      /*
       function isManager() {
         if (!isAuthenticated()) return false
         const words = opts.headers['Authorization'].split('-')

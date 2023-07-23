@@ -24,11 +24,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import CustSettings from '../components/CustSettings.vue'
+import UserSettings from '@/components/UserSettings.vue'
 </script>
 
 <template>
   <main>
-    <CustSettings :register="true" />
+    <UserSettings :register="true" />
   </main>
 </template>

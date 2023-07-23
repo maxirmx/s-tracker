@@ -24,18 +24,47 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { ref } from 'vue'
+import { Form, Field } from 'vee-validate'
+import * as Yup from 'yup'
+//import router from '@/router'
 
-const email = ref('')
+const schema = Yup.object().shape({
+  email: Yup.string()
+    .required('Необходимо указать электронную почту')
+    .email('Неверный формат электронной почты')
+})
+
+function onSubmit(values /*, { setErrors } */) {
+  const { email } = values
+  console.log('Отправим ссылку по адресу: ' + email)
+  //    router.push('/login')
+  //    setErrors - если вдруг письмо не послалось
+}
 </script>
 
 <template>
   <div class="settings">
-    <h1 class="title orange">Восстановление пароля</h1>
-    <div class="form-group">
-      <label for="email" class="label">Адрес электронной почты:</label>
-      <input v-model="email" class="input" id="email" placeholder="Адрес электронной почты" />
-    </div>
-    <button class="button">Выслать ссылку</button>
+    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
+      <h1 class="orange">Восстановление пароля</h1>
+      <hr class="hr" />
+      <div class="form-group">
+        <label for="email" class="label">Адрес электронной почты:</label>
+        <Field
+          name="email"
+          type="text"
+          class="form-control input"
+          :class="{ 'is-invalid': errors.email }"
+          placeholder="Адрес электронной почты"
+        />
+      </div>
+      <div class="form-group">
+        <button class="button" :disabled="isSubmitting">
+          <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+          Отправить ссылку
+        </button>
+      </div>
+      <div v-if="errors.email" class="alert alert-danger mt-3 mb-0">{{ errors.email }}</div>
+      <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{ errors.apiError }}</div>
+    </Form>
   </div>
 </template>

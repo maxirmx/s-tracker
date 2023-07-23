@@ -24,11 +24,17 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import CustSettings from '../components/CustSettings.vue'
+import UserSettings from '@/components/UserSettings.vue'
+import { useAuthStore } from '@/stores/auth.store.js'
+
+const authStore = useAuthStore()
+const user = authStore ? authStore.user : null
+const id = user ? user.id : -1
+
 </script>
 
 <template>
   <main>
-    <CustSettings :register="false" />
+    <UserSettings :register="false" :id="id"/>
   </main>
 </template>
