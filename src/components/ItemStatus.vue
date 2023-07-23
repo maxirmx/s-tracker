@@ -29,44 +29,69 @@
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
 
-//import router from '@/router'
+import router from '@/router'
 //import { useUsersStore } from '@/stores/users.store.js'
 //import { organizations } from '@/stores/demo.orgs.js'
 
 import { statuses } from '@/helpers/statuses.js'
+import { shipment } from '@/stores/demo.shipment.js'
 
 const props = defineProps({
   create: {
     type: Boolean,
-    required: false
+    required: true
   },
   shipmentId: {
+    type: String,
+    required: true
+  },
+  statusId: {
     type: Number,
     required: false
   }
 })
 
+const status = props.statusId ? shipment.history.find((x) => x.id === props.statusId) : null
+const shipmentId = props.create ? props.shipmentId : status.shipmentId
+
 const schema = Yup.object().shape({
   status: Yup.string().required('Выберите статус'),
   location: Yup.string().required('Укажите местонахождение'),
-  date: Yup.string().required('Укажите дату'),
+  date: Yup.string().required('Укажите дату')
 })
 
 function onSubmit(values /*, { setErrors } */) {
   console.log('Такой будет статус: ' + JSON.stringify(values))
+  router.go(-1)
+}
+
+function getHeader() {
+  return props.create ? 'Новый статус' : 'Изменение статуса'
 }
 </script>
 
 <template>
-<h1 class="orange">Cтатус отправления №</h1>
-<hr class="hr" />
+  <h1 class="orange">{{ getHeader() }} отправления {{ shipmentId }}</h1>
+  <hr class="hr" />
   <div class="settings">
-    <Form @submit="onSubmit"  :validation-schema="schema" v-slot="{ errors, isSubmitting }">
+    <Form
+      @submit="onSubmit"
+      :initial-values="status"
+      :validation-schema="schema"
+      v-slot="{ errors, isSubmitting }"
+    >
       <div class="form-group">
         <label for="status" class="label">Статус:</label>
-        <Field name="status" as="select" class="form-control input select" :class="{ 'is-invalid': errors.status }">
+        <Field
+          name="status"
+          as="select"
+          class="form-control input select"
+          :class="{ 'is-invalid': errors.status }"
+        >
           <option value="">Выберите статус</option>
-          <option v-for="status in statuses.items" :key="status" :value="status.id"> {{ status.name }} </option>
+          <option v-for="status in statuses.items" :key="status" :value="status.id">
+            {{ status.name }}
+          </option>
         </Field>
       </div>
       <div class="form-group">
@@ -90,8 +115,8 @@ function onSubmit(values /*, { setErrors } */) {
         />
       </div>
 
-    <div class="form-group">
-        <button class="button" type="submit" @click="$router.go(-1)" :disabled="isSubmitting">
+      <div class="form-group">
+        <button class="button" type="submit" :disabled="isSubmitting">
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           Сохранить
         </button>

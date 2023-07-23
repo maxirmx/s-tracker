@@ -56,8 +56,7 @@ export default {
         { title: 'Права', align: 'start', key: 'credentials', sortable: 'false' },
         { title: '', align: 'center', key: 'actions', sortable: 'false' }
       ],
-      users: [
-      ]
+      users: []
     }
   }
 }

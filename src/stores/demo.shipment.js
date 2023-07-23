@@ -27,20 +27,110 @@ import { stcodes } from '@/helpers/statuses.js'
 
 export const shipment = {
   history: [
-    { id:0, status: stcodes.DELIVERED, date: '21/07/2023', location: 'Опочка, РФ' },
-    { id:1, status: stcodes.OUT_OF_STORAGE, date: '21/07/2023', location: 'Псков, РФ' },
-    { id:2, status: stcodes.IN_STORAGE, date: '20/07/2023', location: 'Псков, РФ' },
-    { id:3, status: stcodes.OUT_OF_STORAGE, date: '19/07/2023', location: 'Новороссийск, РФ' },
-    { id:4, status: stcodes.CUSTOMS_END, date: '19/07/2023', location: 'Новороссийск, РФ' },
-    { id:5, status: stcodes.CUSTOMS_START, date: '16/07/2023', location: 'Новороссийск, РФ' },
-    { id:6, status: stcodes.IN_STORAGE, date: '16/07/2023', location: 'Новороссийск, РФ' },
-    { id:7, status: stcodes.OUT_OF_STORAGE, date: '14/07/2023', location: 'Newark, US' },
-    { id:8, status: stcodes.CUSTOMS_END, date: '13/07/2023', location: 'Newark, US' },
-    { id:9, status: stcodes.CUSTOMS_START, date: '12/07/2023', location: 'Newark, US' },
-    { id:10, status: stcodes.IN_STORAGE, date: '10/07/2023', location: 'Newark, US' },
-    { id:11, status: stcodes.OUT_OF_STORAGE, date: '10/07/2023', location: 'Buffalo, US' },
-    { id:12, status: stcodes.IN_STORAGE, date: '2/07/2023', location: 'Buffalo, US' },
-    { id:14, status: stcodes.COLLECTED, date: '2/07/2023', location: 'Montreal, CA' },
-    { id:15, status: stcodes.REGISTERED, date: '1/07/2023', location: 'Montreal, CA' }
+    {
+      id: 1115,
+      status: stcodes.DELIVERED,
+      date: '21.07.2023',
+      location: 'Опочка, РФ',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 1114,
+      status: stcodes.OUT_OF_STORAGE,
+      date: '21.07.2023',
+      location: 'Псков, РФ',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 1112,
+      status: stcodes.IN_STORAGE,
+      date: '20.07.2023',
+      location: 'Псков, РФ',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 1111,
+      status: stcodes.OUT_OF_STORAGE,
+      date: '19.07.2023',
+      location: 'Новороссийск, РФ',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 904,
+      status: stcodes.CUSTOMS_END,
+      date: '19.07.2023',
+      location: 'Новороссийск, РФ',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 805,
+      status: stcodes.CUSTOMS_START,
+      date: '16.07.2023',
+      location: 'Новороссийск, РФ',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 706,
+      status: stcodes.IN_STORAGE,
+      date: '16.07.2023',
+      location: 'Новороссийск, РФ',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 607,
+      status: stcodes.OUT_OF_STORAGE,
+      date: '14.07.2023',
+      location: 'Newark, US',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 508,
+      status: stcodes.CUSTOMS_END,
+      date: '13.07.2023',
+      location: 'Newark, US',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 409,
+      status: stcodes.CUSTOMS_START,
+      date: '12.07.2023',
+      location: 'Newark, US',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 310,
+      status: stcodes.IN_STORAGE,
+      date: '10.07.2023',
+      location: 'Newark, US',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 211,
+      status: stcodes.OUT_OF_STORAGE,
+      date: '10.07.2023',
+      location: 'Buffalo, US',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 112,
+      status: stcodes.IN_STORAGE,
+      date: '02.07.2023',
+      location: 'Buffalo, US',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 14,
+      status: stcodes.COLLECTED,
+      date: '02.07.2023',
+      location: 'Montreal, CA',
+      shipmentId: '1234A1'
+    },
+    {
+      id: 12,
+      status: stcodes.REGISTERED,
+      date: '01.07.2023',
+      location: 'Montreal, CA',
+      shipmentId: '1234A1'
+    }
   ]
 }

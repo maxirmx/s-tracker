@@ -25,8 +25,9 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
-import router from '../router'
+import router from '@/router'
 import { statuses } from '@/helpers/statuses.js'
+import { shipments } from '@/stores/demo.shipments.js'
 
 export default {
   components: {
@@ -56,40 +57,15 @@ export default {
         { title: 'Дата', align: 'center', key: 'date' },
         { title: '', align: 'center', key: 'actions', sortable: 'false' }
       ],
-      shipments: [
-        {
-          number: '1234A1',
-          location: 'Kuala Lumpur, ML',
-          statusCode: 1,
-          date: '12/07/2023'
-        },
-        {
-          number: '2234A1',
-          location: 'Тикси, РФ',
-          statusCode: 0,
-          date: '14/07/2023'
-        },
-        {
-          number: '2274A1',
-          location: 'Струги Красные, РФ',
-          statusCode: 3,
-          date: '15/07/2023'
-        },
-        {
-          number: '2274A4',
-          location: 'Лесосибирск, РФ',
-          statusCode: 6,
-          date: '15/07/2023'
-        }
-      ]
+      shipments: shipments.items
     }
   }
 }
 </script>
 
 <template>
-      <h1 class="orange">Отправления</h1>
-      <hr class="hr" />
+  <h1 class="orange">Отправления</h1>
+  <hr class="hr" />
 
   <v-data-table
     v-model:items-per-page="itemsPerPage"
@@ -104,9 +80,8 @@ export default {
 
     <template v-slot:[`item.actions`]="{ item }">
       <h4 class="orange btn-wrapper">
-    <button @click="viewHistory(item)" class="anti-btn fa fa-arrow-right-to-bracket"></button>
-  </h4>
-
+        <button @click="viewHistory(item)" class="anti-btn fa fa-arrow-right-to-bracket"></button>
+      </h4>
     </template>
   </v-data-table>
 </template>

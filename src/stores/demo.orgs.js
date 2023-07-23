@@ -23,7 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-export const organizations =  [
-    { id: 0, name: 'OOO "Карго Менеджемент"' },
-    { id: 1, name: 'OOO "Братан Турбо Дизель"' },
-  ]
+export const organizations = [
+  { id: 0, name: 'OOO "Карго Менеджемент"' },
+  { id: 1, name: 'OOO "Братан Турбо Дизель"' }
+]

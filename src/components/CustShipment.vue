@@ -32,7 +32,6 @@ import { shipment } from '@/stores/demo.shipment.js'
 
 import { useAuthStore } from '@/stores/auth.store.js'
 const authStore = useAuthStore()
-
 </script>
 
 <template>
@@ -41,19 +40,21 @@ const authStore = useAuthStore()
     <button @click="$router.push('/shipments')" class="btn fa fa-arrow-right-from-bracket"></button>
   </h1>
   <hr class="hr" />
+  <div class="wrapper" v-if="authStore.user.isManager">
+    <router-link :to="'/status/add/' + $route.params.number" class="link"
+      ><span class="fa fa-calendar-plus"></span> Добавить новый статус</router-link
+    >
+    &nbsp;&nbsp;&nbsp;
+    <router-link :to="'/status/edit/' + shipment.history[0].id" class="link"
+      ><span class="fa fa-pen-to-square"></span> Изменить последний статус</router-link
+    >
+  </div>
   <HistoryItem v-for="item in shipment.history" :key="item">
     <template #icon>
       <component :is="statuses.getIcon(item.status)"></component>
     </template>
     <template #heading> {{ statuses.getName(item.status) }} </template>
-
-    <span class="btn-wrapper">
-      {{ item.date }}&nbsp;&nbsp;&nbsp;{{ item.location }}
-      <h5 v-if="authStore.user.isManager">
-        <button @click="$router.push('/shipments')" class="anti-btn fa fa-trash"></button>
-        <button @click="$router.push('/status')" class="anti-btn fa fa-pen"></button>
-      </h5>
-    </span>
+    {{ item.date }}&nbsp;&nbsp;&nbsp;{{ item.location }}
   </HistoryItem>
 </template>
 

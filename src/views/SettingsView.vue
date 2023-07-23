@@ -30,11 +30,10 @@ import { useAuthStore } from '@/stores/auth.store.js'
 const authStore = useAuthStore()
 const user = authStore ? authStore.user : null
 const id = user ? user.id : -1
-
 </script>
 
 <template>
   <main>
-    <UserSettings :register="false" :id="id"/>
+    <UserSettings :register="false" :id="id" />
   </main>
 </template>

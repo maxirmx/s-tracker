@@ -25,7 +25,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { ref } from 'vue'
-import { storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia'
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
 //import router from '@/router'
@@ -44,38 +44,37 @@ const props = defineProps({
 })
 
 const schema = Yup.object().shape({
-  firstName: Yup.string()
-    .required('Необходимо указать имя'),
-  lastName: Yup.string()
-    .required('Необходимо указать фамилию'),
+  firstName: Yup.string().required('Необходимо указать имя'),
+  lastName: Yup.string().required('Необходимо указать фамилию'),
   patronimic: Yup.string(),
   email: Yup.string()
     .required('Необходимо указать электронную почту')
     .email('Неверный формат электронной почты'),
   password: Yup.string()
     // password optional in edit mode
-    .concat(isRegister() ? Yup.string().required('Необходимо указать парoль') : null )
+    .concat(isRegister() ? Yup.string().required('Необходимо указать парoль') : null)
     .min(4, 'Пароль не может быть короче 4 симоволов'),
   password2: Yup.string()
-    .concat(isRegister() ? Yup.string().required('Необходимо подтвердить пароль') : null )
-    .concat(isRegister() ? Yup.string().oneOf([Yup.ref('password')], 'Пароли должны совпадать') : null )
+    .concat(isRegister() ? Yup.string().required('Необходимо подтвердить пароль') : null)
+    .concat(
+      isRegister() ? Yup.string().oneOf([Yup.ref('password')], 'Пароли должны совпадать') : null
+    )
 })
-
 
 function onSubmit(values /*, { setErrors } */) {
   console.log('Такой будет пользователь: ' + JSON.stringify(values))
 }
 
-const showPassword = ref(false);
-const showPassword2 = ref(false);
+const showPassword = ref(false)
+const showPassword2 = ref(false)
 
-const usersStore = useUsersStore();
-let user = null;
-let org = null;
+const usersStore = useUsersStore()
+let user = null
+let org = null
 
 if (!isRegister()) {
-  ({ user } = storeToRefs(usersStore));
-  usersStore.getById(props.id);
+  ;({ user } = storeToRefs(usersStore))
+  usersStore.getById(props.id)
 }
 
 function isRegister() {
@@ -111,14 +110,18 @@ function getCredentials() {
   }
   return crd
 }
-
 </script>
 
 <template>
-<h1 class="orange">{{ getTitle() }}</h1>
-<hr class="hr" />
+  <h1 class="orange">{{ getTitle() }}</h1>
+  <hr class="hr" />
   <div class="settings">
-    <Form @submit="onSubmit" :initial-values="user" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
+    <Form
+      @submit="onSubmit"
+      :initial-values="user"
+      :validation-schema="schema"
+      v-slot="{ errors, isSubmitting }"
+    >
       <div class="form-group">
         <label for="lastName" class="label">Фамилия:</label>
         <Field
@@ -129,7 +132,7 @@ function getCredentials() {
           placeholder="Фамилия"
         />
       </div>
-    <div class="form-group">
+      <div class="form-group">
         <label for="firstName" class="label">Имя:</label>
         <Field
           name="firstName"
@@ -139,7 +142,7 @@ function getCredentials() {
           placeholder="Имя"
         />
       </div>
-    <div class="form-group">
+      <div class="form-group">
         <label for="patronimic" class="label">Отчество:</label>
         <Field
           name="patronimic"
@@ -149,7 +152,7 @@ function getCredentials() {
           placeholder="Отчество"
         />
       </div>
-    <div class="form-group">
+      <div class="form-group">
         <label for="email" class="label">Адрес электронной почты:</label>
         <Field
           name="email"
@@ -198,30 +201,30 @@ function getCredentials() {
           :class="showPassword2 ? 'button button-s fa fa-eye-slash' : 'button button-s fa fa-eye'"
         ></button>
       </div>
-    <div v-if="getOrg()" class="form-group">
-      <label for="organization" class="label">Организация:</label>
-      <span id="organization"><em>{{ getOrg() }}</em></span>
-    </div>
-    <div v-if="getCredentials()" class="form-group">
-      <label for="сredentials" class="label">Права:</label>
-      <span id="сredentials"><em>{{ getCredentials() }}</em></span>
-    </div>
+      <div v-if="getOrg()" class="form-group">
+        <label for="organization" class="label">Организация:</label>
+        <span id="organization"
+          ><em>{{ getOrg() }}</em></span
+        >
+      </div>
+      <div v-if="getCredentials()" class="form-group">
+        <label for="сredentials" class="label">Права:</label>
+        <span id="сredentials"
+          ><em>{{ getCredentials() }}</em></span
+        >
+      </div>
 
-    <div class="form-group">
-      <label for="isUser" class="label">Права</label>
-      <label for="isUser" >Пользователь</label>
-    <Field name="isUser" type="checkbox">
-    </Field>
-      <label for="isManager" >Менеджер</label>
-    <Field name="isManager" type="checkbox">
-    </Field>
-      <label for="isAdmin" >Администратор</label>
-    <Field name="isAdmin" type="checkbox">
-    </Field>
-</div>
+      <div class="form-group">
+        <label for="isUser" class="label">Права</label>
+        <label for="isUser">Пользователь</label>
+        <Field name="isUser" type="checkbox"> </Field>
+        <label for="isManager">Менеджер</label>
+        <Field name="isManager" type="checkbox"> </Field>
+        <label for="isAdmin">Администратор</label>
+        <Field name="isAdmin" type="checkbox"> </Field>
+      </div>
 
-
-    <div class="form-group">
+      <div class="form-group">
         <button class="button" :disabled="isSubmitting">
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           {{ getButton() }}
@@ -229,18 +232,19 @@ function getCredentials() {
       </div>
       <div v-if="errors.lastName" class="alert alert-danger mt-3 mb-0">{{ errors.lastName }}</div>
       <div v-if="errors.firstName" class="alert alert-danger mt-3 mb-0">{{ errors.firstName }}</div>
-      <div v-if="errors.patronimic" class="alert alert-danger mt-3 mb-0">{{ errors.patronimic }}</div>
+      <div v-if="errors.patronimic" class="alert alert-danger mt-3 mb-0">
+        {{ errors.patronimic }}
+      </div>
       <div v-if="errors.email" class="alert alert-danger mt-3 mb-0">{{ errors.email }}</div>
       <div v-if="errors.password" class="alert alert-danger mt-3 mb-0">{{ errors.password }}</div>
       <div v-if="errors.password2" class="alert alert-danger mt-3 mb-0">{{ errors.password2 }}</div>
       <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{ errors.apiError }}</div>
-
     </Form>
   </div>
   <div v-if="user?.loading" class="text-center m-5">
-      <span class="spinner-border spinner-border-lg align-center"></span>
+    <span class="spinner-border spinner-border-lg align-center"></span>
   </div>
   <div v-if="user?.error" class="text-center m-5">
-      <div class="text-danger">Error loading user: {{user.error}}</div>
+    <div class="text-danger">Error loading user: {{ user.error }}</div>
   </div>
 </template>

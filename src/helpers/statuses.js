@@ -35,13 +35,13 @@ import DeliveredIcon from '@/components/icons/IconDelivered.vue'
 import UnknownIcon from '@/components/icons/IconUnknown.vue'
 
 export const stcodes = {
-  REGISTERED : 0,
-COLLECTED: 1,
-IN_STORAGE: 2,
-OUT_OF_STORAGE: 3,
-CUSTOMS_START: 4,
-CUSTOMS_END: 5,
-DELIVERED: 6,
+  REGISTERED: 0,
+  COLLECTED: 1,
+  IN_STORAGE: 2,
+  OUT_OF_STORAGE: 3,
+  CUSTOMS_START: 4,
+  CUSTOMS_END: 5,
+  DELIVERED: 6
 }
 
 export const statuses = reactive({

@@ -65,10 +65,18 @@ const router = createRouter({
       component: () => import('@/views/SettingsView.vue')
     },
     {
-      path: '/status',
-      name: 'Статус отправления',
-      component: () => import('@/views/StatusView.vue')
-    }  ]
+      path: '/status/add/:shipmentId',
+      name: 'Добавить статус отправления',
+      component: () => import('@/views/AddStatusView.vue'),
+      props: true
+    },
+    {
+      path: '/status/edit/:statusId',
+      name: 'Изменить статус отправления',
+      component: () => import('@/views/EditStatusView.vue'),
+      props: true
+    }
+  ]
 })
 
 router.beforeEach(async (to) => {
