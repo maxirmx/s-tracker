@@ -32,12 +32,13 @@ import { shipment } from '@/stores/demo.shipment.js'
 
 import { useAuthStore } from '@/stores/auth.store.js'
 const authStore = useAuthStore()
+
 </script>
 
 <template>
   <h1 class="orange btn-wrapper">
     <span>История отправления {{ $route.params.number }}</span>
-    <button @click="$router.push('/shipments')" class="btn fa fa-eye-slash"></button>
+    <button @click="$router.push('/shipments')" class="btn fa fa-arrow-right-from-bracket"></button>
   </h1>
   <hr class="hr" />
   <HistoryItem v-for="item in shipment.history" :key="item">
@@ -48,10 +49,10 @@ const authStore = useAuthStore()
 
     <span class="btn-wrapper">
       {{ item.date }}&nbsp;&nbsp;&nbsp;{{ item.location }}
-      <h3 v-if="authStore.user.isManager">
+      <h5 v-if="authStore.user.isManager">
         <button @click="$router.push('/shipments')" class="anti-btn fa fa-trash"></button>
-        <button @click="$router.push('/shipments')" class="anti-btn fa fa-pen"></button>
-      </h3>
+        <button @click="$router.push('/status')" class="anti-btn fa fa-pen"></button>
+      </h5>
     </span>
   </HistoryItem>
 </template>

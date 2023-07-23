@@ -63,8 +63,12 @@ const router = createRouter({
       path: '/settings',
       name: 'Настройки',
       component: () => import('@/views/SettingsView.vue')
-    }
-  ]
+    },
+    {
+      path: '/status',
+      name: 'Статус отправления',
+      component: () => import('@/views/StatusView.vue')
+    }  ]
 })
 
 router.beforeEach(async (to) => {

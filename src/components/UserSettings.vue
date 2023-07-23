@@ -206,6 +206,21 @@ function getCredentials() {
       <label for="сredentials" class="label">Права:</label>
       <span id="сredentials"><em>{{ getCredentials() }}</em></span>
     </div>
+
+    <div class="form-group">
+      <label for="isUser" class="label">Права</label>
+      <label for="isUser" >Пользователь</label>
+    <Field name="isUser" type="checkbox">
+    </Field>
+      <label for="isManager" >Менеджер</label>
+    <Field name="isManager" type="checkbox">
+    </Field>
+      <label for="isAdmin" >Администратор</label>
+    <Field name="isAdmin" type="checkbox">
+    </Field>
+</div>
+
+
     <div class="form-group">
         <button class="button" :disabled="isSubmitting">
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>

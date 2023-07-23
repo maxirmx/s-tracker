@@ -37,6 +37,9 @@ export default {
       var statusCode = item['selectable']['statusCode']
       return statuses.getName(statusCode)
     },
+    getExtra(item) {
+      return item['selectable']['location'] + '   ' + item['selectable']['date']
+    },
     viewHistory(item) {
       var number = item['selectable']['number']
       router.push('shipment/' + number)
@@ -100,7 +103,10 @@ export default {
     </template>
 
     <template v-slot:[`item.actions`]="{ item }">
-      <v-icon size="small" class="fa fa-eye" @click="viewHistory(item)"> </v-icon>
+      <h4 class="orange btn-wrapper">
+    <button @click="viewHistory(item)" class="anti-btn fa fa-arrow-right-to-bracket"></button>
+  </h4>
+
     </template>
   </v-data-table>
 </template>

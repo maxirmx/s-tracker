@@ -34,36 +34,58 @@ import CollectedIcon from '@/components/icons/IconCollected.vue'
 import DeliveredIcon from '@/components/icons/IconDelivered.vue'
 import UnknownIcon from '@/components/icons/IconUnknown.vue'
 
+export const stcodes = {
+  REGISTERED : 0,
+COLLECTED: 1,
+IN_STORAGE: 2,
+OUT_OF_STORAGE: 3,
+CUSTOMS_START: 4,
+CUSTOMS_END: 5,
+DELIVERED: 6,
+}
+
 export const statuses = reactive({
-  REGISTERED: 0,
-  COLLECTED: 1,
-  IN_STORAGE: 2,
-  OUT_OF_STORAGE: 3,
-  CUSTOMS_START: 4,
-  CUSTOMS_END: 5,
-  DELIVERED: 6,
-  names: [
-    'Заявка на перевозку зарегистрирована',
-    'Груз забран у отправителя',
-    'Груз прибыл на склад',
-    'Груз убыл со склада',
-    'Начало таможенного оформления',
-    'Окончание таможенного оформления',
-    'Груз прибыл в пункт назначения'
-  ],
-  icons: [
-    markRaw(RegisteredIcon),
-    markRaw(CollectedIcon),
-    markRaw(InStorageIcon),
-    markRaw(OutOfStorageIcon),
-    markRaw(CustomsStartIcon),
-    markRaw(CustomsEndIcon),
-    markRaw(DeliveredIcon)
+  items: [
+    {
+      id: stcodes.REGISTERED,
+      name: 'Заявка на перевозку зарегистрирована',
+      icon: markRaw(RegisteredIcon)
+    },
+    {
+      id: stcodes.COLLECTED,
+      name: 'Груз забран у отправителя',
+      icon: markRaw(CollectedIcon)
+    },
+    {
+      id: stcodes.IN_STORAGE,
+      name: 'Груз прибыл на склад',
+      icon: markRaw(InStorageIcon)
+    },
+    {
+      id: stcodes.OUT_OF_STORAGE,
+      name: 'Груз убыл со склада',
+      icon: markRaw(OutOfStorageIcon)
+    },
+    {
+      id: stcodes.CUSTOMS_START,
+      name: 'Начало таможенного оформления',
+      icon: markRaw(CustomsStartIcon)
+    },
+    {
+      id: stcodes.CUSTOMS_END,
+      name: 'Окончание таможенного оформления',
+      icon: markRaw(CustomsEndIcon)
+    },
+    {
+      id: stcodes.DELIVERED,
+      name: 'Груз прибыл в пункт назначения',
+      icon: markRaw(DeliveredIcon)
+    }
   ],
   getName(code) {
-    return code < this.names.length ? this.names[code] : 'Не известно (ошибка)'
+    return code < this.items.length ? this.items[code].name : 'Не известно (ошибка)'
   },
   getIcon(code) {
-    return code < this.names.length ? this.icons[code] : UnknownIcon
+    return code < this.items.length ? this.items[code].icon : markRaw(UnknownIcon)
   }
 })
