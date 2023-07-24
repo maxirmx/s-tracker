@@ -30,60 +30,31 @@ import moment from 'moment'
 
 import router from '@/router'
 
+import { stcodes } from '@/helpers/statuses.js'
 import { statuses } from '@/helpers/statuses.js'
-import { shipment } from '@/stores/demo.shipment.js'
-
-const props = defineProps({
-  create: {
-    type: Boolean,
-    required: true
-  },
-  shipmentId: {
-    type: String,
-    required: true
-  },
-  statusId: {
-    type: Number,
-    required: false
-  }
-})
-
-let status = {
-  status: '',
-  location: '',
-  date: moment().format('YYYY-MM-DD')
-}
-
-if (props.statusId) {
-  const pstatus = shipment.history.find((x) => x.id === props.statusId)
-  if (pstatus) {
-    status = {
-      status: pstatus.status,
-      location: pstatus.location,
-      date: moment(pstatus.date, 'dd.MM.YYYY').format('YYYY-MM-DD')
-    }
-  }
-}
-const shipmentId = props.create ? props.shipmentId : status.shipmentId
 
 const schema = Yup.object().shape({
+  number: Yup.string().required('Укажите номер отправления'),
   status: Yup.string().required('Выберите статус'),
   location: Yup.string().required('Укажите местонахождение'),
   date: Yup.string().required('Укажите дату')
 })
 
 function onSubmit(values /*, { setErrors } */) {
-  console.log('Такой будет статус: ' + JSON.stringify(values))
+  console.log('Такое будет отправление: ' + JSON.stringify(values))
   router.go(-1)
 }
 
-function getHeader() {
-  return props.create ? 'Новый статус' : 'Изменение статуса'
+const status = {
+  number: '',
+  status: stcodes.REGISTERED,
+  location: '',
+  date: moment().format('YYYY-MM-DD')
 }
 </script>
 
 <template>
-  <h1 class="orange">{{ getHeader() }} отправления {{ shipmentId }}</h1>
+  <h1 class="orange">Новое отправление</h1>
   <hr class="hr" />
   <div class="settings">
     <Form
@@ -92,6 +63,16 @@ function getHeader() {
       :validation-schema="schema"
       v-slot="{ errors, isSubmitting }"
     >
+      <div class="form-group">
+        <label for="number" class="label">Номер отправления:</label>
+        <Field
+          name="number"
+          type="text"
+          class="form-control input"
+          :class="{ 'is-invalid': errors.тгьиук }"
+          placeholder="Номер отправления"
+        />
+      </div>
       <div class="form-group">
         <label for="status" class="label">Статус:</label>
         <Field
@@ -137,6 +118,7 @@ function getHeader() {
           Отменить
         </button>
       </div>
+      <div v-if="errors.number" class="alert alert-danger mt-3 mb-0">{{ errors.number }}</div>
       <div v-if="errors.status" class="alert alert-danger mt-3 mb-0">{{ errors.status }}</div>
       <div v-if="errors.location" class="alert alert-danger mt-3 mb-0">{{ errors.location }}</div>
       <div v-if="errors.date" class="alert alert-danger mt-3 mb-0">{{ errors.date }}</div>

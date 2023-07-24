@@ -33,7 +33,7 @@ function fakeBackend() {
       password: 'admin',
       firstName: 'Иван',
       patronimic: 'Иванович',
-      organization: 0,
+      organizationId: 0,
       lastName: 'Иванов',
       isAdmin: true,
       isManager: true
@@ -44,7 +44,7 @@ function fakeBackend() {
       password: 'manager',
       firstName: 'Роман',
       patronimic: 'Петрович',
-      organization: 0,
+      organizationId: 0,
       lastName: 'Ойра-Ойра',
       isAdmin: false,
       isManager: true
@@ -55,7 +55,7 @@ function fakeBackend() {
       password: 'user',
       firstName: 'Михаил',
       patronimic: 'Владленович',
-      organization: 1,
+      organizationId: 1,
       lastName: 'Сидоров',
       isAdmin: false,
       isManager: false
@@ -66,7 +66,7 @@ function fakeBackend() {
       password: 'individual',
       firstName: 'Янус',
       patronimic: 'Полуэктович',
-      organization: -1,
+      organizationId: -1,
       lastName: 'Невструев',
       isAdmin: false,
       isManager: false
@@ -114,7 +114,7 @@ function fakeBackend() {
           patronimic: user.patronimic,
           isAdmin: user.isAdmin,
           isManager: user.isManager,
-          organization: user.organization,
+          organizationId: user.organizationId,
           token: 'fake-jwt-token-' + user.id
         })
       }
@@ -187,9 +187,9 @@ function fakeBackend() {
       }
 
       function basicDetails(user) {
-        const { id, firstName, patronimic, lastName, email, isAdmin, isManager, organization } =
+        const { id, firstName, patronimic, lastName, email, isAdmin, isManager, organizationId } =
           user
-        return { id, firstName, patronimic, lastName, email, isAdmin, isManager, organization }
+        return { id, firstName, patronimic, lastName, email, isAdmin, isManager, organizationId }
       }
       /*
       function isManager() {

@@ -85,11 +85,14 @@ function onSubmit(values, { setErrors }) {
               showPassword = !showPassword
             }
           "
-          :class="showPassword ? 'button button-s fa fa-eye-slash' : 'button button-s fa fa-eye'"
-        ></button>
+          class="button button-s"
+        >
+          <font-awesome-icon v-if="showPassword" icon="fa-solid fa-eye" />
+          <font-awesome-icon v-if="!showPassword" icon="fa-solid fa-eye-slash" />
+        </button>
       </div>
       <div class="form-group">
-        <button class="button" :disabled="isSubmitting">
+        <button class="button" type="submit" :disabled="isSubmitting">
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           Войти
         </button>

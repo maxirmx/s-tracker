@@ -23,8 +23,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import '@fortawesome/fontawesome-free/css/all.css'
-import './assets/main.css'
+import '@/assets/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -35,8 +34,8 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 
-import App from './App.vue'
-import router from './router'
+import App from '@/App.vue'
+import router from '@/router'
 
 // setup fake backend
 import { fakeBackend } from '@/helpers/demo.backend.js'
@@ -47,14 +46,44 @@ const vuetify = createVuetify({
   directives
 })
 
-const app = createApp(App)
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core'
 
-app.use(createPinia())
-app.use(router)
-app.use(vuetify, {
-  components: {
-    VDataTable
-  }
-})
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+/* import specific icons */
+import {
+  faArrowRightFromBracket,
+  faArrowRightToBracket,
+  faCalendarPlus,
+  faEye,
+  faEyeSlash,
+  faHouseChimneyMedical,
+  faPen,
+  faPenToSquare,
+  faTruckFast,
+  faUserPlus
+} from '@fortawesome/free-solid-svg-icons'
+
+/* add icons to the library */
+library.add(
+  faArrowRightFromBracket,
+  faArrowRightToBracket,
+  faCalendarPlus,
+  faEye,
+  faEyeSlash,
+  faHouseChimneyMedical,
+  faPen,
+  faPenToSquare,
+  faTruckFast,
+  faUserPlus
+)
+
+const app = createApp(App)
+  .component('font-awesome-icon', FontAwesomeIcon)
+  .use(createPinia())
+  .use(router)
+  .use(vuetify, { components: { VDataTable } })
 
 app.mount('#app')

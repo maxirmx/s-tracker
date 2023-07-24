@@ -60,9 +60,10 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/settings',
+      path: '/settings/:id',
       name: 'Настройки',
-      component: () => import('@/views/SettingsView.vue')
+      component: () => import('@/views/SettingsView.vue'),
+      props: true
     },
     {
       path: '/status/add/:shipmentId',
@@ -75,6 +76,21 @@ const router = createRouter({
       name: 'Изменить статус отправления',
       component: () => import('@/views/EditStatusView.vue'),
       props: true
+    },
+    {
+      path: '/shipment/add',
+      name: 'Добавить отправлениe',
+      component: () => import('@/views/AddShipmentView.vue')
+    },
+    {
+      path: '/users',
+      name: 'Пользователи',
+      component: () => import('@/views/UsersView.vue')
+    },
+    {
+      path: '/organizations',
+      name: 'Организации',
+      component: () => import('@/views/OrgsView.vue')
     }
   ]
 })

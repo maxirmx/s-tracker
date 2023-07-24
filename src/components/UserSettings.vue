@@ -30,6 +30,7 @@ import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
 //import router from '@/router'
 import { useUsersStore } from '@/stores/users.store.js'
+import { useAuthStore } from '@/stores/auth.store.js'
 import { organizations } from '@/stores/demo.orgs.js'
 
 const props = defineProps({
@@ -69,8 +70,8 @@ const showPassword = ref(false)
 const showPassword2 = ref(false)
 
 const usersStore = useUsersStore()
+const authStore = useAuthStore()
 let user = null
-let org = null
 
 if (!isRegister()) {
   ;({ user } = storeToRefs(usersStore))
@@ -81,19 +82,44 @@ function isRegister() {
   return props.register
 }
 
+function asAdmin() {
+  return authStore.user && authStore.user.isAdmin
+}
+
 function getTitle() {
   return isRegister() ? 'Регистрация' : 'Настройки'
 }
 
 function getButton() {
-  return isRegister() ? 'Зарегистрироваться' : 'Сохранить'
+  return isRegister() ? 'Зарегистрировать' + (asAdmin() ? '' : 'ся') : 'Сохранить'
 }
 
 function getOrg() {
+  let org = null
   if (user) {
-    org = organizations.find((org) => org.id === user.value.organization)
+    org = organizations.find((org) => org.id === user.value.organizationId)
   }
   return org ? org.name : null
+}
+
+function showCredentials() {
+  return !isRegister() && !asAdmin()
+}
+
+function showAndEditCredentials() {
+  return asAdmin()
+}
+
+function _isAdmin() {
+  let is = false
+  if (user && user.value.isAdmin) is = true
+  return is
+}
+
+function _isManager() {
+  let is = false
+  if (user && user.value.isManager) is = true
+  return is
 }
 
 function getCredentials() {
@@ -106,7 +132,6 @@ function getCredentials() {
     if (user.value.isAdmin) {
       crd += '; aдминистратор'
     }
-    crd += '.'
   }
   return crd
 }
@@ -179,8 +204,11 @@ function getCredentials() {
               showPassword = !showPassword
             }
           "
-          :class="showPassword ? 'button button-s fa fa-eye-slash' : 'button button-s fa fa-eye'"
-        ></button>
+          class="button button-s"
+        >
+          <font-awesome-icon v-if="showPassword" icon="fa-solid fa-eye" />
+          <font-awesome-icon v-if="!showPassword" icon="fa-solid fa-eye-slash" />
+        </button>
       </div>
       <div class="form-group">
         <label for="password2" class="label">Пароль ещё раз:</label>
@@ -198,36 +226,64 @@ function getCredentials() {
               showPassword2 = !showPassword2
             }
           "
-          :class="showPassword2 ? 'button button-s fa fa-eye-slash' : 'button button-s fa fa-eye'"
-        ></button>
+          class="button button-s"
+        >
+          <font-awesome-icon v-if="showPassword" icon="fa-solid fa-eye" />
+          <font-awesome-icon v-if="!showPassword" icon="fa-solid fa-eye-slash" />
+        </button>
       </div>
-      <div v-if="getOrg()" class="form-group">
-        <label for="organization" class="label">Организация:</label>
-        <span id="organization"
+      <div v-if="showCredentials()" class="form-group">
+        <label for="organizationId" class="label">Организация:</label>
+        <span id="organizationId"
           ><em>{{ getOrg() }}</em></span
         >
       </div>
-      <div v-if="getCredentials()" class="form-group">
+      <div v-if="showAndEditCredentials()" class="form-group">
+        <label for="organizationId" class="label">Организация:</label>
+        <Field
+          name="organizationId"
+          as="select"
+          class="form-control input select"
+          :class="{ 'is-invalid': errors.sorganizationId }"
+        >
+          <option value="">Выберите организацию:</option>
+          <option value="-1">(без организации)</option>
+          <option v-for="org in organizations" :key="org" :value="org.id">
+            {{ org.name }}
+          </option>
+        </Field>
+      </div>
+
+      <div v-if="showCredentials()" class="form-group">
         <label for="сredentials" class="label">Права:</label>
         <span id="сredentials"
           ><em>{{ getCredentials() }}</em></span
         >
       </div>
 
-      <div class="form-group">
+      <div v-if="showAndEditCredentials()" class="form-group">
         <label for="isUser" class="label">Права</label>
         <label for="isUser">Пользователь</label>
-        <Field name="isUser" type="checkbox"> </Field>
+        <input name="isUser" type="checkbox" class="checkbox" :checked="true" />
         <label for="isManager">Менеджер</label>
-        <Field name="isManager" type="checkbox"> </Field>
+        <input name="isManager" type="checkbox" class="checkbox" :checked="_isManager()" />
         <label for="isAdmin">Администратор</label>
-        <Field name="isAdmin" type="checkbox"> </Field>
+        <input type="checkbox" name="isAdmin" class="checkbox" :checked="_isAdmin()" />
       </div>
 
       <div class="form-group">
-        <button class="button" :disabled="isSubmitting">
+        <button class="button" type="submit" :disabled="isSubmitting">
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           {{ getButton() }}
+        </button>
+        <button
+          v-if="!isRegister() || asAdmin()"
+          class="button"
+          @click="$router.go(-1)"
+          :disabled="isSubmitting"
+        >
+          <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+          Отменить
         </button>
       </div>
       <div v-if="errors.lastName" class="alert alert-danger mt-3 mb-0">{{ errors.lastName }}</div>

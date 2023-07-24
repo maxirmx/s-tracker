@@ -1,4 +1,4 @@
-<script>
+<script setup>
 // Copyright (C) 2023 Maxim [maxirmx] Samsonov (www.sw.consulting)
 // All rights reserved.
 // This file is a part of s-tracker applcation
@@ -24,56 +24,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { VDataTable } from 'vuetify/lib/labs/components.mjs'
-import router from '../router'
-import { statuses } from '@/helpers/statuses.js'
-
-export default {
-  components: {
-    VDataTable
-  },
-  methods: {
-    getStatus(item) {
-      var statusCode = item['selectable']['statusCode']
-      return statuses.getName(statusCode)
-    },
-    viewHistory(item) {
-      var number = item['selectable']['number']
-      router.push('shipment/' + number)
-    }
-  },
-
-  data() {
-    return {
-      itemsPerPage: 5,
-      headers: [
-        { title: 'Номер', align: 'start', key: 'id' },
-        { title: 'Фамилия', align: 'start', key: 'lastName' },
-        { title: 'Имя', align: 'start', key: 'firstName' },
-        { title: 'Отчество', align: 'start', key: 'patronimic' },
-        { title: 'Эл. почта', align: 'start', key: 'email' },
-        { title: 'Организация', align: 'start', key: 'organization' },
-        { title: 'Права', align: 'start', key: 'credentials', sortable: 'false' },
-        { title: '', align: 'center', key: 'actions', sortable: 'false' }
-      ],
-      users: []
-    }
-  }
-}
+import CustUsers from '@/components/CustUsers.vue'
 </script>
 
 <template>
-  <h1 class="orange">Пользователи</h1>
-  <hr class="hr" />
-
-  <v-data-table
-    v-model:items-per-page="itemsPerPage"
-    :headers="headers"
-    :items="users"
-    class="elevation-1"
-  >
-    <template v-slot:[`item.actions`]="{ item }">
-      <v-icon size="small" class="fa fa-eye" @click="viewHistory(item)"> </v-icon>
-    </template>
-  </v-data-table>
+  <main>
+    <CustUsers />
+  </main>
 </template>

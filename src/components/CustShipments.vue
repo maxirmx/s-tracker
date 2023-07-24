@@ -29,6 +29,8 @@ import router from '@/router'
 import { statuses } from '@/helpers/statuses.js'
 import { shipments } from '@/stores/demo.shipments.js'
 
+import { useAuthStore } from '@/stores/auth.store.js'
+
 export default {
   components: {
     VDataTable
@@ -49,7 +51,8 @@ export default {
 
   data() {
     return {
-      itemsPerPage: 5,
+      itemsPerPage: 10,
+      authStore: useAuthStore(),
       headers: [
         { title: 'Номер', align: 'start', key: 'number' },
         { title: 'Место', align: 'center', key: 'location' },
@@ -67,6 +70,16 @@ export default {
   <h1 class="orange">Отправления</h1>
   <hr class="hr" />
 
+  <div class="wrapper" v-if="authStore.user.isManager">
+    <router-link :to="'/shipment/add'" class="link">
+      <font-awesome-icon
+        size="1x"
+        icon="fa-solid fa-truck-fast"
+        class="link"
+      />&nbsp;&nbsp;&nbsp;Создать отправление
+    </router-link>
+  </div>
+
   <v-data-table
     v-model:items-per-page="itemsPerPage"
     :headers="headers"
@@ -80,7 +93,9 @@ export default {
 
     <template v-slot:[`item.actions`]="{ item }">
       <h4 class="orange btn-wrapper">
-        <button @click="viewHistory(item)" class="anti-btn fa fa-arrow-right-to-bracket"></button>
+        <button @click="viewHistory(item)" class="anti-btn">
+          <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-to-bracket" class="anti-btn" />
+        </button>
       </h4>
     </template>
   </v-data-table>

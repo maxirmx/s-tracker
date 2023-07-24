@@ -46,7 +46,16 @@ deauth()
 
       <nav v-if="authStore.user">
         <RouterLink to="/shipments" class="link">Отправления</RouterLink>
-        <RouterLink to="/settings" class="link">Настройки</RouterLink>
+        <RouterLink
+          v-if="!authStore.user.isAdmin"
+          :to="'/settings/' + authStore.user.id"
+          class="link"
+          >Настройки</RouterLink
+        >
+        <RouterLink v-if="authStore.user.isAdmin" to="/users" class="link">Пользователи</RouterLink>
+        <RouterLink v-if="authStore.user.isAdmin" to="/organizations" class="link"
+          >Организации</RouterLink
+        >
         <RouterLink to="/login" custom v-slot="{ href }">
           <a :href="href" @click="deauth()" class="link">Выход</a>
         </RouterLink>
