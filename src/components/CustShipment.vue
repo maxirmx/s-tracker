@@ -28,37 +28,70 @@ import '@fortawesome/fontawesome-free/css/all.css'
 
 import HistoryItem from '@/components/HistoryItem.vue'
 import { statuses } from '@/helpers/statuses.js'
+import { stcodes } from '@/helpers/statuses.js'
+import { shipments } from '@/stores/demo.shipments.js'
 import { shipment } from '@/stores/demo.shipment.js'
+import DeliveryTimeIcon from '@/components/icons/IconDeliveryTime.vue'
 
 import { useAuthStore } from '@/stores/auth.store.js'
 const authStore = useAuthStore()
+
+const props = defineProps({
+  shipmentNumber: {
+    type: String,
+    required: true
+  }
+})
+
+const shp = shipments.items.find((x) => x.shipmentNumber === props.shipmentNumber)
+const history = shipment.history.filter(function (historyItem) {
+  return historyItem.shipmentNumber === props.shipmentNumber
+})
+const lastStatus = history.reduce((last, status) => (last.id > status.id ? last : status))
 </script>
 
 <template>
   <h1 class="orange btn-wrapper">
-    <span>История отправления {{ $route.params.number }}</span>
+    <span>История отправления {{ props.shipmentNumber }}</span>
     <button @click="$router.push('/shipments')">
       <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-from-bracket" class="btn" />
     </button>
   </h1>
   <hr class="hr" />
   <div class="wrapper" v-if="authStore.user.isManager">
-    <router-link :to="'/status/add/' + $route.params.number" class="link"
-      ><font-awesome-icon size="1x" icon="fa-solid fa-calendar-plus" class="link" /> Добавить новый
-      статус</router-link
+    <router-link
+      v-if="lastStatus.status != stcodes.DELIVERED"
+      :to="'/status/add/' + props.shipmentNumber"
+      class="link"
     >
+      <font-awesome-icon size="1x" icon="fa-solid fa-calendar-plus" class="link" /> Добавить новый
+      статус
+    </router-link>
     &nbsp;&nbsp;&nbsp;
-    <router-link :to="'/status/edit/' + shipment.history[0].id" class="link"
+    <router-link :to="'/status/edit/' + lastStatus.id" class="link"
       ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить
       последний статус</router-link
     >
   </div>
-  <HistoryItem v-for="item in shipment.history" :key="item">
+  <br /><br />
+
+  <div v-if="lastStatus.status != stcodes.DELIVERED">
+    <HistoryItem>
+      <template #icon>
+        <component :is="DeliveryTimeIcon"></component>
+      </template>
+      <template #heading> Ожидаемая дата прибытия в пункт назначения</template>
+      {{ shp.ddate }}&nbsp;&nbsp;&nbsp;{{ shp.dest }}
+    </HistoryItem>
+    <hr class="hr-light" />
+  </div>
+  <HistoryItem v-for="item in history" :key="item">
     <template #icon>
       <component :is="statuses.getIcon(item.status)"></component>
     </template>
     <template #heading> {{ statuses.getName(item.status) }} </template>
-    {{ item.date }}&nbsp;&nbsp;&nbsp;{{ item.location }}
+    {{ item.date }}&nbsp;&nbsp;&nbsp;{{ item.location }} <br />
+    <span v-if="item.comment">{{ item.comment }}</span>
   </HistoryItem>
 </template>
 

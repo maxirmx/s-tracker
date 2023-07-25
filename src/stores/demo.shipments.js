@@ -28,34 +28,44 @@ import { stcodes } from '@/helpers/statuses.js'
 export const shipments = {
   items: [
     {
-      number: '1034A7',
+      shipmentNumber: '1034A7',
       location: 'Kuala Lumpur, ML',
       statusCode: stcodes.COLLECTED,
-      date: '12/07/2023'
+      date: '12.07.2023',
+      ddate: '12.08.2023',
+      dest: 'Весьегонск, РФ'
     },
     {
-      number: '2234A1',
+      shipmentNumber: '2234A1',
       location: 'Тикси, РФ',
       statusCode: stcodes.REGISTERED,
-      date: '14/07/2023'
+      date: '14.07.2023',
+      ddate: '14.08.2023',
+      dest: 'Hanga Roa, CL'
     },
     {
-      number: '2274A1',
+      shipmentNumber: '2274A1',
       location: 'Струги Красные, РФ',
       statusCode: stcodes.IN_STORAGE,
-      date: '15/07/2023'
+      date: '15.07.2023',
+      ddate: '03.08.2023',
+      dest: 'Kutaisi, GE'
     },
     {
-      number: '2274A4',
+      shipmentNumber: '2274A4',
       location: 'Лесосибирск, РФ',
       statusCode: stcodes.DELIVERED,
-      date: '15/07/2023'
+      date: '15.07.2023',
+      ddate: '15.07.2023',
+      dest: 'Лесосибирск, РФ'
     },
     {
-      number: '1234A1',
+      shipmentNumber: '1234A1',
       location: 'Опочка, РФ',
       statusCode: stcodes.DELIVERED,
-      date: '21/07/2023'
+      date: '21.07.2023',
+      ddate: '21.07.2023',
+      dest: 'Опочка, РФ'
     }
   ]
 }

@@ -39,6 +39,6 @@ const shp = shipment.history.find((x) => x.id === id)
 
 <template>
   <main>
-    <ItemStatus :create="false" :statusId="id" :shipmentId="shp ? shp.shipmentId : null" />
+    <ItemStatus :create="false" :statusId="id" :shipmentNumber="shp ? shp.shipmentNumber : null" />
   </main>
 </template>

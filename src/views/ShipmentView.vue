@@ -25,10 +25,17 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import CustShipment from '@/components/CustShipment.vue'
+
+const props = defineProps({
+  shipmentNumber: {
+    type: String,
+    required: true
+  }
+})
 </script>
 
 <template>
   <main>
-    <CustShipment />
+    <CustShipment :shipmentNumber="props.shipmentNumber" />
   </main>
 </template>

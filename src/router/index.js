@@ -54,7 +54,7 @@ const router = createRouter({
       component: () => import('@/views/ShipmentsView.vue')
     },
     {
-      path: '/shipment/:number',
+      path: '/shipment/:shipmentNumber',
       name: 'Отправлениe',
       component: () => import('@/views/ShipmentView.vue'),
       props: true
@@ -66,7 +66,7 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/status/add/:shipmentId',
+      path: '/status/add/:shipmentNumber',
       name: 'Добавить статус отправления',
       component: () => import('@/views/AddStatusView.vue'),
       props: true

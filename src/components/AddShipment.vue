@@ -34,10 +34,12 @@ import { stcodes } from '@/helpers/statuses.js'
 import { statuses } from '@/helpers/statuses.js'
 
 const schema = Yup.object().shape({
-  number: Yup.string().required('Укажите номер отправления'),
+  shipmentNumber: Yup.string().required('Укажите номер отправления'),
   status: Yup.string().required('Выберите статус'),
+  dest: Yup.string().required('Укажите пункт назначения'),
   location: Yup.string().required('Укажите местонахождение'),
-  date: Yup.string().required('Укажите дату')
+  date: Yup.string().required('Укажите дату'),
+  ddate: Yup.string().required('Укажите ожидаемую дату прибытия')
 })
 
 function onSubmit(values /*, { setErrors } */) {
@@ -46,10 +48,13 @@ function onSubmit(values /*, { setErrors } */) {
 }
 
 const status = {
-  number: '',
+  shipmentNumber: '',
   status: stcodes.REGISTERED,
   location: '',
-  date: moment().format('YYYY-MM-DD')
+  date: moment().format('YYYY-MM-DD'),
+  ddate: '',
+  dest: '',
+  comment: ''
 }
 </script>
 
@@ -64,9 +69,9 @@ const status = {
       v-slot="{ errors, isSubmitting }"
     >
       <div class="form-group">
-        <label for="number" class="label">Номер отправления:</label>
+        <label for="shipmentNumber" class="label">Номер отправления:</label>
         <Field
-          name="number"
+          name="shipmentNumber"
           type="text"
           class="form-control input"
           :class="{ 'is-invalid': errors.тгьиук }"
@@ -109,6 +114,37 @@ const status = {
       </div>
 
       <div class="form-group">
+        <label for="comment" class="label">Комментарий:</label>
+        <Field
+          name="comment"
+          type="text"
+          class="form-control input"
+          :class="{ 'is-invalid': errors.comment }"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="dest" class="label">Пункт назначения:</label>
+        <Field
+          name="dest"
+          type="text"
+          class="form-control input"
+          :class="{ 'is-invalid': errors.dest }"
+          placeholder="Город, Страна"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="ddate" class="label">Ожидаемая дата прибытия:</label>
+        <Field
+          name="ddate"
+          type="date"
+          class="form-control input"
+          :class="{ 'is-invalid': errors.ddate }"
+        />
+      </div>
+
+      <div class="form-group">
         <button class="button" type="submit" :disabled="isSubmitting">
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           Сохранить
@@ -118,10 +154,15 @@ const status = {
           Отменить
         </button>
       </div>
-      <div v-if="errors.number" class="alert alert-danger mt-3 mb-0">{{ errors.number }}</div>
+      <div v-if="errors.shipmentNumber" class="alert alert-danger mt-3 mb-0">
+        {{ errors.shipmentNumber }}
+      </div>
       <div v-if="errors.status" class="alert alert-danger mt-3 mb-0">{{ errors.status }}</div>
       <div v-if="errors.location" class="alert alert-danger mt-3 mb-0">{{ errors.location }}</div>
       <div v-if="errors.date" class="alert alert-danger mt-3 mb-0">{{ errors.date }}</div>
+      <div v-if="errors.dest" class="alert alert-danger mt-3 mb-0">{{ errors.dest }}</div>
+      <div v-if="errors.ddate" class="alert alert-danger mt-3 mb-0">{{ errors.ddate }}</div>
+      <div v-if="errors.comment" class="alert alert-danger mt-3 mb-0">{{ errors.comment }}</div>
     </Form>
   </div>
 </template>
