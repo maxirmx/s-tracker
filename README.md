@@ -1,6 +1,8 @@
 # s-tracker
 
-This template should help get you started developing with Vue 3 in Vite.
+Delivery tracking application front-end
+
+[![CI workflow](https://github.com/maxirmx/s-tracker/actions/workflows/ci.yml/badge.svg)](https://github.com/maxirmx/s-tracker/actions/workflows/ci.yml)
 
 ## Recommended IDE Setup
 
