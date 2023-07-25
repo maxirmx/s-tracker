@@ -58,7 +58,8 @@ const status = {
       location: pstatus ? pstatus.location : '',
       date: pstatus ? moment(pstatus.date, 'dd.MM.YYYY').format('YYYY-MM-DD') : '',
       dest: shp ? shp.dest : '',
-      ddate: shp ? moment(shp.ddate, 'dd.MM.YYYY').format('YYYY-MM-DD') : '',
+//      ddate: shp ? moment(shp.ddate, 'dd.MM.YYYY').format('YYYY-MM-DD') : '',
+      ddate: '',
       comment: pstatus ? pstatus.comment : ''
 }
 

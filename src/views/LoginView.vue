@@ -87,8 +87,8 @@ function onSubmit(values, { setErrors }) {
           "
           class="button button-s"
         >
-          <font-awesome-icon v-if="showPassword" icon="fa-solid fa-eye" />
-          <font-awesome-icon v-if="!showPassword" icon="fa-solid fa-eye-slash" />
+          <font-awesome-icon v-if="!showPassword" icon="fa-solid fa-eye" />
+          <font-awesome-icon v-if="showPassword" icon="fa-solid fa-eye-slash" />
         </button>
       </div>
       <div class="form-group">
