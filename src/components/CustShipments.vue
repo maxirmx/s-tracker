@@ -44,8 +44,8 @@ export default {
       return item['selectable']['location'] + '   ' + item['selectable']['date']
     },
     viewHistory(item) {
-      var number = item['selectable']['number']
-      router.push('shipment/' + number)
+      var shipmentNumber = item['selectable']['shipmentNumber']
+      router.push('shipment/' + shipmentNumber)
     }
   },
 
@@ -54,7 +54,7 @@ export default {
       itemsPerPage: 10,
       authStore: useAuthStore(),
       headers: [
-        { title: 'Номер', align: 'start', key: 'number' },
+        { title: 'Номер', align: 'start', key: 'shipmentNumber' },
         { title: 'Место', align: 'center', key: 'location' },
         { title: 'Статус', align: 'center', key: 'statuses' },
         { title: 'Дата', align: 'center', key: 'date' },

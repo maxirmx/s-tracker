@@ -33,6 +33,15 @@
   margin-bottom: 50px;
 }
 
+.hr-light {
+  position: relative;
+  top: 0px;
+  border: none;
+  height: 2px;
+  background: gray;
+  margin-bottom: 50px;
+}
+
 .input {
   width: 60%;
   display: inline-block;

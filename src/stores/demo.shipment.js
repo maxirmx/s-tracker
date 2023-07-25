@@ -27,110 +27,41 @@ import { stcodes } from '@/helpers/statuses.js'
 
 export const shipment = {
   history: [
-    {
-      id: 1115,
-      status: stcodes.DELIVERED,
-      date: '21.07.2023',
-      location: 'Опочка, РФ',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 1114,
-      status: stcodes.OUT_OF_STORAGE,
-      date: '21.07.2023',
-      location: 'Псков, РФ',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 1112,
-      status: stcodes.IN_STORAGE,
-      date: '20.07.2023',
-      location: 'Псков, РФ',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 1111,
-      status: stcodes.OUT_OF_STORAGE,
-      date: '19.07.2023',
-      location: 'Новороссийск, РФ',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 904,
-      status: stcodes.CUSTOMS_END,
-      date: '19.07.2023',
-      location: 'Новороссийск, РФ',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 805,
-      status: stcodes.CUSTOMS_START,
-      date: '16.07.2023',
-      location: 'Новороссийск, РФ',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 706,
-      status: stcodes.IN_STORAGE,
-      date: '16.07.2023',
-      location: 'Новороссийск, РФ',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 607,
-      status: stcodes.OUT_OF_STORAGE,
-      date: '14.07.2023',
-      location: 'Newark, US',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 508,
-      status: stcodes.CUSTOMS_END,
-      date: '13.07.2023',
-      location: 'Newark, US',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 409,
-      status: stcodes.CUSTOMS_START,
-      date: '12.07.2023',
-      location: 'Newark, US',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 310,
-      status: stcodes.IN_STORAGE,
-      date: '10.07.2023',
-      location: 'Newark, US',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 211,
-      status: stcodes.OUT_OF_STORAGE,
-      date: '10.07.2023',
-      location: 'Buffalo, US',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 112,
-      status: stcodes.IN_STORAGE,
-      date: '02.07.2023',
-      location: 'Buffalo, US',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 14,
-      status: stcodes.COLLECTED,
-      date: '02.07.2023',
-      location: 'Montreal, CA',
-      shipmentId: '1234A1'
-    },
-    {
-      id: 12,
-      status: stcodes.REGISTERED,
-      date: '01.07.2023',
-      location: 'Montreal, CA',
-      shipmentId: '1234A1'
-    }
+    { id: 1115, status: stcodes.DELIVERED,        date: '21.07.2023', location: 'Опочка, РФ',         shipmentNumber: '1234A1',  comment: 'В Опочке было весело'                  },
+    { id: 1114, status: stcodes.OUT_OF_STORAGE,   date: '21.07.2023', location: 'Псков, РФ',          shipmentNumber: '1234A1',  comment: 'Во Пскове было интересно'              },
+    { id: 1112, status: stcodes.IN_STORAGE,       date: '20.07.2023', location: 'Псков, РФ',          shipmentNumber: '1234A1',                                                   },
+    { id: 1111, status: stcodes.OUT_OF_STORAGE,   date: '19.07.2023', location: 'Новороссийск, РФ',   shipmentNumber: '1234A1'                                                    },
+    { id: 904,  status: stcodes.CUSTOMS_END,      date: '19.07.2023', location: 'Новороссийск, РФ',   shipmentNumber: '1234A1'                                                    },
+    { id: 805,  status: stcodes.CUSTOMS_START,    date: '16.07.2023', location: 'Новороссийск, РФ',   shipmentNumber: '1234A1',                                                   },
+    { id: 706,  status: stcodes.IN_STORAGE,       date: '16.07.2023', location: 'Новороссийск, РФ',   shipmentNumber: '1234A1', comment: 'В Новороссийске было солнечно'          },
+    { id: 607,  status: stcodes.OUT_OF_STORAGE,   date: '14.07.2023', location: 'Newark, US',         shipmentNumber: '1234A1',                                                   },
+    { id: 508,  status: stcodes.CUSTOMS_END,      date: '13.07.2023', location: 'Newark, US',         shipmentNumber: '1234A1'                                                    },
+    { id: 409,  status: stcodes.CUSTOMS_START,    date: '12.07.2023', location: 'Newark, US',         shipmentNumber: '1234A1'                                                    },
+    { id: 310,  status: stcodes.IN_STORAGE,       date: '10.07.2023', location: 'Newark, US',         shipmentNumber: '1234A1', comment: 'В Ньюарке протестовали афроамериканцы'  },
+    { id: 211,  status: stcodes.OUT_OF_STORAGE,   date: '10.07.2023', location: 'Buffalo, US',        shipmentNumber: '1234A1'                                                    },
+    { id: 112,  status: stcodes.IN_STORAGE,       date: '02.07.2023', location: 'Buffalo, US',        shipmentNumber: '1234A1', comment: 'В Буффало горел лес'                    },
+    { id: 14,   status: stcodes.COLLECTED,        date: '01.07.2023', location: 'Montreal, CA',       shipmentNumber: '1234A1', comment: 'В Монреале шёл дождь'                   },
+    { id: 11,   status: stcodes.REGISTERED,       date: '01.07.2023', location: 'Montreal, CA',       shipmentNumber: '1234A1'                                                    },
+
+    { id: 1125, status: stcodes.DELIVERED,        date: '15.07.2023', location: 'Лесосибирск, РФ',    shipmentNumber: '2274A4',  comment: 'В Лесосибирске было страшно'           },
+    { id: 1121, status: stcodes.OUT_OF_STORAGE,   date: '12.07.2023', location: 'Дудинка, РФ',        shipmentNumber: '2274A4'                                                    },
+    { id: 914,  status: stcodes.CUSTOMS_END,      date: '12.07.2023', location: 'Дудинка, РФ',        shipmentNumber: '2274A4'                                                    },
+    { id: 815,  status: stcodes.CUSTOMS_START,    date: '09.07.2023', location: 'Дудинка, РФ',        shipmentNumber: '2274A4',                                                   },
+    { id: 716,  status: stcodes.IN_STORAGE,       date: '09.07.2023', location: 'Дудинка, РФ',        shipmentNumber: '2274A4', comment: 'В Дудинке было холодно'                 },
+    { id: 617,  status: stcodes.OUT_OF_STORAGE,   date: '07.07.2023', location: 'Oslo, NO',           shipmentNumber: '2274A4',                                                   },
+    { id: 518,  status: stcodes.CUSTOMS_END,      date: '06.07.2023', location: 'Oslo, NO',           shipmentNumber: '2274A4'                                                    },
+    { id: 419,  status: stcodes.CUSTOMS_START,    date: '05.07.2023', location: 'Oslo, NO',           shipmentNumber: '2274A4'                                                    },
+    { id: 320,  status: stcodes.IN_STORAGE,       date: '03.07.2023', location: 'Oslo, NO',           shipmentNumber: '2274A4', comment: 'В Осло был туман'                       },
+    { id: 24,   status: stcodes.COLLECTED,        date: '22.06.2023', location: 'Malmo, SE',          shipmentNumber: '2274A4', comment: 'Мальмё - дыра дырой'                    },
+    { id: 21,   status: stcodes.REGISTERED,       date: '22.06.2023', location: 'Malmo, SE',          shipmentNumber: '2274A4'                                                    },
+
+    { id: 330,  status: stcodes.IN_STORAGE,       date: '03.07.2023', location: 'Псков, РФ',          shipmentNumber: '2274A1', comment: 'Так и лежит две недели ...'             },
+    { id: 34,   status: stcodes.COLLECTED,        date: '22.06.2023', location: 'Струги Красные, РФ', shipmentNumber: '2274A1',                                                   },
+    { id: 31,   status: stcodes.REGISTERED,       date: '22.06.2023', location: 'Струги Красные, РФ', shipmentNumber: '2274A1', comment: 'Название красивое'                      },
+
+    { id: 41,   status: stcodes.REGISTERED,       date: '14.07.2023', location: 'Тикси, РФ',          shipmentNumber: '2234A1', comment: 'Когда растает снег ...'                 },
+
+    { id: 54,   status: stcodes.COLLECTED,        date: '12.07.2023', location: 'Kuala Lumpur, ML',   shipmentNumber: '1034A7',                                                   },
+    { id: 51,   status: stcodes.REGISTERED,       date: '10.07.2023', location: 'Kuala Lumpur, ML',   shipmentNumber: '1034A7', comment: 'Тут убить человека стоит 5 баксов'      },
   ]
 }

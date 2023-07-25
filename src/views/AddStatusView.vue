@@ -27,7 +27,7 @@
 import ItemStatus from '@/components/ItemStatus.vue'
 
 const props = defineProps({
-  shipmentId: {
+  shipmentNumber: {
     type: String,
     required: true
   }
@@ -36,6 +36,6 @@ const props = defineProps({
 
 <template>
   <main>
-    <ItemStatus :create="true" :shipmentId="props.shipmentId" />
+    <ItemStatus :create="true" :shipmentNumber="props.shipmentNumber" />
   </main>
 </template>

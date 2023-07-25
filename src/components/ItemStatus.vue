@@ -32,15 +32,16 @@ import router from '@/router'
 
 import { statuses } from '@/helpers/statuses.js'
 import { shipment } from '@/stores/demo.shipment.js'
+import { shipments } from '@/stores/demo.shipments.js'
 
 const props = defineProps({
   create: {
     type: Boolean,
     required: true
   },
-  shipmentId: {
+  shipmentNumber: {
     type: String,
-    required: true
+    required: false
   },
   statusId: {
     type: Number,
@@ -48,28 +49,24 @@ const props = defineProps({
   }
 })
 
-let status = {
-  status: '',
-  location: '',
-  date: moment().format('YYYY-MM-DD')
-}
+const pstatus = props.statusId ? shipment.history.find((x) => x.id === props.statusId) : null
+const shpKey = pstatus ? pstatus.shipmentNumber : ( props.shipmentNumber ? props.shipmentNumber : null )
+const shp = shpKey ? shipments.items.find((x) => x.shipmentNumber === shpKey) : null
 
-if (props.statusId) {
-  const pstatus = shipment.history.find((x) => x.id === props.statusId)
-  if (pstatus) {
-    status = {
-      status: pstatus.status,
-      location: pstatus.location,
-      date: moment(pstatus.date, 'dd.MM.YYYY').format('YYYY-MM-DD')
-    }
-  }
+const status = {
+      status: pstatus ? pstatus.status : '',
+      location: pstatus ? pstatus.location : '',
+      date: pstatus ? moment(pstatus.date, 'dd.MM.YYYY').format('YYYY-MM-DD') : '',
+      dest: shp ? shp.dest : '',
+      ddate: shp ? moment(shp.ddate, 'dd.MM.YYYY').format('YYYY-MM-DD') : '',
+      comment: pstatus ? pstatus.comment : ''
 }
-const shipmentId = props.create ? props.shipmentId : status.shipmentId
 
 const schema = Yup.object().shape({
   status: Yup.string().required('Выберите статус'),
   location: Yup.string().required('Укажите местонахождение'),
-  date: Yup.string().required('Укажите дату')
+  date: Yup.string().required('Укажите дату'),
+  ddate: Yup.string().required('Укажите ожидаемую дату прибытия' ),
 })
 
 function onSubmit(values /*, { setErrors } */) {
@@ -83,7 +80,9 @@ function getHeader() {
 </script>
 
 <template>
-  <h1 class="orange">{{ getHeader() }} отправления {{ shipmentId }}</h1>
+  <h1 class="orange">
+    {{ getHeader() }} отправления {{ shp ? shp.shipmentNumber : props.shipmentNumber }}
+  </h1>
   <hr class="hr" />
   <div class="settings">
     <Form
@@ -128,6 +127,38 @@ function getHeader() {
       </div>
 
       <div class="form-group">
+        <label for="comment" class="label">Комментарий:</label>
+        <Field
+          name="comment"
+          type="text"
+          class="form-control input"
+          :class="{ 'is-invalid': errors.comment }"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="dest" class="label">Пункт назначения:</label>
+        <Field
+          name="dest"
+          type="text"
+          class="form-control input"
+          :class="{ 'is-invalid': errors.dest }"
+          placeholder="Город, Страна"
+          :disabled = "true"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="ddate" class="label">Ожидаемая дата прибытия:</label>
+        <Field
+          name="ddate"
+          type="date"
+          class="form-control input"
+          :class="{ 'is-invalid': errors.ddate }"
+        />
+      </div>
+
+      <div class="form-group">
         <button class="button" type="submit" :disabled="isSubmitting">
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           Сохранить
@@ -140,6 +171,9 @@ function getHeader() {
       <div v-if="errors.status" class="alert alert-danger mt-3 mb-0">{{ errors.status }}</div>
       <div v-if="errors.location" class="alert alert-danger mt-3 mb-0">{{ errors.location }}</div>
       <div v-if="errors.date" class="alert alert-danger mt-3 mb-0">{{ errors.date }}</div>
+      <div v-if="errors.dest" class="alert alert-danger mt-3 mb-0">{{ errors.ddate }}</div>
+      <div v-if="errors.ddate" class="alert alert-danger mt-3 mb-0">{{ errors.ddate }}</div>
+      <div v-if="errors.comment" class="alert alert-danger mt-3 mb-0">{{ errors.comment }}</div>
     </Form>
   </div>
 </template>
