@@ -67,36 +67,38 @@ export default {
 </script>
 
 <template>
-  <h1 class="orange">Отправления</h1>
-  <hr class="hr" />
+  <div class="settings">
+    <h1 class="orange">Отправления</h1>
+    <hr class="hr" />
 
-  <div class="wrapper" v-if="authStore.user.isManager">
-    <router-link :to="'/shipment/add'" class="link">
-      <font-awesome-icon
-        size="1x"
-        icon="fa-solid fa-truck-fast"
-        class="link"
-      />&nbsp;&nbsp;&nbsp;Создать отправление
-    </router-link>
+    <div class="wrapper" v-if="authStore.user.isManager">
+      <router-link :to="'/shipment/add'" class="link">
+        <font-awesome-icon
+          size="1x"
+          icon="fa-solid fa-truck-fast"
+          class="link"
+        />&nbsp;&nbsp;&nbsp;Создать отправление
+      </router-link>
+    </div>
+
+    <v-data-table
+      v-model:items-per-page="itemsPerPage"
+      :headers="headers"
+      :items="shipments"
+      item-value="name"
+      class="elevation-1"
+    >
+      <template v-slot:[`item.statuses`]="{ item }">
+        {{ getStatus(item) }}
+      </template>
+
+      <template v-slot:[`item.actions`]="{ item }">
+        <h4 class="orange btn-wrapper">
+          <button @click="viewHistory(item)" class="anti-btn">
+            <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-to-bracket" class="anti-btn" />
+          </button>
+        </h4>
+      </template>
+    </v-data-table>
   </div>
-
-  <v-data-table
-    v-model:items-per-page="itemsPerPage"
-    :headers="headers"
-    :items="shipments"
-    item-value="name"
-    class="elevation-1"
-  >
-    <template v-slot:[`item.statuses`]="{ item }">
-      {{ getStatus(item) }}
-    </template>
-
-    <template v-slot:[`item.actions`]="{ item }">
-      <h4 class="orange btn-wrapper">
-        <button @click="viewHistory(item)" class="anti-btn">
-          <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-to-bracket" class="anti-btn" />
-        </button>
-      </h4>
-    </template>
-  </v-data-table>
 </template>

@@ -38,33 +38,35 @@ const headers = [
 </script>
 
 <template>
-  <h1 class="orange">Организации</h1>
-  <hr class="hr" />
+  <div class="settings">
+    <h1 class="orange">Организации</h1>
+    <hr class="hr" />
 
-  <div class="wrapper">
-    <router-link to="/organizations" class="link"
-      ><font-awesome-icon
-        size="1x"
-        icon="fa-solid fa-house-chimney-medical"
-        class="link"
-      />&nbsp;&nbsp;&nbsp;Создать организацию
-    </router-link>
+    <div class="wrapper">
+      <router-link to="/organizations" class="link"
+        ><font-awesome-icon
+          size="1x"
+          icon="fa-solid fa-house-chimney-medical"
+          class="link"
+        />&nbsp;&nbsp;&nbsp;Создать организацию
+      </router-link>
+    </div>
+
+    <v-data-table
+      v-if="organizations?.length"
+      v-model:items-per-page="itemsPerPage"
+      :headers="headers"
+      :items="organizations"
+      class="elevation-1"
+    >
+      <template v-slot:[`item.actions`]="{ item }">
+        <font-awesome-icon
+          size="1x"
+          icon="fa-solid fa-pen"
+          class="anti-btn"
+          @click="console.log(item)"
+        />
+      </template>
+    </v-data-table>
   </div>
-
-  <v-data-table
-    v-if="organizations?.length"
-    v-model:items-per-page="itemsPerPage"
-    :headers="headers"
-    :items="organizations"
-    class="elevation-1"
-  >
-    <template v-slot:[`item.actions`]="{ item }">
-      <font-awesome-icon
-        size="1x"
-        icon="fa-solid fa-pen"
-        class="anti-btn"
-        @click="console.log(item)"
-      />
-    </template>
-  </v-data-table>
 </template>

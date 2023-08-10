@@ -73,49 +73,51 @@ const headers = [
 </script>
 
 <template>
-  <h1 class="orange">Пользователи</h1>
-  <hr class="hr" />
+  <div class="settings">
+    <h1 class="orange">Пользователи</h1>
+    <hr class="hr" />
 
-  <div class="wrapper">
-    <router-link to="/register" class="link"
-      ><font-awesome-icon
-        size="1x"
-        icon="fa-solid fa-user-plus"
-        class="link"
-      />&nbsp;&nbsp;&nbsp;Зарегистрировать пользователя
-    </router-link>
-  </div>
+    <div class="wrapper">
+      <router-link to="/register" class="link"
+        ><font-awesome-icon
+          size="1x"
+          icon="fa-solid fa-user-plus"
+          class="link"
+        />&nbsp;&nbsp;&nbsp;Зарегистрировать пользователя
+      </router-link>
+    </div>
 
-  <v-data-table
-    v-if="users?.length"
-    v-model:items-per-page="itemsPerPage"
-    :headers="headers"
-    :items="users"
-    class="elevation-1"
-  >
-    <template v-slot:[`item.lastName`]="{ item }">
-      {{ item['selectable']['lastName'] }} {{ item['selectable']['firstName'] }}
-      {{ item['selectable']['patronimic'] }} ({{ item['selectable']['email'] }})
-    </template>
-    <template v-slot:[`item.organizationId`]="{ item }">
-      {{ getOrg(item) }}
-    </template>
-    <template v-slot:[`item.credentials`]="{ item }">
-      {{ getCredentials(item) }}
-    </template>
-    <template v-slot:[`item.actions`]="{ item }">
-      <font-awesome-icon
-        size="1x"
-        icon="fa-solid fa-pen"
-        class="anti-btn"
-        @click="userSettings(item)"
-      />
-    </template>
-  </v-data-table>
-  <div v-if="users?.loading" class="text-center m-5">
-    <span class="spinner-border spinner-border-lg align-center"></span>
-  </div>
-  <div v-if="users?.error" class="text-center m-5">
-    <div class="text-danger">Error loading user: {{ users.error }}</div>
+    <v-data-table
+      v-if="users?.length"
+      v-model:items-per-page="itemsPerPage"
+      :headers="headers"
+      :items="users"
+      class="elevation-1"
+    >
+      <template v-slot:[`item.lastName`]="{ item }">
+        {{ item['selectable']['lastName'] }} {{ item['selectable']['firstName'] }}
+        {{ item['selectable']['patronimic'] }} ({{ item['selectable']['email'] }})
+      </template>
+      <template v-slot:[`item.organizationId`]="{ item }">
+        {{ getOrg(item) }}
+      </template>
+      <template v-slot:[`item.credentials`]="{ item }">
+        {{ getCredentials(item) }}
+      </template>
+      <template v-slot:[`item.actions`]="{ item }">
+        <font-awesome-icon
+          size="1x"
+          icon="fa-solid fa-pen"
+          class="anti-btn"
+          @click="userSettings(item)"
+        />
+      </template>
+    </v-data-table>
+    <div v-if="users?.loading" class="text-center m-5">
+      <span class="spinner-border spinner-border-lg align-center"></span>
+    </div>
+    <div v-if="users?.error" class="text-center m-5">
+      <div class="text-danger">Error loading user: {{ users.error }}</div>
+    </div>
   </div>
 </template>

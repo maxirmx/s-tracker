@@ -138,9 +138,9 @@ function getCredentials() {
 </script>
 
 <template>
-  <h1 class="orange">{{ getTitle() }}</h1>
-  <hr class="hr" />
   <div class="settings">
+    <h1 class="orange">{{ getTitle() }}</h1>
+    <hr class="hr" />
     <Form
       @submit="onSubmit"
       :initial-values="user"

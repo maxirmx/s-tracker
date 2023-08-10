@@ -132,4 +132,14 @@ nav a:first-of-type {
     margin-top: 1rem;
   }
 }
+
+h1 {
+  font-weight: 500;
+  font-size: 2.2rem;
+  position: relative;
+  top: -10px;
+  @media (min-width: 768px) {
+    font-size: 2.6rem;
+  }
+}
 </style>

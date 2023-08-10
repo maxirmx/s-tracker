@@ -1,10 +1,8 @@
 @import './base.css';
 
 #app {
-  max-width: 2560px;
+  padding: 1.3rem;
   margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
 }
 
 .settings {
@@ -22,6 +20,7 @@
 .label {
   width: 35%;
   display: inline-block;
+  padding-right: 10px;
 }
 
 .hr {
@@ -90,10 +89,14 @@
   font-size: 1rem;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  width: 25%;
+  min-width: 25%;
   align-self: center;
   margin-bottom: 1rem;
   margin-right: 1rem;
+}
+
+.button-s {
+  min-width: 0;
 }
 
 .anti-button {
@@ -112,9 +115,10 @@
 }
 
 .button-s {
-  width: 10%;
+  width: 40px;
   align-self: right;
   margin-top: 0rem;
+  margin-right: 0;
   font-size: 1rem;
 }
 
@@ -126,7 +130,7 @@ a,
 }
 
 .link {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 
 .green {
@@ -142,6 +146,19 @@ a,
 
 .notscrollable {
   overflow-y: clip;
+}
+
+.v-data-table-footer .v-data-table-footer__items-per-page > span,
+.v-data-table-footer .v-data-table-footer__items-per-page {
+  padding-inline-end: 5px;
+}
+
+.v-data-table-footer .v-data-table-footer__info {
+  display: block;
+  text-align: right;
+  width: 100%;
+  padding-top: 10px;
+  padding-right: 16px;
 }
 
 @media (hover: hover) {
@@ -164,6 +181,32 @@ a,
   .button:focus {
     outline: none;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@media (min-width: 768px) {
+  #app {
+    padding: 2rem;
+  }
+  .button-s {
+    margin-right: 1rem;
+    width: 10%;
+  }
+  .link {
+    font-size: 1.2rem;
+  }
+
+  .v-data-table-footer .v-data-table-footer__info,
+  .v-data-table-footer .v-data-table-footer__items-per-page,
+  .v-data-table-footer .v-data-table-footer__items-per-page > span {
+    padding-inline-end: 24px;
+  }
+
+  .v-data-table-footer .v-data-table-footer__info {
+    display: inline-block;
+    width: auto;
+    padding-top: 0;
+    padding-right: 0;
   }
 }
 

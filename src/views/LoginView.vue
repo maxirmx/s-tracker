@@ -103,3 +103,34 @@ function onSubmit(values, { setErrors }) {
     </Form>
   </div>
 </template>
+
+<style>
+/* .form-group {
+  display: flex;
+  flex-direction: column;
+  @media (min-width: 768px) {
+    display: block;
+  }
+} */
+
+.form-group .label {
+  width: 100%;
+  @media (min-width: 768px) {
+    width: 35%;
+  }
+}
+
+.form-group .input {
+  width: 100%;
+  &.password {
+      width: calc(100% - 40px);
+    }
+  @media (min-width: 768px) {
+    width: 60%;
+    &.password {
+      width: 50%;
+    }
+  }
+}
+
+</style>

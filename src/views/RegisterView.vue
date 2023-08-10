@@ -32,3 +32,4 @@ import UserSettings from '@/components/UserSettings.vue'
     <UserSettings :register="true" />
   </main>
 </template>
+

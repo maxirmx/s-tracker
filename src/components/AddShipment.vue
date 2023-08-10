@@ -59,110 +59,124 @@ const status = {
 </script>
 
 <template>
-  <h1 class="orange">Новое отправление</h1>
-  <hr class="hr" />
   <div class="settings">
-    <Form
-      @submit="onSubmit"
-      :initial-values="status"
-      :validation-schema="schema"
-      v-slot="{ errors, isSubmitting }"
-    >
-      <div class="form-group">
-        <label for="shipmentNumber" class="label">Номер отправления:</label>
-        <Field
-          name="shipmentNumber"
-          type="text"
-          class="form-control input"
-          :class="{ 'is-invalid': errors.тгьиук }"
-          placeholder="Номер отправления"
-        />
-      </div>
-      <div class="form-group">
-        <label for="status" class="label">Статус:</label>
-        <Field
-          name="status"
-          as="select"
-          class="form-control input select"
-          :class="{ 'is-invalid': errors.status }"
-        >
-          <option value="">Выберите статус</option>
-          <option v-for="status in statuses.items" :key="status" :value="status.id">
-            {{ status.name }}
-          </option>
-        </Field>
-      </div>
-      <div class="form-group">
-        <label for="location" class="label">Местонахождение:</label>
-        <Field
-          name="location"
-          type="text"
-          class="form-control input"
-          :class="{ 'is-invalid': errors.location }"
-          placeholder="Город, Страна"
-        />
-      </div>
+    <h1 class="orange">Новое отправление</h1>
+    <hr class="hr" />
+    <div class="settings">
+      <Form
+        @submit="onSubmit"
+        :initial-values="status"
+        :validation-schema="schema"
+        v-slot="{ errors, isSubmitting }"
+      >
+        <div class="form-group">
+          <label for="shipmentNumber" class="label">Номер отправления:</label>
+          <Field
+            name="shipmentNumber"
+            type="text"
+            class="form-control input"
+            :class="{ 'is-invalid': errors.тгьиук }"
+            placeholder="Номер отправления"
+          />
+        </div>
+        <div class="form-group">
+          <label for="status" class="label">Статус:</label>
+          <Field
+            name="status"
+            as="select"
+            class="form-control input select"
+            :class="{ 'is-invalid': errors.status }"
+          >
+            <option value="">Выберите статус</option>
+            <option v-for="status in statuses.items" :key="status" :value="status.id">
+              {{ status.name }}
+            </option>
+          </Field>
+        </div>
+        <div class="form-group">
+          <label for="location" class="label">Местонахождение:</label>
+          <Field
+            name="location"
+            type="text"
+            class="form-control input"
+            :class="{ 'is-invalid': errors.location }"
+            placeholder="Город, Страна"
+          />
+        </div>
 
-      <div class="form-group">
-        <label for="date" class="label">Дата:</label>
-        <Field
-          name="date"
-          type="date"
-          class="form-control input"
-          :class="{ 'is-invalid': errors.date }"
-        />
-      </div>
+        <div class="form-group">
+          <label for="date" class="label">Дата:</label>
+          <Field
+            name="date"
+            type="date"
+            class="form-control input"
+            :class="{ 'is-invalid': errors.date }"
+          />
+        </div>
 
-      <div class="form-group">
-        <label for="comment" class="label">Комментарий:</label>
-        <Field
-          name="comment"
-          type="text"
-          class="form-control input"
-          :class="{ 'is-invalid': errors.comment }"
-        />
-      </div>
+        <div class="form-group">
+          <label for="comment" class="label">Комментарий:</label>
+          <Field
+            name="comment"
+            type="text"
+            class="form-control input"
+            :class="{ 'is-invalid': errors.comment }"
+          />
+        </div>
 
-      <div class="form-group">
-        <label for="dest" class="label">Пункт назначения:</label>
-        <Field
-          name="dest"
-          type="text"
-          class="form-control input"
-          :class="{ 'is-invalid': errors.dest }"
-          placeholder="Город, Страна"
-        />
-      </div>
+        <div class="form-group">
+          <label for="dest" class="label">Пункт назначения:</label>
+          <Field
+            name="dest"
+            type="text"
+            class="form-control input"
+            :class="{ 'is-invalid': errors.dest }"
+            placeholder="Город, Страна"
+          />
+        </div>
 
-      <div class="form-group">
-        <label for="ddate" class="label">Ожидаемая дата прибытия:</label>
-        <Field
-          name="ddate"
-          type="date"
-          class="form-control input"
-          :class="{ 'is-invalid': errors.ddate }"
-        />
-      </div>
+        <div class="form-group">
+          <label for="ddate" class="label">Ожидаемая дата прибытия:</label>
+          <Field
+            name="ddate"
+            type="date"
+            class="form-control input"
+            :class="{ 'is-invalid': errors.ddate }"
+          />
+        </div>
 
-      <div class="form-group">
-        <button class="button" type="submit" :disabled="isSubmitting">
-          <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
-          Сохранить
-        </button>
-        <button class="button" @click="$router.go(-1)" :disabled="isSubmitting">
-          <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
-          Отменить
-        </button>
-      </div>
-      <div v-if="errors.shipmentNumber" class="alert alert-danger mt-3 mb-0">
-        {{ errors.shipmentNumber }}
-      </div>
-      <div v-if="errors.status" class="alert alert-danger mt-3 mb-0">{{ errors.status }}</div>
-      <div v-if="errors.location" class="alert alert-danger mt-3 mb-0">{{ errors.location }}</div>
-      <div v-if="errors.date" class="alert alert-danger mt-3 mb-0">{{ errors.date }}</div>
-      <div v-if="errors.dest" class="alert alert-danger mt-3 mb-0">{{ errors.dest }}</div>
-      <div v-if="errors.ddate" class="alert alert-danger mt-3 mb-0">{{ errors.ddate }}</div>
-      <div v-if="errors.comment" class="alert alert-danger mt-3 mb-0">{{ errors.comment }}</div>
-    </Form>
+        <div class="form-group">
+          <button class="button" type="submit" :disabled="isSubmitting">
+            <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+            Сохранить
+          </button>
+          <button class="button" @click="$router.go(-1)" :disabled="isSubmitting">
+            <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
+            Отменить
+          </button>
+        </div>
+        <div v-if="errors.shipmentNumber" class="alert alert-danger mt-3 mb-0">
+          {{ errors.shipmentNumber }}
+        </div>
+        <div v-if="errors.status" class="alert alert-danger mt-3 mb-0">{{ errors.status }}</div>
+        <div v-if="errors.location" class="alert alert-danger mt-3 mb-0">{{ errors.location }}</div>
+        <div v-if="errors.date" class="alert alert-danger mt-3 mb-0">{{ errors.date }}</div>
+        <div v-if="errors.dest" class="alert alert-danger mt-3 mb-0">{{ errors.dest }}</div>
+        <div v-if="errors.ddate" class="alert alert-danger mt-3 mb-0">{{ errors.ddate }}</div>
+        <div v-if="errors.comment" class="alert alert-danger mt-3 mb-0">{{ errors.comment }}</div>
+      </Form>
+    </div>
   </div>
 </template>
+
+<style>
+h1 {
+  font-weight: 500;
+  font-size: 2.2rem;
+  position: relative;
+  top: -10px;
+  @media (min-width: 768px) {
+    font-size: 2.6rem;
+  }
+}
+</style>
