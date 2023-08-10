@@ -105,31 +105,33 @@ function onSubmit(values, { setErrors }) {
 </template>
 
 <style>
-/* .form-group {
-  display: flex;
-  flex-direction: column;
-  @media (min-width: 768px) {
-    display: block;
-  }
-} */
 
 .form-group .label {
   width: 100%;
-  @media (min-width: 768px) {
+}
+@media (min-width: 768px) {
+  .form-group .label {
     width: 35%;
   }
 }
 
 .form-group .input {
   width: 100%;
-  &.password {
-      width: calc(100% - 40px);
-    }
-  @media (min-width: 768px) {
+}
+
+@media (min-width: 768px) {
+  .form-group .input {
     width: 60%;
-    &.password {
-      width: 50%;
-    }
+  }
+}
+
+.form-group .input.password {
+  width: calc(100% - 40px);
+}
+
+@media (min-width: 768px) {
+  .form-group .input.password {
+    width: 50%;
   }
 }
 

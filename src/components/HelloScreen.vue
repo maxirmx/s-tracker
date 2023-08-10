@@ -48,9 +48,6 @@ h1 {
   font-size: 2.2rem;
   position: relative;
   top: -10px;
-  @media (min-width: 768px) {
-    font-size: 2.6rem;
-  }
 }
 
 h3 {
@@ -65,6 +62,12 @@ h3 {
 .version {
   font-size: 1rem;
   text-align: left;
+}
+
+@media (min-width: 768px) {
+  h1 {
+    font-size: 2.6rem;
+  }
 }
 
 @media (min-width: 1024px) {

@@ -138,7 +138,11 @@ h1 {
   font-size: 2.2rem;
   position: relative;
   top: -10px;
-  @media (min-width: 768px) {
+  
+}
+
+@media (min-width: 768px) {
+  h1 {
     font-size: 2.6rem;
   }
 }
