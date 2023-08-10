@@ -103,3 +103,36 @@ function onSubmit(values, { setErrors }) {
     </Form>
   </div>
 </template>
+
+<style>
+
+.form-group .label {
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .form-group .label {
+    width: 35%;
+  }
+}
+
+.form-group .input {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .form-group .input {
+    width: 60%;
+  }
+}
+
+.form-group .input.password {
+  width: calc(100% - 40px);
+}
+
+@media (min-width: 768px) {
+  .form-group .input.password {
+    width: 50%;
+  }
+}
+
+</style>
