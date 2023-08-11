@@ -1,5 +1,27 @@
 @import './base.css';
 
+body {
+  background-image: url('@/assets/bg-light.png');
+}
+
+@supports (background-image: url('@/assets/bg-light.webp')) {
+  body {
+    background-image: url('@/assets/bg-light.webp');
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-image: url('@/assets/bg-dark.jpg');
+  }
+
+  @supports (background-image: url('@/assets/bg-dark.webp')) {
+    body {
+      background-image: url('@/assets/bg-dark.webp');
+    }
+  }
+}
+
 #app {
   padding: 1.3rem;
   margin: 0 auto;
