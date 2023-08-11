@@ -61,7 +61,7 @@ h3 {
 
 .version {
   font-size: 1rem;
-  text-align: left;
+  text-align: center;
 }
 
 @media (min-width: 768px) {
@@ -73,6 +73,10 @@ h3 {
 @media (min-width: 1024px) {
   .greetings h1,
   .greetings h3 {
+    text-align: left;
+  }
+
+  .version {
     text-align: left;
   }
 }
