@@ -263,12 +263,12 @@ function getCredentials() {
 
       <div v-if="showAndEditCredentials()" class="form-group">
         <label for="isUser" class="label">Права</label>
+        <input id="isUser" name="isUser" type="checkbox" class="checkbox checkbox-styled" :checked="true" />
         <label for="isUser">Пользователь</label>
-        <input name="isUser" type="checkbox" class="checkbox" :checked="true" />
+        <input id="isManager" name="isManager" type="checkbox" class="checkbox checkbox-styled" :checked="_isManager()" />
         <label for="isManager">Менеджер</label>
-        <input name="isManager" type="checkbox" class="checkbox" :checked="_isManager()" />
+        <input id="isAdmin" type="checkbox" name="isAdmin" class="checkbox checkbox-styled" :checked="_isAdmin()" />
         <label for="isAdmin">Администратор</label>
-        <input type="checkbox" name="isAdmin" class="checkbox" :checked="_isAdmin()" />
       </div>
 
       <div class="form-group">
