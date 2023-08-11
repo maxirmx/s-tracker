@@ -195,7 +195,7 @@ a,
   content: '';
   position: absolute;
   right: 18px;
-  top: 5px;
+  top: 6px;
   background-image: url('@/assets/check-solid.svg');
   background-size: cover;
   width: 12px;
