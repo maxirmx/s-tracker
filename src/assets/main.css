@@ -161,6 +161,12 @@ a,
   padding-right: 16px;
 }
 
+.logo {
+  max-width: 200px;
+  margin: 0 auto;
+  display: block;
+}
+
 @media (hover: hover) {
   a:hover {
     color: #975102;
@@ -220,6 +226,11 @@ a,
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
+  }
+
+  .logo {
+    max-width: 100%;
+    margin: 0;
   }
 }
 
