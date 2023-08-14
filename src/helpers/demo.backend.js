@@ -72,6 +72,13 @@ function fakeBackend() {
       isManager: false
     }
   ]
+
+  let orgs = [
+    { id: 0, name: 'OOO "Карго Менеджемент"' },
+    { id: 1, name: 'OOO "Братан Турбо Дизель"' }
+  ]
+
+
   let realFetch = window.fetch
   window.fetch = function (url, opts) {
     return new Promise((resolve, reject) => {
@@ -90,6 +97,14 @@ function fakeBackend() {
             return updateUser()
           case url.match(/\/users\/\d+$/) && opts.method === 'DELETE':
             return deleteUser()
+          case url.endsWith('/orgs') && opts.method === 'GET':
+            return getOrgs()
+          case url.match(/\/orgs\/\d+$/) && opts.method === 'GET':
+            return getOrgById()
+          case url.match(/\/orgs\/\d+$/) && opts.method === 'PUT':
+            return updateOrg()
+          case url.match(/\/orgs\/\d+$/) && opts.method === 'DELETE':
+            return deleteOrg()
           default:
             // pass through any requests not handled above
             return realFetch(url, opts)
@@ -158,6 +173,36 @@ function fakeBackend() {
         if (!isAuthenticated()) return unauthorized()
 
         users = users.filter((x) => x.id !== idFromUrl())
+        return ok()
+      }
+
+      function getOrgs() {
+        if (!isAuthenticated()) return unauthorized()
+        return ok(orgs)
+      }
+
+      function getOrgById() {
+        if (!isAuthenticated()) return unauthorized()
+        const org = orgs.find((x) => x.id === idFromUrl())
+        return ok(org)
+      }
+
+      function updateOrg() {
+        if (!isAuthenticated()) return unauthorized()
+
+        let params = body()
+        let org = orgs.find((x) => x.id === idFromUrl())
+
+        // update and save user
+        Object.assign(org, params)
+
+        return ok()
+      }
+
+      function deleteOrg() {
+        if (!isAuthenticated()) return unauthorized()
+
+        orgs.filter((x) => x.id !== idFromUrl())
         return ok()
       }
 

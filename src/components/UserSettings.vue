@@ -31,7 +31,7 @@ import * as Yup from 'yup'
 //import router from '@/router'
 import { useUsersStore } from '@/stores/users.store.js'
 import { useAuthStore } from '@/stores/auth.store.js'
-import { organizations } from '@/stores/demo.orgs.js'
+import { useOrgsStore } from '@/stores/orgs.store.js'
 
 const props = defineProps({
   register: {
@@ -71,7 +71,14 @@ const showPassword2 = ref(false)
 
 const usersStore = useUsersStore()
 const authStore = useAuthStore()
+
+
+const orgsStore = useOrgsStore()
+const { orgs } = storeToRefs(orgsStore)
+orgsStore.getAll()
+
 let user = null
+let org = null
 
 if (!isRegister()) {
   ;({ user } = storeToRefs(usersStore))
@@ -95,10 +102,9 @@ function getButton() {
 }
 
 function getOrg() {
-  let org = null
-  if (user) {
-    org = organizations.find((org) => org.id === user.value.organizationId)
-  }
+  ;({ org } = storeToRefs(useOrgsStore))
+  org = orgsStore.getById(org.id)
+  console.log('Организация: ' + JSON.stringify(org))
   return org ? org.name : null
 }
 
@@ -248,7 +254,7 @@ function getCredentials() {
         >
           <option value="">Выберите организацию:</option>
           <option value="-1">(без организации)</option>
-          <option v-for="org in organizations" :key="org" :value="org.id">
+          <option v-for="org in orgs" :key="org" :value="org.id">
             {{ org.name }}
           </option>
         </Field>

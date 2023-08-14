@@ -29,11 +29,15 @@ import router from '../router'
 
 import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/stores/users.store.js'
-import { organizations } from '@/stores/demo.orgs.js'
+import { useOrgsStore } from '@/stores/orgs.store.js'
 
 const usersStore = useUsersStore()
 const { users } = storeToRefs(usersStore)
 usersStore.getAll()
+
+const orgsStore = useOrgsStore()
+const { orgs } = storeToRefs(orgsStore)
+orgsStore.getAll()
 
 function userSettings(item) {
   var id = item['selectable']['id']
@@ -42,9 +46,8 @@ function userSettings(item) {
 
 function getOrg(item) {
   let org = null
-  if (item) {
-    org = organizations.find((org) => org.id === item['selectable']['organizationId'])
-  }
+//  const orgsStore = useOrgsStore()
+//  orgsStore.getById(item['selectable']['organizationId'])
   return org ? org.name : null
 }
 

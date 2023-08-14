@@ -24,49 +24,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { VDataTable } from 'vuetify/lib/labs/components.mjs'
-//import router from '../router'
-
-import { organizations } from '@/stores/demo.orgs.js'
-
-const itemsPerPage = 10
-
-const headers = [
-  { title: 'Организация', align: 'start', key: 'name' },
-  { title: '', align: 'center', key: 'actions', sortable: 'false' }
-]
+import OrgSettings from '@/components/Org_Settings.vue'
 </script>
 
 <template>
-  <div class="settings">
-    <h1 class="orange">Организации</h1>
-    <hr class="hr" />
-
-    <div class="wrapper">
-      <router-link to="/organizations" class="link"
-        ><font-awesome-icon
-          size="1x"
-          icon="fa-solid fa-house-chimney-medical"
-          class="link"
-        />&nbsp;&nbsp;&nbsp;Создать организацию
-      </router-link>
-    </div>
-
-    <v-data-table
-      v-if="organizations?.length"
-      v-model:items-per-page="itemsPerPage"
-      :headers="headers"
-      :items="organizations"
-      class="elevation-1"
-    >
-      <template v-slot:[`item.actions`]="{ item }">
-        <font-awesome-icon
-          size="1x"
-          icon="fa-solid fa-pen"
-          class="anti-btn"
-          @click="console.log(item)"
-        />
-      </template>
-    </v-data-table>
-  </div>
+  <main>
+    <OrgSettings :register="true" />
+  </main>
 </template>

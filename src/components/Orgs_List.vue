@@ -24,11 +24,58 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import CustOrgs from '@/components/CustOrgs.vue'
+import { VDataTable } from 'vuetify/lib/labs/components.mjs'
+import router from '../router'
+import { storeToRefs } from 'pinia'
+import { useOrgsStore } from '@/stores/orgs.store.js'
+
+const orgsStore = useOrgsStore()
+const { orgs } = storeToRefs(orgsStore)
+orgsStore.getAll()
+
+function orgSettings(item) {
+  var id = item['selectable']['id']
+  router.push('org/edit/' + id)
+}
+
+const itemsPerPage = 10
+
+const headers = [
+  { title: 'Организация', align: 'start', key: 'name' },
+  { title: '', align: 'center', key: 'actions', sortable: 'false' }
+]
 </script>
 
 <template>
-  <main>
-    <CustOrgs />
-  </main>
+  <div class="settings">
+    <h1 class="orange">Организации</h1>
+    <hr class="hr" />
+
+    <div class="wrapper">
+      <router-link to="/org/add" class="link"
+        ><font-awesome-icon
+          size="1x"
+          icon="fa-solid fa-house-chimney-medical"
+          class="link"
+        />&nbsp;&nbsp;&nbsp;Зарегистрировать организацию
+      </router-link>
+    </div>
+
+    <v-data-table
+      v-if="orgs?.length"
+      v-model:items-per-page="itemsPerPage"
+      :headers="headers"
+      :items="orgs"
+      class="elevation-1"
+    >
+      <template v-slot:[`item.actions`]="{ item }">
+        <font-awesome-icon
+          size="1x"
+          icon="fa-solid fa-pen"
+          class="anti-btn"
+          @click="orgSettings(item)"
+        />
+      </template>
+    </v-data-table>
+  </div>
 </template>
