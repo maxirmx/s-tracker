@@ -222,7 +222,7 @@ a,
   background-size: cover;
   width: 12px;
   height: 12px;
-  transition: opacity .3s, transform .3s;
+  transition: opacity 0.3s, transform 0.3s;
   transform: translateY(-5px);
   opacity: 0;
 }

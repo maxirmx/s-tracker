@@ -104,9 +104,9 @@ function getOrg() {
     let org = null
     if (!orgs.value.loading) {
       org = orgs.value.find((o) => o.id === user.value.orgId)
-   }
-   return org ? org.name : ''
-   })
+    }
+    return org ? org.name : ''
+  })
   return org.value
 }
 
@@ -271,11 +271,29 @@ function getCredentials() {
 
       <div v-if="showAndEditCredentials()" class="form-group">
         <label for="isUser" class="label">Права</label>
-        <input id="isUser" name="isUser" type="checkbox" class="checkbox checkbox-styled" :checked="true" />
+        <input
+          id="isUser"
+          name="isUser"
+          type="checkbox"
+          class="checkbox checkbox-styled"
+          :checked="true"
+        />
         <label for="isUser">Пользователь</label>
-        <input id="isManager" name="isManager" type="checkbox" class="checkbox checkbox-styled" :checked="_isManager()" />
+        <input
+          id="isManager"
+          name="isManager"
+          type="checkbox"
+          class="checkbox checkbox-styled"
+          :checked="_isManager()"
+        />
         <label for="isManager">Менеджер</label>
-        <input id="isAdmin" type="checkbox" name="isAdmin" class="checkbox checkbox-styled" :checked="_isAdmin()" />
+        <input
+          id="isAdmin"
+          type="checkbox"
+          name="isAdmin"
+          class="checkbox checkbox-styled"
+          :checked="_isAdmin()"
+        />
         <label for="isAdmin">Администратор</label>
       </div>
 

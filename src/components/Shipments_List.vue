@@ -43,18 +43,18 @@ function getStatus(item) {
 }
 
 function viewHistory(item) {
-      var shipmentNumber = item['selectable']['shipmentNumber']
-      router.push('shipment/' + shipmentNumber)
+  var shipmentNumber = item['selectable']['shipmentNumber']
+  router.push('shipment/' + shipmentNumber)
 }
 
 const itemsPerPage = 10
 const headers = [
-        { title: 'Номер', align: 'start', key: 'shipmentNumber' },
-        { title: 'Место', align: 'center', key: 'location' },
-        { title: 'Статус', align: 'center', key: 'statuses' },
-        { title: 'Дата', align: 'center', key: 'date' },
-        { title: '', align: 'center', key: 'actions', sortable: 'false' }
-      ]
+  { title: 'Номер', align: 'start', key: 'shipmentNumber' },
+  { title: 'Место', align: 'center', key: 'location' },
+  { title: 'Статус', align: 'center', key: 'statuses' },
+  { title: 'Дата', align: 'center', key: 'date' },
+  { title: '', align: 'center', key: 'actions', sortable: 'false' }
+]
 </script>
 
 <template>
@@ -87,7 +87,11 @@ const headers = [
       <template v-slot:[`item.actions`]="{ item }">
         <h4 class="orange btn-wrapper">
           <button @click="viewHistory(item)" class="anti-btn">
-            <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-to-bracket" class="anti-btn" />
+            <font-awesome-icon
+              size="1x"
+              icon="fa-solid fa-arrow-right-to-bracket"
+              class="anti-btn"
+            />
           </button>
         </h4>
       </template>
@@ -98,6 +102,5 @@ const headers = [
     <div v-if="shipments?.error" class="text-center m-5">
       <div class="text-danger">Error loading shipments: {{ shipments.error }}</div>
     </div>
-
   </div>
 </template>

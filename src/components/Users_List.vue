@@ -50,9 +50,9 @@ function getOrg(item) {
     let org = null
     if (!orgs.value.loading) {
       org = orgs.value.find((o) => o.id === item['orgId'])
-   }
-   return org ? org.name : ''
-   })
+    }
+    return org ? org.name : ''
+  })
   return org.value
 }
 

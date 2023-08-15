@@ -42,7 +42,7 @@ const props = defineProps({
 })
 
 const schema = Yup.object().shape({
-  name: Yup.string().required('Необходимо указать название организации'),
+  name: Yup.string().required('Необходимо указать название организации')
 })
 
 function onSubmit(values /*, { setErrors } */) {
@@ -54,7 +54,7 @@ function isRegister() {
 }
 
 function getTitle() {
-  return (isRegister() ? 'Регистрация' : 'Редактирование') + ' организации';
+  return (isRegister() ? 'Регистрация' : 'Редактирование') + ' организации'
 }
 
 function getButton() {
@@ -68,7 +68,6 @@ if (!isRegister()) {
   ;({ org } = storeToRefs(orgsStore))
   orgsStore.getById(props.id)
 }
-
 </script>
 
 <template>
@@ -97,11 +96,7 @@ if (!isRegister()) {
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           {{ getButton() }}
         </button>
-        <button
-          class="button"
-          @click="$router.go(-1)"
-          :disabled="isSubmitting"
-        >
+        <button class="button" @click="$router.go(-1)" :disabled="isSubmitting">
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           Отменить
         </button>

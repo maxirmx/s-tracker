@@ -33,7 +33,6 @@ import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 
 import { statuses } from '@/helpers/statuses.js'
-import { shipments_statuses } from '@/stores/demo.shipment.js'
 
 const props = defineProps({
   create: {
@@ -42,7 +41,7 @@ const props = defineProps({
   },
   shipmentNumber: {
     type: String,
-    required: false
+    required: true
   },
   statusId: {
     type: Number,
@@ -50,34 +49,35 @@ const props = defineProps({
   }
 })
 
-const pstatus = props.statusId ? shipments_statuses.history.find((x) => x.id === props.statusId) : null
+
+import { useHistoryStore } from '@/stores/history.store.js'
+const historyStore = useHistoryStore()
+const { status } = storeToRefs(historyStore)
+let pstatus = null;
+if (props.statusId) {
+  historyStore.getById(props.statusId)
+  pstatus = computed(()=>status.value.loading ? null: status.value)
+}
 
 import { useShipmentsStore } from '@/stores/shipments.store.js'
 const shipmentStore = useShipmentsStore()
 const { shipment } = storeToRefs(shipmentStore)
-const shpKey = pstatus ? pstatus.shipmentNumber : ( props.shipmentNumber ? props.shipmentNumber : null )
-shipmentStore.getByNumber(shpKey)
+shipmentStore.getByNumber(props.shipmentNumber)
 
-function getDest() {
-  return computed(() => {
-   return shipment && !shipment.value.loading ? shipment.value.name : 'загружается ...'
-   })
-}
-
-const status = {
+const sts = computed(() => { return {
       status: pstatus ? pstatus.status : '',
       location: pstatus ? pstatus.location : '',
       date: pstatus ? moment(pstatus.date, 'dd.MM.YYYY').format('YYYY-MM-DD') : '',
-      dest: getDest(),
+      dest: shipment && !shipment.value.loading ? shipment.value.dest : 'загружается ...',
       ddate: '',
       comment: pstatus ? pstatus.comment : ''
-}
+}})
 
 const schema = Yup.object().shape({
-//  status: Yup.string().required('Выберите статус'),
-//  location: Yup.string().required('Укажите местонахождение'),
-//  date: Yup.string().required('Укажите дату'),
-//  ddate: Yup.string().required('Укажите ожидаемую дату прибытия' ),
+  status: Yup.string().required('Выберите статус'),
+  location: Yup.string().required('Укажите местонахождение'),
+  date: Yup.string().required('Укажите дату'),
+  ddate: Yup.string().required('Укажите ожидаемую дату прибытия' ),
 })
 
 function onSubmit(values /*, { setErrors } */) {
@@ -88,6 +88,7 @@ function onSubmit(values /*, { setErrors } */) {
 function getHeader() {
   return props.create ? 'Новый статус' : 'Изменение статуса'
 }
+
 </script>
 
 <template>
@@ -98,7 +99,7 @@ function getHeader() {
   <div class="settings">
     <Form
       @submit="onSubmit"
-      :initial-values="status"
+      :initial-values="sts"
       :validation-schema="schema"
       v-slot="{ errors, isSubmitting }"
     >

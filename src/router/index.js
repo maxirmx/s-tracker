@@ -66,7 +66,7 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/status/edit/:statusId',
+      path: '/status/edit/:statusId/:shipmentNumber',
       name: 'Изменить статус отправления',
       component: () => import('@/views/ShipmentStatus_EditView.vue'),
       props: true

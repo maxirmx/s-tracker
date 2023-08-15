@@ -105,7 +105,6 @@ function onSubmit(values, { setErrors }) {
 </template>
 
 <style>
-
 .form-group .label {
   width: 100%;
 }
@@ -134,5 +133,4 @@ function onSubmit(values, { setErrors }) {
     width: 50%;
   }
 }
-
 </style>

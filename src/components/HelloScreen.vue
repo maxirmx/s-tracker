@@ -24,7 +24,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import {version} from '@/../package'
+import { version } from '@/../package'
 
 defineProps({
   appName: {
@@ -38,7 +38,7 @@ defineProps({
   <div class="greetings">
     <h1 class="orange">{{ appName }}</h1>
     <img alt="Сargo Management" class="logo" src="@/assets/logo.svg" width="250" height="125" />
-    <div class = "orange version">{{ version }}</div>
+    <div class="orange version">{{ version }}</div>
   </div>
 </template>
 

@@ -25,20 +25,24 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import ItemStatus from '@/components/ItemStatus.vue'
-import { shipments_statuses } from '@/stores/demo.shipment.js'
 
 const props = defineProps({
   statusId: {
     type: String,
     required: true
+  },
+  shipmentNumber: {
+    type: String,
+    required: true
   }
+
 })
 const id = parseInt(props.statusId)
-const shp = shipments_statuses.history.find((x) => x.id === id)
+console.log(id, props.shipmentNumber)
 </script>
 
 <template>
   <main>
-    <ItemStatus :create="false" :statusId="id" :shipmentNumber="shp ? shp.shipmentNumber : null" />
+    <ItemStatus :create="false" :statusId="id" :shipmentNumber="props.shipmentNumber" />
   </main>
 </template>
