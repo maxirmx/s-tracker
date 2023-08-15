@@ -26,11 +26,12 @@
 
 import '@fortawesome/fontawesome-free/css/all.css'
 
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+
 import HistoryItem from '@/components/HistoryItem.vue'
-import { statuses } from '@/helpers/statuses.js'
-import { stcodes } from '@/helpers/statuses.js'
-import { shipments } from '@/stores/demo.shipments.js'
-import { shipment } from '@/stores/demo.shipment.js'
+import { statuses, stcodes } from '@/helpers/statuses.js'
+import { shipments_statuses } from '@/stores/demo.shipment.js'
 import DeliveryTimeIcon from '@/components/icons/IconDeliveryTime.vue'
 
 import { useAuthStore } from '@/stores/auth.store.js'
@@ -43,11 +44,27 @@ const props = defineProps({
   }
 })
 
-const shp = shipments.items.find((x) => x.shipmentNumber === props.shipmentNumber)
-const history = shipment.history.filter(function (historyItem) {
+import { useShipmentsStore } from '@/stores/shipments.store.js'
+const shipmentStore = useShipmentsStore()
+const { shipment } = storeToRefs(shipmentStore)
+shipmentStore.getByNumber(props.shipmentNumber)
+
+const history = shipments_statuses.history.filter(function (historyItem) {
   return historyItem.shipmentNumber === props.shipmentNumber
 })
 const lastStatus = history.reduce((last, status) => (last.id > status.id ? last : status))
+
+function getDDate() {
+  return computed(() => {
+    return shipment && !shipment.value.loading ? shipment.value.ddate : "загружается..."
+  }).value
+}
+
+function getDest() {
+  return computed(() => {
+    return shipment && !shipment.value.loading ? shipment.value.dest : "загружается..."
+  }).value
+}
 </script>
 
 <template>
@@ -81,7 +98,7 @@ const lastStatus = history.reduce((last, status) => (last.id > status.id ? last 
         <component :is="DeliveryTimeIcon"></component>
       </template>
       <template #heading> Ожидаемая дата прибытия в пункт назначения</template>
-      {{ shp.ddate }}&nbsp;&nbsp;&nbsp;{{ shp.dest }}
+      {{ getDDate() }}&nbsp;&nbsp;&nbsp;{{ getDest() }}
     </HistoryItem>
     <hr class="hr-light" />
   </div>

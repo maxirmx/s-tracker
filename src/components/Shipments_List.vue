@@ -1,4 +1,4 @@
-<script>
+<script setup>
 // Copyright (C) 2023 Maxim [maxirmx] Samsonov (www.sw.consulting)
 // All rights reserved.
 // This file is a part of s-tracker applcation
@@ -26,44 +26,35 @@
 
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 import router from '@/router'
+import { storeToRefs } from 'pinia'
 import { statuses } from '@/helpers/statuses.js'
-import { shipments } from '@/stores/demo.shipments.js'
 
+import { useShipmentsStore } from '@/stores/shipments.store.js'
 import { useAuthStore } from '@/stores/auth.store.js'
+const authStore = useAuthStore()
 
-export default {
-  components: {
-    VDataTable
-  },
-  methods: {
-    getStatus(item) {
-      var statusCode = item['selectable']['statusCode']
-      return statuses.getName(statusCode)
-    },
-    getExtra(item) {
-      return item['selectable']['location'] + '   ' + item['selectable']['date']
-    },
-    viewHistory(item) {
+const shipmentsStore = useShipmentsStore()
+const { shipments } = storeToRefs(shipmentsStore)
+shipmentsStore.getAll()
+
+function getStatus(item) {
+  var statusCode = item['selectable']['statusCode']
+  return statuses.getName(statusCode)
+}
+
+function viewHistory(item) {
       var shipmentNumber = item['selectable']['shipmentNumber']
       router.push('shipment/' + shipmentNumber)
-    }
-  },
+}
 
-  data() {
-    return {
-      itemsPerPage: 10,
-      authStore: useAuthStore(),
-      headers: [
+const itemsPerPage = 10
+const headers = [
         { title: 'Номер', align: 'start', key: 'shipmentNumber' },
         { title: 'Место', align: 'center', key: 'location' },
         { title: 'Статус', align: 'center', key: 'statuses' },
         { title: 'Дата', align: 'center', key: 'date' },
         { title: '', align: 'center', key: 'actions', sortable: 'false' }
-      ],
-      shipments: shipments.items
-    }
-  }
-}
+      ]
 </script>
 
 <template>
@@ -82,6 +73,7 @@ export default {
     </div>
 
     <v-data-table
+      v-if="shipments?.length"
       v-model:items-per-page="itemsPerPage"
       :headers="headers"
       :items="shipments"
@@ -100,5 +92,12 @@ export default {
         </h4>
       </template>
     </v-data-table>
+    <div v-if="shipments?.loading" class="text-center m-5">
+      <span class="spinner-border spinner-border-lg align-center"></span>
+    </div>
+    <div v-if="shipments?.error" class="text-center m-5">
+      <div class="text-danger">Error loading shipments: {{ shipments.error }}</div>
+    </div>
+
   </div>
 </template>

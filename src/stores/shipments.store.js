@@ -1,6 +1,6 @@
 // Copyright (C) 2023 Maxim [maxirmx] Samsonov  (www.sw.consulting)
 // All rights reserved.
-// This file is a part of s-tracker applcation  (test data set)
+// This file is a part of s-tracker applcation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -23,49 +23,48 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { stcodes } from '@/helpers/statuses.js'
+import { defineStore } from 'pinia'
+import { fetchWrapper } from '@/helpers/fetch.wrapper.js'
 
-export const shipments = {
-  items: [
-    {
-      shipmentNumber: '1034A7',
-      location: 'Kuala Lumpur, ML',
-      statusCode: stcodes.COLLECTED,
-      date: '12.07.2023',
-      ddate: '12.08.2023',
-      dest: 'Весьегонск, РФ'
+const baseUrl = `${import.meta.env.VITE_API_URL}/shipments`
+
+export const useShipmentsStore = defineStore({
+  id: 'shipments',
+  state: () => ({
+    shipments: {},
+    shipment: {}
+  }),
+  actions: {
+    async register(org) {
+      await fetchWrapper.post(`${baseUrl}/add`, org)
     },
-    {
-      shipmentNumber: '2234A1',
-      location: 'Тикси, РФ',
-      statusCode: stcodes.REGISTERED,
-      date: '14.07.2023',
-      ddate: '14.08.2023',
-      dest: 'Hanga Roa, CL'
+    async getAll() {
+      this.shipments = { loading: true }
+      try {
+        this.shipments = await fetchWrapper.get(baseUrl)
+      } catch (error) {
+        this.shipments = { error }
+      }
     },
-    {
-      shipmentNumber: '2274A1',
-      location: 'Струги Красные, РФ',
-      statusCode: stcodes.IN_STORAGE,
-      date: '15.07.2023',
-      ddate: '03.08.2023',
-      dest: 'Kutaisi, GE'
+    async getByNumber(number) {
+      this.shipment = { loading: true }
+      try {
+        this.shipment = await fetchWrapper.get(`${baseUrl}/${number}`)
+      } catch (error) {
+        this.shipment = { error }
+      }
     },
-    {
-      shipmentNumber: '2274A4',
-      location: 'Лесосибирск, РФ',
-      statusCode: stcodes.DELIVERED,
-      date: '15.07.2023',
-      ddate: '15.07.2023',
-      dest: 'Лесосибирск, РФ'
+    async update(number, params) {
+      await fetchWrapper.put(`${baseUrl}/${number}`, params)
     },
-    {
-      shipmentNumber: '1234A1',
-      location: 'Опочка, РФ',
-      statusCode: stcodes.DELIVERED,
-      date: '21.07.2023',
-      ddate: '21.07.2023',
-      dest: 'Опочка, РФ'
+    async delete(number) {
+      // add isDeleting prop to user being deleted
+      this.shipments.find((x) => x.number === number).isDeleting = true
+
+      await fetchWrapper.delete(`${baseUrl}/${number}`)
+
+      // remove user from list after deleted
+      this.shipments = this.shipments.filter((x) => x.number !== number)
     }
-  ]
-}
+  }
+})

@@ -24,7 +24,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import CustShipment from '@/components/CustShipment.vue'
+import Shipment from '@/components/Shipment_History.vue'
 
 const props = defineProps({
   shipmentNumber: {
@@ -36,6 +36,6 @@ const props = defineProps({
 
 <template>
   <main>
-    <CustShipment :shipmentNumber="props.shipmentNumber" />
+    <Shipment :shipmentNumber="props.shipmentNumber" />
   </main>
 </template>

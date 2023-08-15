@@ -29,10 +29,11 @@ import * as Yup from 'yup'
 import moment from 'moment'
 
 import router from '@/router'
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 
 import { statuses } from '@/helpers/statuses.js'
-import { shipment } from '@/stores/demo.shipment.js'
-import { shipments } from '@/stores/demo.shipments.js'
+import { shipments_statuses } from '@/stores/demo.shipment.js'
 
 const props = defineProps({
   create: {
@@ -49,25 +50,34 @@ const props = defineProps({
   }
 })
 
-const pstatus = props.statusId ? shipment.history.find((x) => x.id === props.statusId) : null
+const pstatus = props.statusId ? shipments_statuses.history.find((x) => x.id === props.statusId) : null
+
+import { useShipmentsStore } from '@/stores/shipments.store.js'
+const shipmentStore = useShipmentsStore()
+const { shipment } = storeToRefs(shipmentStore)
 const shpKey = pstatus ? pstatus.shipmentNumber : ( props.shipmentNumber ? props.shipmentNumber : null )
-const shp = shpKey ? shipments.items.find((x) => x.shipmentNumber === shpKey) : null
+shipmentStore.getByNumber(shpKey)
+
+function getDest() {
+  return computed(() => {
+   return shipment && !shipment.value.loading ? shipment.value.name : 'загружается ...'
+   })
+}
 
 const status = {
       status: pstatus ? pstatus.status : '',
       location: pstatus ? pstatus.location : '',
       date: pstatus ? moment(pstatus.date, 'dd.MM.YYYY').format('YYYY-MM-DD') : '',
-      dest: shp ? shp.dest : '',
-//      ddate: shp ? moment(shp.ddate, 'dd.MM.YYYY').format('YYYY-MM-DD') : '',
+      dest: getDest(),
       ddate: '',
       comment: pstatus ? pstatus.comment : ''
 }
 
 const schema = Yup.object().shape({
-  status: Yup.string().required('Выберите статус'),
-  location: Yup.string().required('Укажите местонахождение'),
-  date: Yup.string().required('Укажите дату'),
-  ddate: Yup.string().required('Укажите ожидаемую дату прибытия' ),
+//  status: Yup.string().required('Выберите статус'),
+//  location: Yup.string().required('Укажите местонахождение'),
+//  date: Yup.string().required('Укажите дату'),
+//  ddate: Yup.string().required('Укажите ожидаемую дату прибытия' ),
 })
 
 function onSubmit(values /*, { setErrors } */) {
@@ -82,7 +92,7 @@ function getHeader() {
 
 <template>
   <h1 class="orange">
-    {{ getHeader() }} отправления {{ shp ? shp.shipmentNumber : props.shipmentNumber }}
+    {{ getHeader() }} отправления {{ shpKey }}
   </h1>
   <hr class="hr" />
   <div class="settings">

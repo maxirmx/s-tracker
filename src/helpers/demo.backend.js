@@ -24,8 +24,53 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 export { fakeBackend }
+import { stcodes } from '@/helpers/statuses.js'
 
 function fakeBackend() {
+
+  let shipments = [
+      {
+        shipmentNumber: '1034A7',
+        location: 'Kuala Lumpur, ML',
+        statusCode: stcodes.COLLECTED,
+        date: '12.07.2023',
+        ddate: '12.08.2023',
+        dest: 'Весьегонск, РФ'
+      },
+      {
+        shipmentNumber: '2234A1',
+        location: 'Тикси, РФ',
+        statusCode: stcodes.REGISTERED,
+        date: '14.07.2023',
+        ddate: '14.08.2023',
+        dest: 'Hanga Roa, CL'
+      },
+      {
+        shipmentNumber: '2274A1',
+        location: 'Струги Красные, РФ',
+        statusCode: stcodes.IN_STORAGE,
+        date: '15.07.2023',
+        ddate: '03.08.2023',
+        dest: 'Kutaisi, GE'
+      },
+      {
+        shipmentNumber: '2274A4',
+        location: 'Лесосибирск, РФ',
+        statusCode: stcodes.DELIVERED,
+        date: '15.07.2023',
+        ddate: '15.07.2023',
+        dest: 'Лесосибирск, РФ'
+      },
+      {
+        shipmentNumber: '1234A1',
+        location: 'Опочка, РФ',
+        statusCode: stcodes.DELIVERED,
+        date: '21.07.2023',
+        ddate: '21.07.2023',
+        dest: 'Опочка, РФ'
+      }
+    ]
+
   let users = [
     {
       id: 0,
@@ -33,7 +78,7 @@ function fakeBackend() {
       password: 'admin',
       firstName: 'Иван',
       patronimic: 'Иванович',
-      organizationId: 0,
+      orgId: 0,
       lastName: 'Иванов',
       isAdmin: true,
       isManager: true
@@ -44,7 +89,7 @@ function fakeBackend() {
       password: 'manager',
       firstName: 'Роман',
       patronimic: 'Петрович',
-      organizationId: 0,
+      orgId: 0,
       lastName: 'Ойра-Ойра',
       isAdmin: false,
       isManager: true
@@ -55,7 +100,7 @@ function fakeBackend() {
       password: 'user',
       firstName: 'Михаил',
       patronimic: 'Владленович',
-      organizationId: 1,
+      orgId: 1,
       lastName: 'Сидоров',
       isAdmin: false,
       isManager: false
@@ -66,7 +111,7 @@ function fakeBackend() {
       password: 'individual',
       firstName: 'Янус',
       patronimic: 'Полуэктович',
-      organizationId: -1,
+      orgId: -1,
       lastName: 'Невструев',
       isAdmin: false,
       isManager: false
@@ -77,6 +122,8 @@ function fakeBackend() {
     { id: 0, name: 'OOO "Карго Менеджемент"' },
     { id: 1, name: 'OOO "Братан Турбо Дизель"' }
   ]
+
+
 
 
   let realFetch = window.fetch
@@ -105,6 +152,14 @@ function fakeBackend() {
             return updateOrg()
           case url.match(/\/orgs\/\d+$/) && opts.method === 'DELETE':
             return deleteOrg()
+          case url.endsWith('/shipments') && opts.method === 'GET':
+            return getShipments()
+          case url.match(/\/shipments\/.+$/) && opts.method === 'GET':
+            return getShipmentByNumber()
+          case url.match(/\/shipments\/.+$/) && opts.method === 'PUT':
+            return updateShipment()
+          case url.match(/\/shipments\/.+$/) && opts.method === 'DELETE':
+            return deleteShipment()
           default:
             // pass through any requests not handled above
             return realFetch(url, opts)
@@ -129,7 +184,7 @@ function fakeBackend() {
           patronimic: user.patronimic,
           isAdmin: user.isAdmin,
           isManager: user.isManager,
-          organizationId: user.organizationId,
+          orgId: user.orgId,
           token: 'fake-jwt-token-' + user.id
         })
       }
@@ -206,10 +261,45 @@ function fakeBackend() {
         return ok()
       }
 
+      function getShipments() {
+        if (!isAuthenticated()) return unauthorized()
+        return ok(shipments)
+      }
+
+      function getShipmentByNumber() {
+        if (!isAuthenticated()) return unauthorized()
+        const shipment = shipments.find((x) => x.shipmentNumber === numberFromUrl())
+        return ok(shipment)
+      }
+
+      function updateShipment() {
+        if (!isAuthenticated()) return unauthorized()
+
+        let params = body()
+        let shipment = shipments.find((x) => x.shipmentNumber === numberFromUrl())
+
+        // update and save user
+        Object.assign(shipment, params)
+
+        return ok()
+      }
+
+      function deleteShipment() {
+        if (!isAuthenticated()) return unauthorized()
+
+        shipments.filter((x) => x.shipmentNumber !== numberFromUrl())
+        return ok()
+      }
+
       // helper functions
       function idFromUrl() {
         const urlParts = url.split('/')
         return parseInt(urlParts[urlParts.length - 1])
+      }
+
+      function numberFromUrl() {
+        const urlParts = url.split('/')
+        return urlParts[urlParts.length - 1]
       }
 
       function ok(body) {
@@ -232,9 +322,9 @@ function fakeBackend() {
       }
 
       function basicDetails(user) {
-        const { id, firstName, patronimic, lastName, email, isAdmin, isManager, organizationId } =
+        const { id, firstName, patronimic, lastName, email, isAdmin, isManager, orgId } =
           user
-        return { id, firstName, patronimic, lastName, email, isAdmin, isManager, organizationId }
+        return { id, firstName, patronimic, lastName, email, isAdmin, isManager, orgId }
       }
       /*
       function isManager() {

@@ -25,7 +25,7 @@
 
 import { stcodes } from '@/helpers/statuses.js'
 
-export const shipment = {
+export const shipments_statuses = {
   history: [
     { id: 1115, status: stcodes.DELIVERED,        date: '21.07.2023', location: 'Опочка, РФ',         shipmentNumber: '1234A1',  comment: 'В Опочке было весело'                  },
     { id: 1114, status: stcodes.OUT_OF_STORAGE,   date: '21.07.2023', location: 'Псков, РФ',          shipmentNumber: '1234A1',  comment: 'Во Пскове было интересно'              },

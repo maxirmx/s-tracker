@@ -39,6 +39,11 @@ const router = createRouter({
       component: () => import('@/views/LoginView.vue')
     },
     {
+      path: '/users',
+      name: 'Пользователи',
+      component: () => import('@/views/Users_View.vue')
+    },
+    {
       path: '/recover',
       name: 'Восстановление пароля',
       component: () => import('@/views/User_RecoverView.vue')
@@ -81,11 +86,6 @@ const router = createRouter({
       path: '/shipment/add',
       name: 'Добавить отправлениe',
       component: () => import('@/views/Shipment_AddView.vue')
-    },
-    {
-      path: '/users',
-      name: 'Пользователи',
-      component: () => import('@/views/Users_View.vue')
     },
     {
       path: '/orgs',

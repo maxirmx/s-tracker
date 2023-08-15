@@ -24,11 +24,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import AddShipment from '@/components/AddShipment.vue'
+import Shipment from '@/components/Shipment_Add.vue'
 </script>
 
 <template>
   <main>
-    <AddShipment />
+    <Shipment />
   </main>
 </template>

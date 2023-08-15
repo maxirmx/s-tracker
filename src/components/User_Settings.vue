@@ -25,10 +25,10 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { ref } from 'vue'
+import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
-//import router from '@/router'
 import { useUsersStore } from '@/stores/users.store.js'
 import { useAuthStore } from '@/stores/auth.store.js'
 import { useOrgsStore } from '@/stores/orgs.store.js'
@@ -72,13 +72,11 @@ const showPassword2 = ref(false)
 const usersStore = useUsersStore()
 const authStore = useAuthStore()
 
-
 const orgsStore = useOrgsStore()
 const { orgs } = storeToRefs(orgsStore)
 orgsStore.getAll()
 
 let user = null
-let org = null
 
 if (!isRegister()) {
   ;({ user } = storeToRefs(usersStore))
@@ -102,10 +100,14 @@ function getButton() {
 }
 
 function getOrg() {
-  ;({ org } = storeToRefs(useOrgsStore))
-  org = orgsStore.getById(org.id)
-  console.log('Организация: ' + JSON.stringify(org))
-  return org ? org.name : null
+  let org = computed(() => {
+    let org = null
+    if (!orgs.value.loading) {
+      org = orgs.value.find((o) => o.id === user.value.orgId)
+   }
+   return org ? org.name : ''
+   })
+  return org.value
 }
 
 function showCredentials() {
@@ -239,18 +241,18 @@ function getCredentials() {
         </button>
       </div>
       <div v-if="showCredentials()" class="form-group">
-        <label for="organizationId" class="label">Организация:</label>
-        <span id="organizationId"
+        <label for="orgId" class="label">Организация:</label>
+        <span id="orgId"
           ><em>{{ getOrg() }}</em></span
         >
       </div>
       <div v-if="showAndEditCredentials()" class="form-group">
-        <label for="organizationId" class="label">Организация:</label>
+        <label for="orgId" class="label">Организация:</label>
         <Field
-          name="organizationId"
+          name="orgId"
           as="select"
           class="form-control input select"
-          :class="{ 'is-invalid': errors.sorganizationId }"
+          :class="{ 'is-invalid': errors.orgId }"
         >
           <option value="">Выберите организацию:</option>
           <option value="-1">(без организации)</option>

@@ -25,7 +25,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import ItemStatus from '@/components/ItemStatus.vue'
-import { shipment } from '@/stores/demo.shipment.js'
+import { shipments_statuses } from '@/stores/demo.shipment.js'
 
 const props = defineProps({
   statusId: {
@@ -34,7 +34,7 @@ const props = defineProps({
   }
 })
 const id = parseInt(props.statusId)
-const shp = shipment.history.find((x) => x.id === id)
+const shp = shipments_statuses.history.find((x) => x.id === id)
 </script>
 
 <template>
