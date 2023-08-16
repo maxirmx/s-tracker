@@ -77,5 +77,11 @@ const headers = [
         />
       </template>
     </v-data-table>
+    <div v-if="orgs?.error" class="text-center m-5">
+        <div class="text-danger">Ошибка загрузки информации об организации: {{ orgs.error }}</div>
+    </div>
+    <div v-if="orgs?.loading" class="text-center m-5">
+      <span class="spinner-border spinner-border-lg align-center"></span>
+    </div>
   </div>
 </template>

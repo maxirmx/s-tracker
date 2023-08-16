@@ -156,10 +156,10 @@ function fakeBackend() {
     }
   ]
 
-  let orgs = [
-    { id: 0, name: 'OOO "Карго Менеджемент"' },
-    { id: 1, name: 'OOO "Братан Турбо Дизель"' }
-  ]
+//  let orgs = [
+//    { id: 0, name: 'OOO "Карго Менеджемент"' },
+//    { id: 1, name: 'OOO "Братан Турбо Дизель"' }
+//  ]
 
 
 
@@ -168,7 +168,7 @@ function fakeBackend() {
   window.fetch = function (url, opts) {
     return new Promise((resolve, reject) => {
       // wrap in timeout to simulate server api call
-      setTimeout(handleRoute, 500)
+      setTimeout(handleRoute, 5)
 
       function handleRoute() {
         switch (true) {
@@ -182,14 +182,14 @@ function fakeBackend() {
             return updateUser()
           case url.match(/\/users\/\d+$/) && opts.method === 'DELETE':
             return deleteUser()
-          case url.endsWith('/orgs') && opts.method === 'GET':
-            return getOrgs()
-          case url.match(/\/orgs\/\d+$/) && opts.method === 'GET':
-            return getOrgById()
-          case url.match(/\/orgs\/\d+$/) && opts.method === 'PUT':
-            return updateOrg()
-          case url.match(/\/orgs\/\d+$/) && opts.method === 'DELETE':
-            return deleteOrg()
+//          case url.endsWith('/orgs') && opts.method === 'GET':
+//            return getOrgs()
+//          case url.match(/\/orgs\/\d+$/) && opts.method === 'GET':
+//            return getOrgById()
+//          case url.match(/\/orgs\/\d+$/) && opts.method === 'PUT':
+//            return updateOrg()
+//          case url.match(/\/orgs\/\d+$/) && opts.method === 'DELETE':
+//            return deleteOrg()
           case url.endsWith('/shipments') && opts.method === 'GET':
             return getShipments()
           case url.match(/\/shipments\/.+$/) && opts.method === 'GET':
@@ -277,35 +277,35 @@ function fakeBackend() {
         return ok()
       }
 
-      function getOrgs() {
-        if (!isAuthenticated()) return unauthorized()
-        return ok(orgs)
-      }
+//      function getOrgs() {
+//        if (!isAuthenticated()) return unauthorized()
+//        return ok(orgs)
+//      }
 
-      function getOrgById() {
-        if (!isAuthenticated()) return unauthorized()
-        const org = orgs.find((x) => x.id === idFromUrl())
-        return ok(org)
-      }
+//      function getOrgById() {
+//        if (!isAuthenticated()) return unauthorized()
+//        const org = orgs.find((x) => x.id === idFromUrl())
+//        return ok(org)
+//      }
 
-      function updateOrg() {
-        if (!isAuthenticated()) return unauthorized()
+//      function updateOrg() {
+//        if (!isAuthenticated()) return unauthorized()
 
-        let params = body()
-        let org = orgs.find((x) => x.id === idFromUrl())
+//        let params = body()
+//        let org = orgs.find((x) => x.id === idFromUrl())
 
         // update and save user
-        Object.assign(org, params)
+//        Object.assign(org, params)
 
-        return ok()
-      }
+//        return ok()
+//      }
 
-      function deleteOrg() {
-        if (!isAuthenticated()) return unauthorized()
+//      function deleteOrg() {
+//        if (!isAuthenticated()) return unauthorized()
 
-        orgs.filter((x) => x.id !== idFromUrl())
-        return ok()
-      }
+//        orgs.filter((x) => x.id !== idFromUrl())
+//        return ok()
+//      }
 
       function getShipments() {
         if (!isAuthenticated()) return unauthorized()

@@ -26,6 +26,7 @@
 
 import { storeToRefs } from 'pinia'
 import { Form, Field } from 'vee-validate'
+import router from '@/router'
 import * as Yup from 'yup'
 
 import { useOrgsStore } from '@/stores/orgs.store.js'
@@ -45,10 +46,6 @@ const schema = Yup.object().shape({
   name: Yup.string().required('Необходимо указать название организации')
 })
 
-function onSubmit(values /*, { setErrors } */) {
-  console.log('Такая будет организация: ' + JSON.stringify(values))
-}
-
 function isRegister() {
   return props.register
 }
@@ -65,9 +62,26 @@ const orgsStore = useOrgsStore()
 let org = null
 
 if (!isRegister()) {
-  ;({ org } = storeToRefs(orgsStore))
+  ({ org } = storeToRefs(orgsStore))
   orgsStore.getById(props.id)
 }
+
+function onSubmit(values, { setErrors }) {
+
+  if (isRegister()) {
+    return orgsStore
+      .add(values)
+      .then(() => { router.go(-1) })
+      .catch((error) => setErrors({ apiError: error }))
+  }
+  else {
+    return orgsStore
+      .update(props.id, values)
+      .then(() => { router.go(-1) })
+      .catch((error) => setErrors({ apiError: error }))
+  }
+}
+
 </script>
 
 <template>
@@ -81,7 +95,7 @@ if (!isRegister()) {
       v-slot="{ errors, isSubmitting }"
     >
       <div class="form-group">
-        <label for="lastName" class="label">Фамилия:</label>
+        <label for="lastName" class="label">Название:</label>
         <Field
           name="name"
           type="text"
@@ -102,12 +116,15 @@ if (!isRegister()) {
         </button>
       </div>
       <div v-if="errors.name" class="alert alert-danger mt-3 mb-0">{{ errors.name }}</div>
+      <div v-if="org?.error" class="text-center m-5">
+        <div class="text-danger">Ошибка загрузки информации об организации: {{ org.error }}</div>
+      </div>
+      <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">
+        <div class="text-danger">Ошибка: {{ errors.apiError }}</div>
+      </div>
+      <div v-if="org?.loading" class="text-center m-5">
+        <span class="spinner-border spinner-border-lg align-center"></span>
+      </div>
     </Form>
-  </div>
-  <div v-if="org?.loading" class="text-center m-5">
-    <span class="spinner-border spinner-border-lg align-center"></span>
-  </div>
-  <div v-if="org?.error" class="text-center m-5">
-    <div class="text-danger">Error loading organization: {{ org.error }}</div>
   </div>
 </template>

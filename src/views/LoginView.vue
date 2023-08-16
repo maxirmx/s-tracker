@@ -31,10 +31,10 @@ import router from '@/router'
 import { useAuthStore } from '@/stores/auth.store.js'
 
 const schema = Yup.object().shape({
-  email: Yup.string()
+  login_email: Yup.string()
     .required('Необходимо указать электронную почту')
     .email('Неверный формат электронной почты'),
-  password: Yup.string()
+  login_password: Yup.string()
     .required('Необходимо указать пароль')
     .min(4, 'Пароль не может быть короче 4 симоволов')
 })
@@ -43,10 +43,10 @@ const showPassword = ref(false)
 
 function onSubmit(values, { setErrors }) {
   const authStore = useAuthStore()
-  const { email, password } = values
+  const { login_email, login_password } = values
 
   return authStore
-    .login(email, password)
+    .login(login_email, login_password)
     .then(() => {
       router.push('/shipments')
     })
@@ -60,22 +60,22 @@ function onSubmit(values, { setErrors }) {
       <h1 class="orange">Вход</h1>
       <hr class="hr" />
       <div class="form-group">
-        <label for="email" class="label">Адрес электронной почты:</label>
+        <label for="login_email" class="label">Адрес электронной почты:</label>
         <Field
-          name="email"
+          name="login_email"
           type="text"
           class="form-control input"
-          :class="{ 'is-invalid': errors.email }"
+          :class="{ 'is-invalid': errors.login_email }"
           placeholder="Адрес электронной почты"
         />
       </div>
       <div class="form-group">
-        <label for="password" class="label">Пароль:</label>
+        <label for="login_password" class="label">Пароль:</label>
         <Field
-          name="password"
+          name="login_password"
           :type="showPassword ? 'text' : 'password'"
           class="form-control input password"
-          :class="{ 'is-invalid': errors.password }"
+          :class="{ 'is-invalid': errors.login_password }"
           placeholder="Пароль"
         />
         <button
@@ -97,8 +97,8 @@ function onSubmit(values, { setErrors }) {
           Войти
         </button>
       </div>
-      <div v-if="errors.email" class="alert alert-danger mt-3 mb-0">{{ errors.email }}</div>
-      <div v-if="errors.password" class="alert alert-danger mt-3 mb-0">{{ errors.password }}</div>
+      <div v-if="errors.login_email" class="alert alert-danger mt-3 mb-0">{{ errors.login_email }}</div>
+      <div v-if="errors.login_password" class="alert alert-danger mt-3 mb-0">{{ errors.login_password }}</div>
       <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{ errors.apiError }}</div>
     </Form>
   </div>

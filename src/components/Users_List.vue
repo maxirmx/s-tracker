@@ -26,7 +26,7 @@
 
 import { computed } from 'vue'
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
-import router from '../router'
+import router from '@/router'
 
 import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/stores/users.store.js'
@@ -46,12 +46,15 @@ function userSettings(item) {
 }
 
 function getOrg(item) {
+  if (item['orgId'] == -1) {
+    return ''
+  }
   let org = computed(() => {
     let org = null
     if (!orgs.value.loading) {
       org = orgs.value.find((o) => o.id === item['orgId'])
     }
-    return org ? org.name : ''
+    return org ? org.name : 'загружается...'
   })
   return org.value
 }

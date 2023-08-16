@@ -33,7 +33,7 @@ export const fetchWrapper = {
 }
 
 function request(method) {
-  return (url, body) => {
+  return async (url, body) => {
     const requestOptions = {
       method,
       headers: authHeader(url)
@@ -42,7 +42,9 @@ function request(method) {
       requestOptions.headers['Content-Type'] = 'application/json'
       requestOptions.body = JSON.stringify(body)
     }
-    return fetch(url, requestOptions).then(handleResponse)
+    console.log(url, requestOptions)
+    const response = await fetch(url, requestOptions)
+    return handleResponse(response)
   }
 }
 
