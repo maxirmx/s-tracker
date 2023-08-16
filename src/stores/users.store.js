@@ -26,8 +26,16 @@
 import { defineStore } from 'pinia'
 import { fetchWrapper } from '@/helpers/fetch.wrapper.js'
 import { useAuthStore } from '@/stores/auth.store.js'
+import { apiUrl } from '@/helpers/config.js'
 
-const baseUrl = `${import.meta.env.VITE_API_URL}/users`
+const baseUrl = `${apiUrl}/users`
+
+function translate(param) {
+  param.isEnabled = (param.isEnabled === "ENABLED")
+  param.isManager = (param.isManager === "MANAGER")
+  param.isAdmin = (param.isAdmin === "ADMIN")
+  return param
+}
 
 export const useUsersStore = defineStore({
   id: 'users',
@@ -36,7 +44,16 @@ export const useUsersStore = defineStore({
     user: {}
   }),
   actions: {
-    async register(user) {
+    async add(user, trnslt = false) {
+      if (trnslt) {
+        user = translate(user)
+      }
+      await fetchWrapper.post(`${baseUrl}/add`, user)
+    },
+    async register(user, trnslt = false) {
+      if (trnslt) {
+        user = translate(user)
+      }
       await fetchWrapper.post(`${baseUrl}/register`, user)
     },
     async getAll() {
@@ -47,15 +64,23 @@ export const useUsersStore = defineStore({
         this.users = { error }
       }
     },
-    async getById(id) {
+    async getById(id, trnslt = false) {
       this.user = { loading: true }
       try {
         this.user = await fetchWrapper.get(`${baseUrl}/${id}`)
+        if (trnslt) {
+          this.user.isEnabled = this.user.isEnabled ? "ENABLED" : "JERK"
+          this.user.isManager = this.user.isEnabled ? "MANAGER" : "JERK"
+          this.user.isAdmin = this.user.isEnabled ? "ADMIN" : "JERK"
+        }
       } catch (error) {
         this.user = { error }
       }
     },
-    async update(id, params) {
+    async update(id, params, trnslt = false) {
+      if (trnslt) {
+        params = translate(params)
+      }
       await fetchWrapper.put(`${baseUrl}/${id}`, params)
 
       // update stored user if the logged in user updated their own record

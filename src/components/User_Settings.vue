@@ -26,6 +26,7 @@
 
 import { ref } from 'vue'
 import { computed } from 'vue'
+import router from '@/router'
 import { storeToRefs } from 'pinia'
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
@@ -62,10 +63,6 @@ const schema = Yup.object().shape({
     )
 })
 
-function onSubmit(values /*, { setErrors } */) {
-  console.log('Такой будет пользователь: ' + JSON.stringify(values))
-}
-
 const showPassword = ref(false)
 const showPassword2 = ref(false)
 
@@ -76,11 +73,13 @@ const orgsStore = useOrgsStore()
 const { orgs } = storeToRefs(orgsStore)
 orgsStore.getAll()
 
-let user = null
+let user = {
+  isEnabled: 'ENABLED'
+}
 
 if (!isRegister()) {
-  ;({ user } = storeToRefs(usersStore))
-  usersStore.getById(props.id)
+  ({ user } = storeToRefs(usersStore))
+  usersStore.getById(props.id, true)
 }
 
 function isRegister() {
@@ -118,31 +117,44 @@ function showAndEditCredentials() {
   return asAdmin()
 }
 
-function _isAdmin() {
-  let is = false
-  if (user && user.value.isAdmin) is = true
-  return is
-}
-
-function _isManager() {
-  let is = false
-  if (user && user.value.isManager) is = true
-  return is
-}
-
 function getCredentials() {
   let crd = null
   if (user) {
     crd = 'Пользователь'
-    if (user.value.isManager) {
+    if (user.value.isManager === 'MANAGER') {
       crd += '; менеджер'
     }
-    if (user.value.isAdmin) {
+    if (user.value.isAdmin === 'ADMIN') {
       crd += '; aдминистратор'
     }
   }
   return crd
 }
+
+function onSubmit(values , { setErrors } ) {
+  if (isRegister()) {
+    if (asAdmin()) {
+      return usersStore
+        .add(values, true)
+        .then(() => { router.go(-1) })
+        .catch((error) => setErrors({ apiError: error }))
+    }
+    else {
+      return usersStore
+        .register(values, true)
+        .then(() => { router.go(-1) })
+        .catch((error) => setErrors({ apiError: error }))
+    }
+  }
+  else {
+    return usersStore
+      .update(props.id, values, true)
+      .then(() => { router.go(-1) })
+      .catch((error) => setErrors({ apiError: error }))
+  }
+}
+
+
 </script>
 
 <template>
@@ -270,29 +282,29 @@ function getCredentials() {
       </div>
 
       <div v-if="showAndEditCredentials()" class="form-group">
-        <label for="isUser" class="label">Права</label>
-        <input
-          id="isUser"
-          name="isUser"
+        <label for="isEnabled" class="label">Права</label>
+        <Field
+          id="isEnabled"
+          name="isEnabled"
           type="checkbox"
           class="checkbox checkbox-styled"
-          :checked="true"
+          value='ENABLED'
         />
-        <label for="isUser">Пользователь</label>
-        <input
+        <label for="isEnabled">Пользователь</label>
+        <Field
           id="isManager"
           name="isManager"
           type="checkbox"
           class="checkbox checkbox-styled"
-          :checked="_isManager()"
-        />
+          value='MANAGER'
+          />
         <label for="isManager">Менеджер</label>
-        <input
+        <Field
           id="isAdmin"
           type="checkbox"
           name="isAdmin"
           class="checkbox checkbox-styled"
-          :checked="_isAdmin()"
+          value='ADMIN'
         />
         <label for="isAdmin">Администратор</label>
       </div>

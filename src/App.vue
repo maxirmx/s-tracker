@@ -48,7 +48,7 @@ deauth()
         <RouterLink to="/shipments" class="link">Отправления</RouterLink>
         <RouterLink
           v-if="!authStore.user.isAdmin"
-          :to="'/settings/' + authStore.user.id"
+          :to="'/user/edit/' + authStore.user.id"
           class="link"
           >Настройки</RouterLink
         >

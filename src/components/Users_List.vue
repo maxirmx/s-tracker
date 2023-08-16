@@ -42,7 +42,7 @@ orgsStore.getAll()
 
 function userSettings(item) {
   var id = item['id']
-  router.push('settings/' + id)
+  router.push('user/edit/' + id)
 }
 
 function getOrg(item) {

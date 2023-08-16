@@ -174,14 +174,14 @@ function fakeBackend() {
         switch (true) {
           case url.endsWith('/users/authenticate') && opts.method === 'POST':
             return authenticate()
-          case url.endsWith('/users') && opts.method === 'GET':
-            return getUsers()
-          case url.match(/\/users\/\d+$/) && opts.method === 'GET':
-            return getUserById()
-          case url.match(/\/users\/\d+$/) && opts.method === 'PUT':
-            return updateUser()
-          case url.match(/\/users\/\d+$/) && opts.method === 'DELETE':
-            return deleteUser()
+//          case url.endsWith('/users') && opts.method === 'GET':
+//            return getUsers()
+//          case url.match(/\/users\/\d+$/) && opts.method === 'GET':
+//            return getUserById()
+//          case url.match(/\/users\/\d+$/) && opts.method === 'PUT':
+//            return updateUser()
+//          case url.match(/\/users\/\d+$/) && opts.method === 'DELETE':
+//            return deleteUser()
 //          case url.endsWith('/orgs') && opts.method === 'GET':
 //            return getOrgs()
 //          case url.match(/\/orgs\/\d+$/) && opts.method === 'GET':
@@ -235,47 +235,47 @@ function fakeBackend() {
         })
       }
 
-      function getUsers() {
-        if (!isAuthenticated()) return unauthorized()
-        return ok(users)
-      }
+//      function getUsers() {
+//        if (!isAuthenticated()) return unauthorized()
+//        return ok(users)
+//      }
 
-      function getUserById() {
-        if (!isAuthenticated()) return unauthorized()
-        const user = users.find((x) => x.id === idFromUrl())
-        return ok(basicDetails(user))
-      }
+//      function getUserById() {
+//        if (!isAuthenticated()) return unauthorized()
+//        const user = users.find((x) => x.id === idFromUrl())
+//        return ok(basicDetails(user))
+//      }
 
-      function updateUser() {
-        if (!isAuthenticated()) return unauthorized()
+//      function updateUser() {
+//        if (!isAuthenticated()) return unauthorized()
 
-        let params = body()
-        let user = users.find((x) => x.id === idFromUrl())
+//        let params = body()
+//        let user = users.find((x) => x.id === idFromUrl())
 
         // only update password if entered
-        if (!params.password) {
-          delete params.password
-        }
+//        if (!params.password) {
+//          delete params.password
+//        }
 
         // if email changed check if taken
-        if (params.email !== user.email && users.find((x) => x.email === params.email)) {
-          return error(
-            'Пользователь с электронной почтой "' + params.email + '" уже зарегистрирован'
-          )
-        }
+//        if (params.email !== user.email && users.find((x) => x.email === params.email)) {
+//          return error(
+//            'Пользователь с электронной почтой "' + params.email + '" уже зарегистрирован'
+//          )
+//        }
 
         // update and save user
-        Object.assign(user, params)
+//        Object.assign(user, params)
 
-        return ok()
-      }
+//        return ok()
+//      }
 
-      function deleteUser() {
-        if (!isAuthenticated()) return unauthorized()
+//      function deleteUser() {
+//        if (!isAuthenticated()) return unauthorized()
 
-        users = users.filter((x) => x.id !== idFromUrl())
-        return ok()
-      }
+//        users = users.filter((x) => x.id !== idFromUrl())
+//        return ok()
+//      }
 
 //      function getOrgs() {
 //        if (!isAuthenticated()) return unauthorized()
@@ -398,10 +398,10 @@ function fakeBackend() {
         return opts.headers['Authorization'].startsWith('Bearer fake-jwt-token')
       }
 
-      function basicDetails(user) {
-        const { id, firstName, patronimic, lastName, email, isAdmin, isManager, orgId } = user
-        return { id, firstName, patronimic, lastName, email, isAdmin, isManager, orgId }
-      }
+//      function basicDetails(user) {
+//        const { id, firstName, patronimic, lastName, email, isAdmin, isManager, orgId } = user
+//        return { id, firstName, patronimic, lastName, email, isAdmin, isManager, orgId }
+//      }
       /*
       function isManager() {
         if (!isAuthenticated()) return false

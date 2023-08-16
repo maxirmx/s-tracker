@@ -39,11 +39,6 @@ const router = createRouter({
       component: () => import('@/views/LoginView.vue')
     },
     {
-      path: '/users',
-      name: 'Пользователи',
-      component: () => import('@/views/Users_View.vue')
-    },
-    {
       path: '/recover',
       name: 'Восстановление пароля',
       component: () => import('@/views/User_RecoverView.vue')
@@ -54,9 +49,30 @@ const router = createRouter({
       component: () => import('@/views/User_RegisterView.vue')
     },
     {
-      path: '/settings/:id',
+      path: '/users',
+      name: 'Пользователи',
+      component: () => import('@/views/Users_View.vue')
+    },
+    {
+      path: '/user/edit/:id',
       name: 'Настройки',
-      component: () => import('@/views/User_SettingsView.vue'),
+      component: () => import('@/views/User_EditView.vue'),
+      props: true
+    },
+    {
+      path: '/orgs',
+      name: 'Организации',
+      component: () => import('@/views/Orgs_View.vue')
+    },
+    {
+      path: '/org/add',
+      name: 'Добавить организацию',
+      component: () => import('@/views/Org_AddView.vue')
+    },
+    {
+      path: '/org/edit/:orgId',
+      name: 'Редактировать информацию об организации',
+      component: () => import('@/views/Org_EditView.vue'),
       props: true
     },
     {
@@ -86,22 +102,6 @@ const router = createRouter({
       path: '/shipment/add',
       name: 'Добавить отправлениe',
       component: () => import('@/views/Shipment_AddView.vue')
-    },
-    {
-      path: '/orgs',
-      name: 'Организации',
-      component: () => import('@/views/Orgs_View.vue')
-    },
-    {
-      path: '/org/add',
-      name: 'Добавить организацию',
-      component: () => import('@/views/Org_AddView.vue')
-    },
-    {
-      path: '/org/edit/:orgId',
-      name: 'Редактировать информацию об организации',
-      component: () => import('@/views/Org_EditView.vue'),
-      props: true
     }
   ]
 })
