@@ -24,18 +24,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import CustShipment from '@/components/CustShipment.vue'
-
-const props = defineProps({
-  shipmentNumber: {
-    type: String,
-    required: true
-  }
-})
+import UserSettings from '@/components/User_Settings.vue'
 </script>
 
 <template>
   <main>
-    <CustShipment :shipmentNumber="props.shipmentNumber" />
+    <UserSettings :register="true" />
   </main>
 </template>

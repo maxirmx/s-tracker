@@ -24,60 +24,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { version } from '@/../package'
-
-defineProps({
-  appName: {
-    type: String,
-    required: true
-  }
-})
+import Shipments from '@/components/Shipments_List.vue'
 </script>
 
 <template>
-  <div class="greetings">
-    <h1 class="orange">{{ appName }}</h1>
-    <img alt="Сargo Management" class="logo" src="@/assets/logo.svg" width="250" height="125" />
-    <div class="orange version">{{ version }}</div>
-  </div>
+  <main>
+    <Shipments />
+  </main>
 </template>
-
-<style scoped>
-h1 {
-  font-weight: 500;
-  font-size: 2.2rem;
-  position: relative;
-  top: -10px;
-}
-
-h3 {
-  font-size: 1.2rem;
-}
-
-.greetings h1,
-.greetings h3 {
-  text-align: center;
-}
-
-.version {
-  font-size: 1rem;
-  text-align: center;
-}
-
-@media (min-width: 768px) {
-  h1 {
-    font-size: 2.6rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .greetings h1,
-  .greetings h3 {
-    text-align: left;
-  }
-
-  .version {
-    text-align: left;
-  }
-}
-</style>

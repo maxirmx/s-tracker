@@ -48,14 +48,12 @@ deauth()
         <RouterLink to="/shipments" class="link">Отправления</RouterLink>
         <RouterLink
           v-if="!authStore.user.isAdmin"
-          :to="'/settings/' + authStore.user.id"
+          :to="'/user/edit/' + authStore.user.id"
           class="link"
           >Настройки</RouterLink
         >
         <RouterLink v-if="authStore.user.isAdmin" to="/users" class="link">Пользователи</RouterLink>
-        <RouterLink v-if="authStore.user.isAdmin" to="/organizations" class="link"
-          >Организации</RouterLink
-        >
+        <RouterLink v-if="authStore.user.isAdmin" to="/orgs" class="link">Организации</RouterLink>
         <RouterLink to="/login" custom v-slot="{ href }">
           <a :href="href" @click="deauth()" class="link">Выход</a>
         </RouterLink>
@@ -138,7 +136,6 @@ h1 {
   font-size: 2.2rem;
   position: relative;
   top: -10px;
-  
 }
 
 @media (min-width: 768px) {

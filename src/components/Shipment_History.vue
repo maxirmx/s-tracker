@@ -26,11 +26,11 @@
 
 import '@fortawesome/fontawesome-free/css/all.css'
 
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+
 import HistoryItem from '@/components/HistoryItem.vue'
-import { statuses } from '@/helpers/statuses.js'
-import { stcodes } from '@/helpers/statuses.js'
-import { shipments } from '@/stores/demo.shipments.js'
-import { shipment } from '@/stores/demo.shipment.js'
+import { statuses, stcodes } from '@/helpers/statuses.js'
 import DeliveryTimeIcon from '@/components/icons/IconDeliveryTime.vue'
 
 import { useAuthStore } from '@/stores/auth.store.js'
@@ -43,11 +43,34 @@ const props = defineProps({
   }
 })
 
-const shp = shipments.items.find((x) => x.shipmentNumber === props.shipmentNumber)
-const history = shipment.history.filter(function (historyItem) {
-  return historyItem.shipmentNumber === props.shipmentNumber
-})
-const lastStatus = history.reduce((last, status) => (last.id > status.id ? last : status))
+import { useShipmentsStore } from '@/stores/shipments.store.js'
+const shipmentStore = useShipmentsStore()
+const { shipment } = storeToRefs(shipmentStore)
+shipmentStore.getByNumber(props.shipmentNumber)
+
+import { useHistoryStore } from '@/stores/history.store.js'
+const historyStore = useHistoryStore()
+const { history } = storeToRefs(historyStore)
+historyStore.getByNumber(props.shipmentNumber)
+
+function getLastStatus() {
+  return computed(() => {
+    return !history.value.loading ?
+      history.value.reduce((last, status) => (last.id > status.id ? last : status)) : null
+  }).value
+}
+
+function getDDate() {
+  return computed(() => {
+    return !shipment.value.loading ? shipment.value.ddate : 'загружается...'
+  }).value
+}
+
+function getDest() {
+  return computed(() => {
+    return !shipment.value.loading ? shipment.value.dest : 'загружается...'
+  }).value
+}
 </script>
 
 <template>
@@ -60,7 +83,7 @@ const lastStatus = history.reduce((last, status) => (last.id > status.id ? last 
   <hr class="hr" />
   <div class="wrapper" v-if="authStore.user.isManager">
     <router-link
-      v-if="lastStatus.status != stcodes.DELIVERED"
+      v-if="getLastStatus()?.status != stcodes.DELIVERED"
       :to="'/status/add/' + props.shipmentNumber"
       class="link"
     >
@@ -68,20 +91,22 @@ const lastStatus = history.reduce((last, status) => (last.id > status.id ? last 
       статус
     </router-link>
     &nbsp;&nbsp;&nbsp;
-    <router-link :to="'/status/edit/' + lastStatus.id" class="link"
+    <router-link
+    v-if="getLastStatus()?.id"
+      :to="'/status/edit/' + getLastStatus().id + '/' + props.shipmentNumber" class="link"
       ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить
       последний статус</router-link
     >
   </div>
   <br /><br />
 
-  <div v-if="lastStatus.status != stcodes.DELIVERED">
+  <div v-if="getLastStatus()?.status && getLastStatus().status != stcodes.DELIVERED">
     <HistoryItem>
       <template #icon>
         <component :is="DeliveryTimeIcon"></component>
       </template>
       <template #heading> Ожидаемая дата прибытия в пункт назначения</template>
-      {{ shp.ddate }}&nbsp;&nbsp;&nbsp;{{ shp.dest }}
+      {{ getDDate() }}&nbsp;&nbsp;&nbsp;{{ getDest() }}
     </HistoryItem>
     <hr class="hr-light" />
   </div>
@@ -93,6 +118,15 @@ const lastStatus = history.reduce((last, status) => (last.id > status.id ? last 
     {{ item.date }}&nbsp;&nbsp;&nbsp;{{ item.location }} <br />
     <span v-if="item.comment">{{ item.comment }}</span>
   </HistoryItem>
+  <div v-if="history?.loading || shipment?.loading" class="text-center m-5">
+    <span class="spinner-border spinner-border-lg align-center"></span>
+  </div>
+  <div v-if="history?.error" class="text-center m-5">
+    <div class="text-danger">Error loading history: {{ history.error }}</div>
+  </div>
+  <div v-if="shipment?.error" class="text-center m-5">
+    <div class="text-danger">Error loading shipment: {{ shipment.error }}</div>
+  </div>
 </template>
 
 <style></style>

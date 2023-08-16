@@ -30,8 +30,7 @@ import moment from 'moment'
 
 import router from '@/router'
 
-import { stcodes } from '@/helpers/statuses.js'
-import { statuses } from '@/helpers/statuses.js'
+import { stcodes, statuses } from '@/helpers/statuses.js'
 
 const schema = Yup.object().shape({
   shipmentNumber: Yup.string().required('Укажите номер отправления'),

@@ -24,11 +24,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import CustOrgs from '@/components/CustOrgs.vue'
+import OrgSettings from '@/components/Org_Settings.vue'
 </script>
 
 <template>
   <main>
-    <CustOrgs />
+    <OrgSettings :register="true" />
   </main>
 </template>

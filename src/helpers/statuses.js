@@ -32,7 +32,7 @@ import InStorageIcon from '@/components/icons/IconInStorage.vue'
 import RegisteredIcon from '@/components/icons/IconRegistered.vue'
 import CollectedIcon from '@/components/icons/IconCollected.vue'
 import DeliveredIcon from '@/components/icons/IconDelivered.vue'
-import UnknownIcon from '@/components/icons/IconUnknown.vue'
+import LoadingIcon from '@/components/icons/IconLoading.vue'
 
 export const stcodes = {
   REGISTERED: 0,
@@ -83,9 +83,9 @@ export const statuses = reactive({
     }
   ],
   getName(code) {
-    return code < this.items.length ? this.items[code].name : 'Не известно (ошибка)'
+    return code < this.items.length ? this.items[code].name : 'загружается...'
   },
   getIcon(code) {
-    return code < this.items.length ? this.items[code].icon : markRaw(UnknownIcon)
+    return code < this.items.length ? this.items[code].icon : markRaw(LoadingIcon)
   }
 })

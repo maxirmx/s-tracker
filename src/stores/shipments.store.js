@@ -23,60 +23,48 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { useAuthStore } from '@/stores/auth.store.js'
+import { defineStore } from 'pinia'
+import { fetchWrapper } from '@/helpers/fetch.wrapper.js'
 
-export const fetchWrapper = {
-  get: request('GET'),
-  post: request('POST'),
-  put: request('PUT'),
-  delete: request('DELETE')
-}
+const baseUrl = `${import.meta.env.VITE_API_URL}/shipments`
 
-function request(method) {
-  return async (url, body) => {
-    const requestOptions = {
-      method,
-      headers: authHeader(url)
-    }
-    if (body) {
-      requestOptions.headers['Content-Type'] = 'application/json'
-      requestOptions.body = JSON.stringify(body)
-    }
-    console.log(url, requestOptions)
-    const response = await fetch(url, requestOptions)
-    return handleResponse(response)
-  }
-}
-
-// helper functions
-
-function authHeader(url) {
-  // return auth header with jwt if user is logged in and request is to the api url
-  const { user } = useAuthStore()
-  const isLoggedIn = !!user?.token
-  const isApiUrl = url.startsWith(import.meta.env.VITE_API_URL)
-  if (isLoggedIn && isApiUrl) {
-    return { Authorization: `Bearer ${user.token}` }
-  } else {
-    return {}
-  }
-}
-
-function handleResponse(response) {
-  return response.text().then((text) => {
-    const data = text && JSON.parse(text)
-
-    if (!response.ok) {
-      const { user, logout } = useAuthStore()
-      if ([401, 403].includes(response.status) && user) {
-        // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
-        logout()
+export const useShipmentsStore = defineStore({
+  id: 'shipments',
+  state: () => ({
+    shipments: {},
+    shipment: {}
+  }),
+  actions: {
+    async register(org) {
+      await fetchWrapper.post(`${baseUrl}/add`, org)
+    },
+    async getAll() {
+      this.shipments = { loading: true }
+      try {
+        this.shipments = await fetchWrapper.get(baseUrl)
+      } catch (error) {
+        this.shipments = { error }
       }
+    },
+    async getByNumber(number) {
+      this.shipment = { loading: true }
+      try {
+        this.shipment = await fetchWrapper.get(`${baseUrl}/${number}`)
+      } catch (error) {
+        this.shipment = { error }
+      }
+    },
+    async update(number, params) {
+      await fetchWrapper.put(`${baseUrl}/${number}`, params)
+    },
+    async delete(number) {
+      // add isDeleting prop to user being deleted
+      this.shipments.find((x) => x.number === number).isDeleting = true
 
-      const error = (data && data.message) || response.statusText
-      return Promise.reject(error)
+      await fetchWrapper.delete(`${baseUrl}/${number}`)
+
+      // remove user from list after deleted
+      this.shipments = this.shipments.filter((x) => x.number !== number)
     }
-
-    return data
-  })
-}
+  }
+})

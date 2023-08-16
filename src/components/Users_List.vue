@@ -24,38 +24,49 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+import { computed } from 'vue'
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
-import router from '../router'
+import router from '@/router'
 
 import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/stores/users.store.js'
-import { organizations } from '@/stores/demo.orgs.js'
+import { useOrgsStore } from '@/stores/orgs.store.js'
 
 const usersStore = useUsersStore()
 const { users } = storeToRefs(usersStore)
 usersStore.getAll()
 
+const orgsStore = useOrgsStore()
+const { orgs } = storeToRefs(orgsStore)
+orgsStore.getAll()
+
 function userSettings(item) {
-  var id = item['selectable']['id']
-  router.push('settings/' + id)
+  var id = item['id']
+  router.push('user/edit/' + id)
 }
 
 function getOrg(item) {
-  let org = null
-  if (item) {
-    org = organizations.find((org) => org.id === item['selectable']['organizationId'])
+  if (item['orgId'] == -1) {
+    return ''
   }
-  return org ? org.name : null
+  let org = computed(() => {
+    let org = null
+    if (!orgs.value.loading) {
+      org = orgs.value.find((o) => o.id === item['orgId'])
+    }
+    return org ? org.name : 'загружается...'
+  })
+  return org.value
 }
 
 function getCredentials(item) {
   let crd = null
   if (item) {
     crd = 'Пользователь'
-    if (item['selectable']['isManager']) {
+    if (item['isManager']) {
       crd += '; менеджер'
     }
-    if (item['selectable']['isAdmin']) {
+    if (item['isAdmin']) {
       crd += '; aдминистратор'
     }
   }
@@ -66,7 +77,7 @@ const itemsPerPage = 10
 
 const headers = [
   { title: 'Пользователь', align: 'start', key: 'lastName', sortable: 'true' },
-  { title: 'Организация', align: 'start', key: 'organizationId' },
+  { title: 'Организация', align: 'start', key: 'orgId' },
   { title: 'Права', align: 'start', key: 'credentials', sortable: 'false' },
   { title: '', align: 'center', key: 'actions', sortable: 'false' }
 ]
@@ -98,18 +109,18 @@ const headers = [
         {{ item['selectable']['lastName'] }} {{ item['selectable']['firstName'] }}
         {{ item['selectable']['patronimic'] }} ({{ item['selectable']['email'] }})
       </template>
-      <template v-slot:[`item.organizationId`]="{ item }">
-        {{ getOrg(item) }}
+      <template v-slot:[`item.orgId`]="{ item }">
+        {{ getOrg(item['selectable']) }}
       </template>
       <template v-slot:[`item.credentials`]="{ item }">
-        {{ getCredentials(item) }}
+        {{ getCredentials(item['selectable']) }}
       </template>
       <template v-slot:[`item.actions`]="{ item }">
         <font-awesome-icon
           size="1x"
           icon="fa-solid fa-pen"
           class="anti-btn"
-          @click="userSettings(item)"
+          @click="userSettings(item['selectable'])"
         />
       </template>
     </v-data-table>

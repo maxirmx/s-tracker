@@ -29,10 +29,10 @@ import * as Yup from 'yup'
 import moment from 'moment'
 
 import router from '@/router'
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
 
 import { statuses } from '@/helpers/statuses.js'
-import { shipment } from '@/stores/demo.shipment.js'
-import { shipments } from '@/stores/demo.shipments.js'
 
 const props = defineProps({
   create: {
@@ -41,7 +41,7 @@ const props = defineProps({
   },
   shipmentNumber: {
     type: String,
-    required: false
+    required: true
   },
   statusId: {
     type: Number,
@@ -49,19 +49,29 @@ const props = defineProps({
   }
 })
 
-const pstatus = props.statusId ? shipment.history.find((x) => x.id === props.statusId) : null
-const shpKey = pstatus ? pstatus.shipmentNumber : ( props.shipmentNumber ? props.shipmentNumber : null )
-const shp = shpKey ? shipments.items.find((x) => x.shipmentNumber === shpKey) : null
 
-const status = {
+import { useHistoryStore } from '@/stores/history.store.js'
+const historyStore = useHistoryStore()
+const { status } = storeToRefs(historyStore)
+let pstatus = null;
+if (props.statusId) {
+  historyStore.getById(props.statusId)
+  pstatus = computed(()=>status.value.loading ? null: status.value)
+}
+
+import { useShipmentsStore } from '@/stores/shipments.store.js'
+const shipmentStore = useShipmentsStore()
+const { shipment } = storeToRefs(shipmentStore)
+shipmentStore.getByNumber(props.shipmentNumber)
+
+const sts = computed(() => { return {
       status: pstatus ? pstatus.status : '',
       location: pstatus ? pstatus.location : '',
       date: pstatus ? moment(pstatus.date, 'dd.MM.YYYY').format('YYYY-MM-DD') : '',
-      dest: shp ? shp.dest : '',
-//      ddate: shp ? moment(shp.ddate, 'dd.MM.YYYY').format('YYYY-MM-DD') : '',
+      dest: shipment && !shipment.value.loading ? shipment.value.dest : 'загружается ...',
       ddate: '',
       comment: pstatus ? pstatus.comment : ''
-}
+}})
 
 const schema = Yup.object().shape({
   status: Yup.string().required('Выберите статус'),
@@ -78,17 +88,18 @@ function onSubmit(values /*, { setErrors } */) {
 function getHeader() {
   return props.create ? 'Новый статус' : 'Изменение статуса'
 }
+
 </script>
 
 <template>
   <h1 class="orange">
-    {{ getHeader() }} отправления {{ shp ? shp.shipmentNumber : props.shipmentNumber }}
+    {{ getHeader() }} отправления {{ shpKey }}
   </h1>
   <hr class="hr" />
   <div class="settings">
     <Form
       @submit="onSubmit"
-      :initial-values="status"
+      :initial-values="sts"
       :validation-schema="schema"
       v-slot="{ errors, isSubmitting }"
     >

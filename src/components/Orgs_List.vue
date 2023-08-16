@@ -25,9 +25,18 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
-//import router from '../router'
+import router from '../router'
+import { storeToRefs } from 'pinia'
+import { useOrgsStore } from '@/stores/orgs.store.js'
 
-import { organizations } from '@/stores/demo.orgs.js'
+const orgsStore = useOrgsStore()
+const { orgs } = storeToRefs(orgsStore)
+orgsStore.getAll()
+
+function orgSettings(item) {
+  var id = item['selectable']['id']
+  router.push('org/edit/' + id)
+}
 
 const itemsPerPage = 10
 
@@ -43,20 +52,20 @@ const headers = [
     <hr class="hr" />
 
     <div class="wrapper">
-      <router-link to="/organizations" class="link"
+      <router-link to="/org/add" class="link"
         ><font-awesome-icon
           size="1x"
           icon="fa-solid fa-house-chimney-medical"
           class="link"
-        />&nbsp;&nbsp;&nbsp;Создать организацию
+        />&nbsp;&nbsp;&nbsp;Зарегистрировать организацию
       </router-link>
     </div>
 
     <v-data-table
-      v-if="organizations?.length"
+      v-if="orgs?.length"
       v-model:items-per-page="itemsPerPage"
       :headers="headers"
-      :items="organizations"
+      :items="orgs"
       class="elevation-1"
     >
       <template v-slot:[`item.actions`]="{ item }">
@@ -64,9 +73,15 @@ const headers = [
           size="1x"
           icon="fa-solid fa-pen"
           class="anti-btn"
-          @click="console.log(item)"
+          @click="orgSettings(item)"
         />
       </template>
     </v-data-table>
+    <div v-if="orgs?.error" class="text-center m-5">
+        <div class="text-danger">Ошибка загрузки информации об организации: {{ orgs.error }}</div>
+    </div>
+    <div v-if="orgs?.loading" class="text-center m-5">
+      <span class="spinner-border spinner-border-lg align-center"></span>
+    </div>
   </div>
 </template>

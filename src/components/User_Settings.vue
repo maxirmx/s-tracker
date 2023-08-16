@@ -25,13 +25,14 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { ref } from 'vue'
+import { computed } from 'vue'
+import router from '@/router'
 import { storeToRefs } from 'pinia'
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
-//import router from '@/router'
 import { useUsersStore } from '@/stores/users.store.js'
 import { useAuthStore } from '@/stores/auth.store.js'
-import { organizations } from '@/stores/demo.orgs.js'
+import { useOrgsStore } from '@/stores/orgs.store.js'
 
 const props = defineProps({
   register: {
@@ -62,20 +63,23 @@ const schema = Yup.object().shape({
     )
 })
 
-function onSubmit(values /*, { setErrors } */) {
-  console.log('Такой будет пользователь: ' + JSON.stringify(values))
-}
-
 const showPassword = ref(false)
 const showPassword2 = ref(false)
 
 const usersStore = useUsersStore()
 const authStore = useAuthStore()
-let user = null
+
+const orgsStore = useOrgsStore()
+const { orgs } = storeToRefs(orgsStore)
+orgsStore.getAll()
+
+let user = {
+  isEnabled: 'ENABLED'
+}
 
 if (!isRegister()) {
-  ;({ user } = storeToRefs(usersStore))
-  usersStore.getById(props.id)
+  ({ user } = storeToRefs(usersStore))
+  usersStore.getById(props.id, true)
 }
 
 function isRegister() {
@@ -95,11 +99,14 @@ function getButton() {
 }
 
 function getOrg() {
-  let org = null
-  if (user) {
-    org = organizations.find((org) => org.id === user.value.organizationId)
-  }
-  return org ? org.name : null
+  let org = computed(() => {
+    let org = null
+    if (!orgs.value.loading) {
+      org = orgs.value.find((o) => o.id === user.value.orgId)
+    }
+    return org ? org.name : ''
+  })
+  return org.value
 }
 
 function showCredentials() {
@@ -110,31 +117,44 @@ function showAndEditCredentials() {
   return asAdmin()
 }
 
-function _isAdmin() {
-  let is = false
-  if (user && user.value.isAdmin) is = true
-  return is
-}
-
-function _isManager() {
-  let is = false
-  if (user && user.value.isManager) is = true
-  return is
-}
-
 function getCredentials() {
   let crd = null
   if (user) {
     crd = 'Пользователь'
-    if (user.value.isManager) {
+    if (user.value.isManager === 'MANAGER') {
       crd += '; менеджер'
     }
-    if (user.value.isAdmin) {
+    if (user.value.isAdmin === 'ADMIN') {
       crd += '; aдминистратор'
     }
   }
   return crd
 }
+
+function onSubmit(values , { setErrors } ) {
+  if (isRegister()) {
+    if (asAdmin()) {
+      return usersStore
+        .add(values, true)
+        .then(() => { router.go(-1) })
+        .catch((error) => setErrors({ apiError: error }))
+    }
+    else {
+      return usersStore
+        .register(values, true)
+        .then(() => { router.go(-1) })
+        .catch((error) => setErrors({ apiError: error }))
+    }
+  }
+  else {
+    return usersStore
+      .update(props.id, values, true)
+      .then(() => { router.go(-1) })
+      .catch((error) => setErrors({ apiError: error }))
+  }
+}
+
+
 </script>
 
 <template>
@@ -233,22 +253,22 @@ function getCredentials() {
         </button>
       </div>
       <div v-if="showCredentials()" class="form-group">
-        <label for="organizationId" class="label">Организация:</label>
-        <span id="organizationId"
+        <label for="orgId" class="label">Организация:</label>
+        <span id="orgId"
           ><em>{{ getOrg() }}</em></span
         >
       </div>
       <div v-if="showAndEditCredentials()" class="form-group">
-        <label for="organizationId" class="label">Организация:</label>
+        <label for="orgId" class="label">Организация:</label>
         <Field
-          name="organizationId"
+          name="orgId"
           as="select"
           class="form-control input select"
-          :class="{ 'is-invalid': errors.sorganizationId }"
+          :class="{ 'is-invalid': errors.orgId }"
         >
           <option value="">Выберите организацию:</option>
           <option value="-1">(без организации)</option>
-          <option v-for="org in organizations" :key="org" :value="org.id">
+          <option v-for="org in orgs" :key="org" :value="org.id">
             {{ org.name }}
           </option>
         </Field>
@@ -262,12 +282,30 @@ function getCredentials() {
       </div>
 
       <div v-if="showAndEditCredentials()" class="form-group">
-        <label for="isUser" class="label">Права</label>
-        <input id="isUser" name="isUser" type="checkbox" class="checkbox checkbox-styled" :checked="true" />
-        <label for="isUser">Пользователь</label>
-        <input id="isManager" name="isManager" type="checkbox" class="checkbox checkbox-styled" :checked="_isManager()" />
+        <label for="isEnabled" class="label">Права</label>
+        <Field
+          id="isEnabled"
+          name="isEnabled"
+          type="checkbox"
+          class="checkbox checkbox-styled"
+          value='ENABLED'
+        />
+        <label for="isEnabled">Пользователь</label>
+        <Field
+          id="isManager"
+          name="isManager"
+          type="checkbox"
+          class="checkbox checkbox-styled"
+          value='MANAGER'
+          />
         <label for="isManager">Менеджер</label>
-        <input id="isAdmin" type="checkbox" name="isAdmin" class="checkbox checkbox-styled" :checked="_isAdmin()" />
+        <Field
+          id="isAdmin"
+          type="checkbox"
+          name="isAdmin"
+          class="checkbox checkbox-styled"
+          value='ADMIN'
+        />
         <label for="isAdmin">Администратор</label>
       </div>
 

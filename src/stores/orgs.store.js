@@ -1,6 +1,6 @@
 // Copyright (C) 2023 Maxim [maxirmx] Samsonov  (www.sw.consulting)
 // All rights reserved.
-// This file is a part of s-tracker applcation  (test data set)
+// This file is a part of s-tracker applcation
 //
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions
@@ -23,7 +23,49 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-export const organizations = [
-  { id: 0, name: 'OOO "Карго Менеджемент"' },
-  { id: 1, name: 'OOO "Братан Турбо Дизель"' }
-]
+import { defineStore } from 'pinia'
+import { fetchWrapper } from '@/helpers/fetch.wrapper.js'
+import { apiUrl } from '@/helpers/config.js'
+
+const baseUrl = `${apiUrl}/orgs`
+
+export const useOrgsStore = defineStore({
+  id: 'orgs',
+  state: () => ({
+    orgs: {},
+    org: {}
+  }),
+  actions: {
+    async add(org) {
+      await fetchWrapper.post(`${baseUrl}/add`, org)
+    },
+    async getAll() {
+      this.orgs = { loading: true }
+      try {
+        this.orgs = await fetchWrapper.get(baseUrl)
+      } catch (error) {
+        this.orgs = { error }
+      }
+    },
+    async getById(id) {
+      this.org = { loading: true }
+      try {
+        this.org = await fetchWrapper.get(`${baseUrl}/${id}`)
+      } catch (error) {
+        this.org = { error }
+      }
+    },
+    async update(id, params) {
+      await fetchWrapper.put(`${baseUrl}/${id}`, params)
+    },
+    async delete(id) {
+      // add isDeleting prop to user being deleted
+      this.orgs.find((x) => x.id === id).isDeleting = true
+
+      await fetchWrapper.delete(`${baseUrl}/${id}`)
+
+      // remove user from list after deleted
+      this.orgs = this.orgs.filter((x) => x.id !== id)
+    }
+  }
+})

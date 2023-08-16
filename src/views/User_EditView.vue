@@ -24,11 +24,19 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import CustUsers from '@/components/CustUsers.vue'
+import UserSettings from '@/components/User_Settings.vue'
+
+const props = defineProps({
+  id: {
+    type: String,
+    required: true
+  }
+})
+const id = parseInt(props.id)
 </script>
 
 <template>
   <main>
-    <CustUsers />
+    <UserSettings :register="false" :id="id" />
   </main>
 </template>

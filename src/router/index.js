@@ -41,56 +41,67 @@ const router = createRouter({
     {
       path: '/recover',
       name: 'Восстановление пароля',
-      component: () => import('@/views/RecoverView.vue')
+      component: () => import('@/views/User_RecoverView.vue')
     },
     {
       path: '/register',
       name: 'Регистрация',
-      component: () => import('@/views/RegisterView.vue')
+      component: () => import('@/views/User_RegisterView.vue')
     },
     {
-      path: '/shipments',
-      name: 'Отправления',
-      component: () => import('@/views/ShipmentsView.vue')
+      path: '/users',
+      name: 'Пользователи',
+      component: () => import('@/views/Users_View.vue')
     },
     {
-      path: '/shipment/:shipmentNumber',
-      name: 'Отправлениe',
-      component: () => import('@/views/ShipmentView.vue'),
+      path: '/user/edit/:id',
+      name: 'Настройки',
+      component: () => import('@/views/User_EditView.vue'),
       props: true
     },
     {
-      path: '/settings/:id',
-      name: 'Настройки',
-      component: () => import('@/views/SettingsView.vue'),
+      path: '/orgs',
+      name: 'Организации',
+      component: () => import('@/views/Orgs_View.vue')
+    },
+    {
+      path: '/org/add',
+      name: 'Добавить организацию',
+      component: () => import('@/views/Org_AddView.vue')
+    },
+    {
+      path: '/org/edit/:orgId',
+      name: 'Редактировать информацию об организации',
+      component: () => import('@/views/Org_EditView.vue'),
       props: true
     },
     {
       path: '/status/add/:shipmentNumber',
       name: 'Добавить статус отправления',
-      component: () => import('@/views/AddStatusView.vue'),
+      component: () => import('@/views/ShipmentStatus_AddView.vue'),
       props: true
     },
     {
-      path: '/status/edit/:statusId',
+      path: '/status/edit/:statusId/:shipmentNumber',
       name: 'Изменить статус отправления',
-      component: () => import('@/views/EditStatusView.vue'),
+      component: () => import('@/views/ShipmentStatus_EditView.vue'),
+      props: true
+    },
+    {
+      path: '/shipments',
+      name: 'Отправления',
+      component: () => import('@/views/Shipments_View.vue')
+    },
+    {
+      path: '/shipment/:shipmentNumber',
+      name: 'Отправлениe',
+      component: () => import('@/views/Shipment_View.vue'),
       props: true
     },
     {
       path: '/shipment/add',
       name: 'Добавить отправлениe',
-      component: () => import('@/views/AddShipmentView.vue')
-    },
-    {
-      path: '/users',
-      name: 'Пользователи',
-      component: () => import('@/views/UsersView.vue')
-    },
-    {
-      path: '/organizations',
-      name: 'Организации',
-      component: () => import('@/views/OrgsView.vue')
+      component: () => import('@/views/Shipment_AddView.vue')
     }
   ]
 })

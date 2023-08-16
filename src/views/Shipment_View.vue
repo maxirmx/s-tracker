@@ -24,11 +24,18 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import AddShipment from '@/components/AddShipment.vue'
+import Shipment from '@/components/Shipment_History.vue'
+
+const props = defineProps({
+  shipmentNumber: {
+    type: String,
+    required: true
+  }
+})
 </script>
 
 <template>
   <main>
-    <AddShipment />
+    <Shipment :shipmentNumber="props.shipmentNumber" />
   </main>
 </template>
