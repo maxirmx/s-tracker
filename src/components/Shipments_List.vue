@@ -62,7 +62,7 @@ const headers = [
     <h1 class="orange">Отправления</h1>
     <hr class="hr" />
 
-    <div class="wrapper" v-if="authStore.user.isManager">
+    <div class="wrapper" v-if="authStore.isManager()">
       <router-link :to="'/shipment/add'" class="link">
         <font-awesome-icon
           size="1x"

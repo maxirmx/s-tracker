@@ -109,7 +109,7 @@ function fakeBackend() {
       { id: 51,   status: stcodes.REGISTERED,       date: '10.07.2023', location: 'Kuala Lumpur, ML',   shipmentNumber: '1034A7', comment: 'Тут убить человека стоит 5 баксов'      },
     ]
 
-  let users = [
+  /*let users = [
     {
       id: 0,
       email: 'admin@example.com',
@@ -155,14 +155,11 @@ function fakeBackend() {
       isManager: false
     }
   ]
-
-//  let orgs = [
-//    { id: 0, name: 'OOO "Карго Менеджемент"' },
-//    { id: 1, name: 'OOO "Братан Турбо Дизель"' }
-//  ]
-
-
-
+  let orgs = [
+    { id: 0, name: 'OOO "Карго Менеджемент"' },
+    { id: 1, name: 'OOO "Братан Турбо Дизель"' }
+  ]
+*/
 
   let realFetch = window.fetch
   window.fetch = function (url, opts) {
@@ -172,8 +169,8 @@ function fakeBackend() {
 
       function handleRoute() {
         switch (true) {
-          case url.endsWith('/users/authenticate') && opts.method === 'POST':
-            return authenticate()
+//          case url.endsWith('/users/authenticate') && opts.method === 'POST':
+//            return authenticate()
 //          case url.endsWith('/users') && opts.method === 'GET':
 //            return getUsers()
 //          case url.match(/\/users\/\d+$/) && opts.method === 'GET':
@@ -216,24 +213,24 @@ function fakeBackend() {
 
       // route functions
 
-      function authenticate() {
-        const { email, password } = body()
-        const user = users.find((x) => x.email === email && x.password === password)
+//      function authenticate() {
+//        const { email, password } = body()
+//        const user = users.find((x) => x.email === email && x.password === password)
 
-        if (!user) return error('Неправильный пароль или адрес электронной почты')
+//        if (!user) return error('Неправильный пароль или адрес электронной почты')
 
-        return ok({
-          id: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          patronimic: user.patronimic,
-          isAdmin: user.isAdmin,
-          isManager: user.isManager,
-          orgId: user.orgId,
-          token: 'fake-jwt-token-' + user.id
-        })
-      }
+//        return ok({
+//          id: user.id,
+//          email: user.email,
+//          firstName: user.firstName,
+//          lastName: user.lastName,
+//          patronimic: user.patronimic,
+//          isAdmin: user.isAdmin,
+//          isManager: user.isManager,
+//          orgId: user.orgId,
+//          token: 'fake-jwt-token-' + user.id
+//        })
+//      }
 
 //      function getUsers() {
 //        if (!isAuthenticated()) return unauthorized()
@@ -390,12 +387,12 @@ function fakeBackend() {
         })
       }
 
-      function error(message) {
-        resolve({ status: 400, text: () => Promise.resolve(JSON.stringify({ message })) })
-      }
+//      function error(message) {
+//        resolve({ status: 400, text: () => Promise.resolve(JSON.stringify({ message })) })
+//      }
 
       function isAuthenticated() {
-        return opts.headers['Authorization'].startsWith('Bearer fake-jwt-token')
+        return opts.headers['Authorization'].startsWith('Bearer')
       }
 
 //      function basicDetails(user) {
