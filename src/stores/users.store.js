@@ -43,6 +43,11 @@ export const useUsersStore = defineStore({
     users: {},
     user: {}
   }),
+  getters: {
+    getUserById: (state) => {
+      return (userId) => state.users.find((user) => user.id === userId)
+    },
+  },
   actions: {
     async add(user, trnslt = false) {
       if (trnslt) {
@@ -70,8 +75,8 @@ export const useUsersStore = defineStore({
         this.user = await fetchWrapper.get(`${baseUrl}/${id}`)
         if (trnslt) {
           this.user.isEnabled = this.user.isEnabled ? "ENABLED" : "JERK"
-          this.user.isManager = this.user.isEnabled ? "MANAGER" : "JERK"
-          this.user.isAdmin = this.user.isEnabled ? "ADMIN" : "JERK"
+          this.user.isManager = this.user.isManager ? "MANAGER" : "JERK"
+          this.user.isAdmin = this.user.isAdmin ? "ADMIN" : "JERK"
         }
       } catch (error) {
         this.user = { error }
@@ -92,21 +97,6 @@ export const useUsersStore = defineStore({
 
         // update auth user in pinia state
         authStore.user = user
-      }
-    },
-    async delete(id) {
-      // add isDeleting prop to user being deleted
-      this.users.find((x) => x.id === id).isDeleting = true
-
-      await fetchWrapper.delete(`${baseUrl}/${id}`)
-
-      // remove user from list after deleted
-      this.users = this.users.filter((x) => x.id !== id)
-
-      // auto logout if the logged in user deleted their own record
-      const authStore = useAuthStore()
-      if (id === authStore.user.id) {
-        authStore.logout()
       }
     }
   }

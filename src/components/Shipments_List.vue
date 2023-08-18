@@ -24,6 +24,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+import moment from 'moment'
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
@@ -38,18 +39,23 @@ const { shipments } = storeToRefs(shipmentsStore)
 shipmentsStore.getAll()
 
 function getStatus(item) {
-  var statusCode = item['selectable']['statusCode']
+  var statusCode = item['selectable']['status']
   return statuses.getName(statusCode)
 }
 
+function getDate(item) {
+  var date = item['selectable']['date']
+  return moment(date, 'YYYY-MM-DD').format('DD.MM.YYYY')
+}
+
 function viewHistory(item) {
-  var shipmentNumber = item['selectable']['shipmentNumber']
+  var shipmentNumber = item['selectable']['number']
   router.push('shipment/' + shipmentNumber)
 }
 
 const itemsPerPage = 10
 const headers = [
-  { title: 'Номер', align: 'start', key: 'shipmentNumber' },
+  { title: 'Номер', align: 'start', key: 'number' },
   { title: 'Место', align: 'center', key: 'location' },
   { title: 'Статус', align: 'center', key: 'statuses' },
   { title: 'Дата', align: 'center', key: 'date' },
@@ -62,7 +68,7 @@ const headers = [
     <h1 class="orange">Отправления</h1>
     <hr class="hr" />
 
-    <div class="wrapper" v-if="authStore.user.isManager">
+    <div class="wrapper" v-if="authStore.user?.isManager">
       <router-link :to="'/shipment/add'" class="link">
         <font-awesome-icon
           size="1x"
@@ -80,6 +86,11 @@ const headers = [
       item-value="name"
       class="elevation-1"
     >
+
+      <template v-slot:[`item.date`]="{ item }">
+        {{ getDate(item) }}
+      </template>
+
       <template v-slot:[`item.statuses`]="{ item }">
         {{ getStatus(item) }}
       </template>
@@ -100,7 +111,7 @@ const headers = [
       <span class="spinner-border spinner-border-lg align-center"></span>
     </div>
     <div v-if="shipments?.error" class="text-center m-5">
-      <div class="text-danger">Error loading shipments: {{ shipments.error }}</div>
+      <div class="text-danger">Ошибка при загрузке списка отправлений: {{ shipments.error }}</div>
     </div>
   </div>
 </template>

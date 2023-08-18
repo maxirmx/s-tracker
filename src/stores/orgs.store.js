@@ -57,15 +57,6 @@ export const useOrgsStore = defineStore({
     },
     async update(id, params) {
       await fetchWrapper.put(`${baseUrl}/${id}`, params)
-    },
-    async delete(id) {
-      // add isDeleting prop to user being deleted
-      this.orgs.find((x) => x.id === id).isDeleting = true
-
-      await fetchWrapper.delete(`${baseUrl}/${id}`)
-
-      // remove user from list after deleted
-      this.orgs = this.orgs.filter((x) => x.id !== id)
     }
   }
 })

@@ -45,23 +45,24 @@ const props = defineProps({
   }
 })
 
-const schema = Yup.object().shape({
-  firstName: Yup.string().required('Необходимо указать имя'),
-  lastName: Yup.string().required('Необходимо указать фамилию'),
-  patronimic: Yup.string(),
-  email: Yup.string()
-    .required('Необходимо указать электронную почту')
-    .email('Неверный формат электронной почты'),
-  password: Yup.string()
-    // password optional in edit mode
-    .concat(isRegister() ? Yup.string().required('Необходимо указать парoль') : null)
-    .min(4, 'Пароль не может быть короче 4 симоволов'),
-  password2: Yup.string()
-    .concat(isRegister() ? Yup.string().required('Необходимо подтвердить пароль') : null)
-    .concat(
-      isRegister() ? Yup.string().oneOf([Yup.ref('password')], 'Пароли должны совпадать') : null
-    )
-})
+const schema =
+  Yup.object().shape({
+    firstName: Yup.string().required('Необходимо указать имя'),
+    lastName: Yup.string().required('Необходимо указать фамилию'),
+    patronimic: Yup.string(),
+    email: Yup.string()
+      .required('Необходимо указать электронную почту')
+      .email('Неверный формат электронной почты'),
+    password: Yup.string()
+      .concat(isRegister() ?
+        Yup.string().required('Необходимо указать пароль').min(4, 'Пароль не может быть короче 4 символов') :
+        null),
+    password2: Yup.string()
+      .when('password', (password, schema) => {
+        if ((password && password !='') || isRegister()) return schema.required('Необходимо подтвердить пароль');
+      })
+      .oneOf([Yup.ref('password')], 'Пароли должны совпадать')
+  })
 
 const showPassword = ref(false)
 const showPassword2 = ref(false)
@@ -136,24 +137,26 @@ function onSubmit(values , { setErrors } ) {
     if (asAdmin()) {
       return usersStore
         .add(values, true)
-        .then(() => { router.go(-1) })
+        .then(() => router.go(-1))
         .catch((error) => setErrors({ apiError: error }))
     }
     else {
+      values.isEnabled = true
+      values.isManager = false
+      values.isAdmin = false
       return usersStore
         .register(values, true)
-        .then(() => { router.go(-1) })
+        .then(() => router.go(-1))
         .catch((error) => setErrors({ apiError: error }))
     }
   }
   else {
     return usersStore
       .update(props.id, values, true)
-      .then(() => { router.go(-1) })
+      .then(() => router.go(-1))
       .catch((error) => setErrors({ apiError: error }))
   }
 }
-
 
 </script>
 
@@ -339,6 +342,6 @@ function onSubmit(values , { setErrors } ) {
     <span class="spinner-border spinner-border-lg align-center"></span>
   </div>
   <div v-if="user?.error" class="text-center m-5">
-    <div class="text-danger">Error loading user: {{ user.error }}</div>
+    <div class="text-danger">Ошибка при загрузке информации о пользователе: {{ user.error }}</div>
   </div>
 </template>

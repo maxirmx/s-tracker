@@ -109,7 +109,7 @@ function fakeBackend() {
       { id: 51,   status: stcodes.REGISTERED,       date: '10.07.2023', location: 'Kuala Lumpur, ML',   shipmentNumber: '1034A7', comment: 'Тут убить человека стоит 5 баксов'      },
     ]
 
-  let users = [
+  /*let users = [
     {
       id: 0,
       email: 'admin@example.com',
@@ -155,25 +155,22 @@ function fakeBackend() {
       isManager: false
     }
   ]
-
-//  let orgs = [
-//    { id: 0, name: 'OOO "Карго Менеджемент"' },
-//    { id: 1, name: 'OOO "Братан Турбо Дизель"' }
-//  ]
-
-
-
+  let orgs = [
+    { id: 0, name: 'OOO "Карго Менеджемент"' },
+    { id: 1, name: 'OOO "Братан Турбо Дизель"' }
+  ]
+*/
 
   let realFetch = window.fetch
   window.fetch = function (url, opts) {
     return new Promise((resolve, reject) => {
       // wrap in timeout to simulate server api call
-      setTimeout(handleRoute, 5)
+//      setTimeout(handleRoute, 5)
 
-      function handleRoute() {
+//      function handleRoute() {
         switch (true) {
-          case url.endsWith('/users/authenticate') && opts.method === 'POST':
-            return authenticate()
+//          case url.endsWith('/users/authenticate') && opts.method === 'POST':
+//            return authenticate()
 //          case url.endsWith('/users') && opts.method === 'GET':
 //            return getUsers()
 //          case url.match(/\/users\/\d+$/) && opts.method === 'GET':
@@ -190,16 +187,16 @@ function fakeBackend() {
 //            return updateOrg()
 //          case url.match(/\/orgs\/\d+$/) && opts.method === 'DELETE':
 //            return deleteOrg()
-          case url.endsWith('/shipments') && opts.method === 'GET':
-            return getShipments()
-          case url.match(/\/shipments\/.+$/) && opts.method === 'GET':
-            return getShipmentByNumber()
-          case url.match(/\/shipments\/.+$/) && opts.method === 'PUT':
-            return updateShipment()
-          case url.match(/\/shipments\/.+$/) && opts.method === 'DELETE':
-            return deleteShipment()
-          case url.match(/\/history\/.+$/) && opts.method === 'GET':
-            return getHistoryByNumber()
+//          case url.endsWith('/shipments') && opts.method === 'GET':
+//            return getShipments()
+//          case url.match(/\/shipments\/.+$/) && opts.method === 'GET':
+//            return getShipmentByNumber()
+//          case url.match(/\/shipments\/.+$/) && opts.method === 'PUT':
+//            return updateShipment()
+//          case url.match(/\/shipments\/.+$/) && opts.method === 'DELETE':
+//            return deleteShipment()
+//          case url.match(/\/history\/.+$/) && opts.method === 'GET':
+//            return getHistoryByNumber()
           case url.match(/\/status\/\d+$/) && opts.method === 'GET':
             return getStatusById()
           case url.match(/\/status\/.+$/) && opts.method === 'PUT':
@@ -212,28 +209,28 @@ function fakeBackend() {
               .then((response) => resolve(response))
               .catch((error) => reject(error))
         }
-      }
+//      }
 
       // route functions
 
-      function authenticate() {
-        const { email, password } = body()
-        const user = users.find((x) => x.email === email && x.password === password)
+//      function authenticate() {
+//        const { email, password } = body()
+//        const user = users.find((x) => x.email === email && x.password === password)
 
-        if (!user) return error('Неправильный пароль или адрес электронной почты')
+//        if (!user) return error('Неправильный пароль или адрес электронной почты')
 
-        return ok({
-          id: user.id,
-          email: user.email,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          patronimic: user.patronimic,
-          isAdmin: user.isAdmin,
-          isManager: user.isManager,
-          orgId: user.orgId,
-          token: 'fake-jwt-token-' + user.id
-        })
-      }
+//        return ok({
+//          id: user.id,
+//          email: user.email,
+//          firstName: user.firstName,
+//          lastName: user.lastName,
+//          patronimic: user.patronimic,
+//          isAdmin: user.isAdmin,
+//          isManager: user.isManager,
+//          orgId: user.orgId,
+//          token: 'fake-jwt-token-' + user.id
+//        })
+//      }
 
 //      function getUsers() {
 //        if (!isAuthenticated()) return unauthorized()
@@ -307,16 +304,16 @@ function fakeBackend() {
 //        return ok()
 //      }
 
-      function getShipments() {
-        if (!isAuthenticated()) return unauthorized()
-        return ok(shipments)
-      }
+//      function getShipments() {
+//        if (!isAuthenticated()) return unauthorized()
+//        return ok(shipments)
+//      }
 
-      function getShipmentByNumber() {
-        if (!isAuthenticated()) return unauthorized()
-        const shipment = shipments.find((x) => x.shipmentNumber === numberFromUrl())
-        return ok(shipment)
-      }
+//      function getShipmentByNumber() {
+//        if (!isAuthenticated()) return unauthorized()
+//        const shipment = shipments.find((x) => x.shipmentNumber === numberFromUrl())
+//        return ok(shipment)
+//      }
 
       function updateShipment() {
         if (!isAuthenticated()) return unauthorized()
@@ -390,12 +387,12 @@ function fakeBackend() {
         })
       }
 
-      function error(message) {
-        resolve({ status: 400, text: () => Promise.resolve(JSON.stringify({ message })) })
-      }
+//      function error(message) {
+//        resolve({ status: 400, text: () => Promise.resolve(JSON.stringify({ message })) })
+//      }
 
       function isAuthenticated() {
-        return opts.headers['Authorization'].startsWith('Bearer fake-jwt-token')
+        return opts.headers['Authorization'].startsWith('Bearer')
       }
 
 //      function basicDetails(user) {
