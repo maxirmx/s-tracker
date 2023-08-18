@@ -53,10 +53,8 @@ const props = defineProps({
 import { useHistoryStore } from '@/stores/history.store.js'
 const historyStore = useHistoryStore()
 const { status } = storeToRefs(historyStore)
-let pstatus = null;
-if (props.statusId) {
+if (!props.create) {
   historyStore.getById(props.statusId)
-  pstatus = computed(()=>status.value.loading ? null: status.value)
 }
 
 import { useShipmentsStore } from '@/stores/shipments.store.js'
@@ -65,12 +63,12 @@ const { shipment } = storeToRefs(shipmentStore)
 shipmentStore.getByNumber(props.shipmentNumber)
 
 const sts = computed(() => { return {
-      status: pstatus ? pstatus.status : '',
-      location: pstatus ? pstatus.location : '',
-      date: pstatus ? moment(pstatus.date, 'dd.MM.YYYY').format('YYYY-MM-DD') : '',
+      status: props.create ? '' : status.value.status,
+      location: props.create ? '' : status.value.location,
+      date: props.create ?  moment().format('YYYY-MM-DD') : moment(status.value.date).format('YYYY-MM-DD'),
       dest: shipment && !shipment.value.loading ? shipment.value.dest : 'загружается ...',
       ddate: '',
-      comment: pstatus ? pstatus.comment : ''
+      comment: props.create ?  '' : status.value.comment
 }})
 
 const schema = Yup.object().shape({
@@ -91,10 +89,10 @@ function onSubmit(values, { setErrors } ) {
   else {
     console.log('Shall update: ', values)
     router.go(-1)
-//    return historyStore
-//      .update(props.id, values)
-//      .then(() => { router.go(-1) })
-//      .catch((error) => setErrors({ apiError: error }))
+    return historyStore
+      .update(props.statusId, values)
+      .then(() => { router.go(-1) })
+      .catch((error) => setErrors({ apiError: error }))
   }
 }
 

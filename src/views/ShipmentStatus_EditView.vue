@@ -38,7 +38,6 @@ const props = defineProps({
 
 })
 const id = parseInt(props.statusId)
-console.log(id, props.shipmentNumber)
 </script>
 
 <template>

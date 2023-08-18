@@ -42,7 +42,7 @@ export const useHistoryStore = defineStore({
     async getById(id) {
       this.status = { loading: true }
       try {
-        this.status = await fetchWrapper.get(`${baseUrl}/status/${id}`)
+        this.status = await fetchWrapper.get(`${baseUrl}/statuses/${id}`)
       } catch (error) {
         this.status = { error }
       }
@@ -50,7 +50,7 @@ export const useHistoryStore = defineStore({
     async getByNumber(number) {
       this.history = { loading: true }
       try {
-        this.history = await fetchWrapper.get(`${baseUrl}/statuses/${number}`)
+        this.history = await fetchWrapper.get(`${baseUrl}/history/${number}`)
       } catch (error) {
         this.history = { error }
       }
