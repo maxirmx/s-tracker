@@ -64,12 +64,11 @@ function authHeader(url) {
 }
 
 function handleResponse(response) {
-  console.log(response)
   return response.text().then((text) => {
     const data = text && JSON.parse(text)
+    console.log(response.status, response.statusText, data)
 
     if (!response.ok) {
-      console.log(response.status, response.statusText, data)
 
       const { user, logout } = useAuthStore()
       if ([401].includes(response.status)) {

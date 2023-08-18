@@ -80,9 +80,22 @@ const schema = Yup.object().shape({
   ddate: Yup.string().required('Укажите ожидаемую дату прибытия' ),
 })
 
-function onSubmit(values /*, { setErrors } */) {
-  console.log('Такой будет статус: ' + JSON.stringify(values))
-  router.go(-1)
+function onSubmit(values, { setErrors } ) {
+  values.shipmentNumber = props.shipmentNumber;
+  if (props.create) {
+    return historyStore
+      .add(values)
+      .then(() => { router.go(-1) })
+      .catch((error) => setErrors({ apiError: error }))
+  }
+  else {
+    console.log('Shall update: ', values)
+    router.go(-1)
+//    return historyStore
+//      .update(props.id, values)
+//      .then(() => { router.go(-1) })
+//      .catch((error) => setErrors({ apiError: error }))
+  }
 }
 
 function getHeader() {
@@ -93,7 +106,7 @@ function getHeader() {
 
 <template>
   <h1 class="orange">
-    {{ getHeader() }} отправления {{ shpKey }}
+    {{ getHeader() }} отправления {{ props.shipmentNumber }}
   </h1>
   <hr class="hr" />
   <div class="settings">

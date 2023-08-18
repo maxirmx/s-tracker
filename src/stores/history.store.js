@@ -36,7 +36,7 @@ export const useHistoryStore = defineStore({
     status: {}
   }),
   actions: {
-    async register(status) {
+    async add(status) {
       await fetchWrapper.post(`${baseUrl}/statuses/add`, status)
     },
     async getById(id) {
@@ -56,7 +56,7 @@ export const useHistoryStore = defineStore({
       }
     },
     async update(id, params) {
-      await fetchWrapper.put(`${baseUrl}/status/${id}`, params)
+      await fetchWrapper.put(`${baseUrl}/statuses/${id}`, params)
     }
   }
 })

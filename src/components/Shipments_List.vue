@@ -24,6 +24,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+import moment from 'moment'
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
@@ -40,6 +41,11 @@ shipmentsStore.getAll()
 function getStatus(item) {
   var statusCode = item['selectable']['status']
   return statuses.getName(statusCode)
+}
+
+function getDate(item) {
+  var date = item['selectable']['date']
+  return moment(date, 'YYYY-MM-DD').format('DD.MM.YYYY')
 }
 
 function viewHistory(item) {
@@ -80,6 +86,11 @@ const headers = [
       item-value="name"
       class="elevation-1"
     >
+
+      <template v-slot:[`item.date`]="{ item }">
+        {{ getDate(item) }}
+      </template>
+
       <template v-slot:[`item.statuses`]="{ item }">
         {{ getStatus(item) }}
       </template>
@@ -100,7 +111,7 @@ const headers = [
       <span class="spinner-border spinner-border-lg align-center"></span>
     </div>
     <div v-if="shipments?.error" class="text-center m-5">
-      <div class="text-danger">Error loading shipments: {{ shipments.error }}</div>
+      <div class="text-danger">Ошибка при загрузке списка отправлений: {{ shipments.error }}</div>
     </div>
   </div>
 </template>

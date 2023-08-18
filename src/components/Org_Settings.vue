@@ -117,10 +117,10 @@ function onSubmit(values, { setErrors }) {
       </div>
       <div v-if="errors.name" class="alert alert-danger mt-3 mb-0">{{ errors.name }}</div>
       <div v-if="org?.error" class="text-center m-5">
-        <div class="text-danger">Ошибка загрузки информации об организации: {{ org.error }}</div>
+        <div class="text-danger">Ошибка при загрузке информации об организации: {{ org.error }}</div>
       </div>
       <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">
-        <div class="text-danger">Ошибка: {{ errors.apiError }}</div>
+        <div class="text-danger">{{ errors.apiError }}</div>
       </div>
       <div v-if="org?.loading" class="text-center m-5">
         <span class="spinner-border spinner-border-lg align-center"></span>

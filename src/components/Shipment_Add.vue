@@ -25,43 +25,51 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { Form, Field } from 'vee-validate'
+import { storeToRefs } from 'pinia'
 import * as Yup from 'yup'
 import moment from 'moment'
 import router from '@/router'
 import { stcodes, statuses } from '@/helpers/statuses.js'
 
-//import { useUsersStore } from '@/stores/users.store.js'
-//import { useAuthStore } from '@/stores/auth.store.js'
-//import { useOrgsStore } from '@/stores/orgs.store.js'
-//import { useShipmentsStore } from '@/stores/shipments.store.js'
+import { useUsersStore } from '@/stores/users.store.js'
+import { useShipmentsStore } from '@/stores/shipments.store.js'
 
-//const usersStore = useUsersStore()
-//const authStore = useAuthStore()
-//const orgsStore = useOrgsStore()
-//const shipmentsStore = useShipmentsStore()
+const usersStore = useUsersStore()
+const { users } = storeToRefs(usersStore)
+const { getUserById } = storeToRefs(usersStore)
+usersStore.getAll()
 
+const shipmentsStore = useShipmentsStore()
+
+const userIdError = 'Выберите клиента. Клиент и его организация смогут отслеживать отправление.'
 const schema = Yup.object().shape({
-  shipmentNumber: Yup.string().required('Укажите номер отправления'),
+  number: Yup.string().required('Укажите номер отправления'),
   status: Yup.string().required('Выберите статус'),
   dest: Yup.string().required('Укажите пункт назначения'),
   location: Yup.string().required('Укажите местонахождение'),
   date: Yup.string().required('Укажите дату'),
-  ddate: Yup.string().required('Укажите ожидаемую дату прибытия')
+  ddate: Yup.string().required('Укажите ожидаемую дату прибытия'),
+  userId: Yup.number(userIdError).typeError(userIdError).
+              integer(userIdError).required(userIdError)
 })
 
-function onSubmit(values /*, { setErrors } */) {
-  console.log('Такое будет отправление: ' + JSON.stringify(values))
-  router.go(-1)
+function onSubmit(values , { setErrors }) {
+  values.orgId = getUserById.value(values.userId).orgId
+  return shipmentsStore
+      .add(values)
+      .then(() => { router.go(-1) })
+      .catch((error) => setErrors({ apiError: error }))
 }
 
 const status = {
-  shipmentNumber: '',
+  number: '',
   status: stcodes.REGISTERED,
   location: '',
   date: moment().format('YYYY-MM-DD'),
   ddate: '',
   dest: '',
-  comment: ''
+  comment: '',
+  userId: ''
 }
 </script>
 
@@ -77,9 +85,9 @@ const status = {
         v-slot="{ errors, isSubmitting }"
       >
         <div class="form-group">
-          <label for="shipmentNumber" class="label">Номер отправления:</label>
+          <label for="number" class="label">Номер отправления:</label>
           <Field
-            name="shipmentNumber"
+            name="number"
             type="text"
             class="form-control input"
             :class="{ 'is-invalid': errors.тгьиук }"
@@ -153,6 +161,21 @@ const status = {
         </div>
 
         <div class="form-group">
+          <label for="userId" class="label">Клиент:</label>
+          <Field
+            name="userId"
+            as="select"
+            class="form-control input select"
+            :class="{ 'is-invalid': errors.userId }"
+          >
+            <option value="">Выберите клиента:</option>
+            <option v-for="user in users" :key="user" :value="user.id">
+              {{ user.lastName }} {{ user.firstName }} {{ user.patronimic }}
+            </option>
+          </Field>
+        </div>
+
+        <div class="form-group">
           <button class="button" type="submit" :disabled="isSubmitting">
             <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
             Сохранить
@@ -162,8 +185,8 @@ const status = {
             Отменить
           </button>
         </div>
-        <div v-if="errors.shipmentNumber" class="alert alert-danger mt-3 mb-0">
-          {{ errors.shipmentNumber }}
+        <div v-if="errors.number" class="alert alert-danger mt-3 mb-0">
+          {{ errors.number }}
         </div>
         <div v-if="errors.status" class="alert alert-danger mt-3 mb-0">{{ errors.status }}</div>
         <div v-if="errors.location" class="alert alert-danger mt-3 mb-0">{{ errors.location }}</div>
@@ -171,8 +194,13 @@ const status = {
         <div v-if="errors.dest" class="alert alert-danger mt-3 mb-0">{{ errors.dest }}</div>
         <div v-if="errors.ddate" class="alert alert-danger mt-3 mb-0">{{ errors.ddate }}</div>
         <div v-if="errors.comment" class="alert alert-danger mt-3 mb-0">{{ errors.comment }}</div>
+        <div v-if="errors.userId" class="alert alert-danger mt-3 mb-0">{{ errors.userId }}</div>
+        <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{ errors.apiError }}</div>
       </Form>
     </div>
+  </div>
+  <div v-if="user?.loading" class="text-center m-5">
+    <span class="spinner-border spinner-border-lg align-center"></span>
   </div>
 </template>
 

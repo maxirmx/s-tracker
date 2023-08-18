@@ -43,6 +43,11 @@ export const useUsersStore = defineStore({
     users: {},
     user: {}
   }),
+  getters: {
+    getUserById: (state) => {
+      return (userId) => state.users.find((user) => user.id === userId)
+    },
+  },
   actions: {
     async add(user, trnslt = false) {
       if (trnslt) {

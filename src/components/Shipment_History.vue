@@ -26,8 +26,8 @@
 
 import '@fortawesome/fontawesome-free/css/all.css'
 
-import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import moment from 'moment'
 
 import HistoryItem from '@/components/HistoryItem.vue'
 import { statuses, stcodes } from '@/helpers/statuses.js'
@@ -51,26 +51,9 @@ shipmentStore.getByNumber(props.shipmentNumber)
 import { useHistoryStore } from '@/stores/history.store.js'
 const historyStore = useHistoryStore()
 const { history } = storeToRefs(historyStore)
+
 historyStore.getByNumber(props.shipmentNumber)
 
-function getLastStatus() {
-  return computed(() => {
-    return !history.value.loading ?
-      history.value.reduce((last, status) => (last.id > status.id ? last : status)) : null
-  }).value
-}
-
-function getDDate() {
-  return computed(() => {
-    return !shipment.value.loading ? shipment.value.ddate : 'загружается...'
-  }).value
-}
-
-function getDest() {
-  return computed(() => {
-    return !shipment.value.loading ? shipment.value.dest : 'загружается...'
-  }).value
-}
 </script>
 
 <template>
@@ -80,33 +63,35 @@ function getDest() {
       <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-from-bracket" class="btn" />
     </button>
   </h1>
+  <div class="orange customer" v-if="authStore.user?.isManager"> Клиент: {{ shipment.lastName }} {{ shipment.firstName }} {{ shipment.patronimic }}
+    {{ shipment.name ? '(' + shipment.name.trim() + ')' :'' }}
+  </div>
   <hr class="hr" />
   <div class="wrapper" v-if="authStore.user?.isManager">
     <router-link
-      v-if="getLastStatus()?.status != stcodes.DELIVERED"
+      v-if="shipment.status != stcodes.DELIVERED"
       :to="'/status/add/' + props.shipmentNumber"
       class="link"
     >
-      <font-awesome-icon size="1x" icon="fa-solid fa-calendar-plus" class="link" /> Добавить новый
-      статус
+      <font-awesome-icon size="1x" icon="fa-solid fa-calendar-plus" class="link" />
+      Добавить новый статус
     </router-link>
     &nbsp;&nbsp;&nbsp;
     <router-link
-    v-if="getLastStatus()?.id"
-      :to="'/status/edit/' + getLastStatus().id + '/' + props.shipmentNumber" class="link"
+      :to="'/status/edit/' + shipment.statusId + '/' + props.shipmentNumber" class="link"
       ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить
       последний статус</router-link
     >
   </div>
   <br /><br />
 
-  <div v-if="getLastStatus()?.status && getLastStatus().status != stcodes.DELIVERED">
+  <div v-if="shipment.status != stcodes.DELIVERED">
     <HistoryItem>
       <template #icon>
         <component :is="DeliveryTimeIcon"></component>
       </template>
       <template #heading> Ожидаемая дата прибытия в пункт назначения</template>
-      {{ getDDate() }}&nbsp;&nbsp;&nbsp;{{ getDest() }}
+      {{  shipment.ddate ? moment(shipment.ddate, 'YYYY-MM-DD').format('DD.MM.YYYY') : ''  }}&nbsp;&nbsp;&nbsp;{{ shipment.dest }}
     </HistoryItem>
     <hr class="hr-light" />
   </div>
@@ -115,18 +100,24 @@ function getDest() {
       <component :is="statuses.getIcon(item.status)"></component>
     </template>
     <template #heading> {{ statuses.getName(item.status) }} </template>
-    {{ item.date }}&nbsp;&nbsp;&nbsp;{{ item.location }} <br />
+    {{ item.date ? moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY') : '' }}&nbsp;&nbsp;&nbsp;{{ item.location }} <br />
     <span v-if="item.comment">{{ item.comment }}</span>
   </HistoryItem>
   <div v-if="history?.loading || shipment?.loading" class="text-center m-5">
     <span class="spinner-border spinner-border-lg align-center"></span>
   </div>
   <div v-if="history?.error" class="text-center m-5">
-    <div class="text-danger">Error loading history: {{ history.error }}</div>
+    <div class="text-danger">Ошибка при загрузке истории отправления: {{ history.error }}</div>
   </div>
   <div v-if="shipment?.error" class="text-center m-5">
-    <div class="text-danger">Error loading shipment: {{ shipment.error }}</div>
+    <div class="text-danger">Ошибка при загрузке информации об отправлении: {{ shipment.error }}</div>
   </div>
 </template>
 
-<style></style>
+<style>
+.customer {
+  font-size: 1.5 rem;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+</style>

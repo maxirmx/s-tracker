@@ -342,6 +342,6 @@ function onSubmit(values , { setErrors } ) {
     <span class="spinner-border spinner-border-lg align-center"></span>
   </div>
   <div v-if="user?.error" class="text-center m-5">
-    <div class="text-danger">Error loading user: {{ user.error }}</div>
+    <div class="text-danger">Ошибка при загрузке информации о пользователе: {{ user.error }}</div>
   </div>
 </template>

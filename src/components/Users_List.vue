@@ -128,7 +128,7 @@ const headers = [
       <span class="spinner-border spinner-border-lg align-center"></span>
     </div>
     <div v-if="users?.error" class="text-center m-5">
-      <div class="text-danger">Error loading user: {{ users.error }}</div>
+      <div class="text-danger">Ошибка при загрузке списка пользователей: {{ users.error }}</div>
     </div>
   </div>
 </template>
