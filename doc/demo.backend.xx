@@ -189,14 +189,14 @@ function fakeBackend() {
 //            return deleteOrg()
 //          case url.endsWith('/shipments') && opts.method === 'GET':
 //            return getShipments()
-          case url.match(/\/shipments\/.+$/) && opts.method === 'GET':
-            return getShipmentByNumber()
-          case url.match(/\/shipments\/.+$/) && opts.method === 'PUT':
-            return updateShipment()
-          case url.match(/\/shipments\/.+$/) && opts.method === 'DELETE':
-            return deleteShipment()
-          case url.match(/\/history\/.+$/) && opts.method === 'GET':
-            return getHistoryByNumber()
+//          case url.match(/\/shipments\/.+$/) && opts.method === 'GET':
+//            return getShipmentByNumber()
+//          case url.match(/\/shipments\/.+$/) && opts.method === 'PUT':
+//            return updateShipment()
+//          case url.match(/\/shipments\/.+$/) && opts.method === 'DELETE':
+//            return deleteShipment()
+//          case url.match(/\/history\/.+$/) && opts.method === 'GET':
+//            return getHistoryByNumber()
           case url.match(/\/status\/\d+$/) && opts.method === 'GET':
             return getStatusById()
           case url.match(/\/status\/.+$/) && opts.method === 'PUT':
@@ -309,11 +309,11 @@ function fakeBackend() {
 //        return ok(shipments)
 //      }
 
-      function getShipmentByNumber() {
-        if (!isAuthenticated()) return unauthorized()
-        const shipment = shipments.find((x) => x.shipmentNumber === numberFromUrl())
-        return ok(shipment)
-      }
+//      function getShipmentByNumber() {
+//        if (!isAuthenticated()) return unauthorized()
+//        const shipment = shipments.find((x) => x.shipmentNumber === numberFromUrl())
+//        return ok(shipment)
+//      }
 
       function updateShipment() {
         if (!isAuthenticated()) return unauthorized()

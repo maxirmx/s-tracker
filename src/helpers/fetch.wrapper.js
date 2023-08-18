@@ -25,8 +25,7 @@
 
 import { useAuthStore } from '@/stores/auth.store.js'
 import { apiUrl } from '@/helpers/config.js'
-const baseUrl = `${import.meta.env.VITE_API_URL}`
-
+const baseUrl = `${apiUrl}`
 
 export const fetchWrapper = {
   get: request('GET'),
@@ -57,7 +56,7 @@ function authHeader(url) {
   // return auth header with jwt if user is logged in and request is to the api url
   const { user } = useAuthStore()
   const isLoggedIn = !!user?.token
-  if (isLoggedIn && (url.startsWith(apiUrl) || url.startsWith(baseUrl))) {
+  if (isLoggedIn && url.startsWith(baseUrl)) {
     return { Authorization: `Bearer ${user.token}` }
   } else {
     return {}

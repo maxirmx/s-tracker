@@ -36,8 +36,8 @@ export const useShipmentsStore = defineStore({
     shipment: {}
   }),
   actions: {
-    async add(org) {
-      await fetchWrapper.post(`${baseUrl}/add`, org)
+    async add(shipment) {
+      await fetchWrapper.post(`${baseUrl}/add`, shipment)
     },
     async getAll() {
       this.shipments = { loading: true }
@@ -57,15 +57,6 @@ export const useShipmentsStore = defineStore({
     },
     async update(number, params) {
       await fetchWrapper.put(`${baseUrl}/${number}`, params)
-    },
-    async delete(number) {
-      // add isDeleting prop to user being deleted
-      this.shipments.find((x) => x.number === number).isDeleting = true
-
-      await fetchWrapper.delete(`${baseUrl}/${number}`)
-
-      // remove user from list after deleted
-      this.shipments = this.shipments.filter((x) => x.number !== number)
     }
   }
 })

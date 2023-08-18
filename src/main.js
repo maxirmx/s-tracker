@@ -37,9 +37,9 @@ import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 import App from '@/App.vue'
 import router from '@/router'
 
-// setup fake backend
-import { fakeBackend } from '@/helpers/demo.backend.js'
-fakeBackend()
+//setup fake backend
+//import { fakeBackend } from '@/helpers/demo.backend.js'
+//fakeBackend()
 
 const vuetify = createVuetify({
   components,

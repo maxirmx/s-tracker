@@ -25,8 +25,9 @@
 
 import { defineStore } from 'pinia'
 import { fetchWrapper } from '@/helpers/fetch.wrapper.js'
+import { apiUrl } from '@/helpers/config.js'
 
-const baseUrl = `${import.meta.env.VITE_API_URL}`
+const baseUrl = `${ apiUrl }`
 
 export const useHistoryStore = defineStore({
   id: 'history',
@@ -36,7 +37,7 @@ export const useHistoryStore = defineStore({
   }),
   actions: {
     async register(status) {
-      await fetchWrapper.post(`${baseUrl}/status/add`, status)
+      await fetchWrapper.post(`${baseUrl}/statuses/add`, status)
     },
     async getById(id) {
       this.status = { loading: true }
@@ -49,22 +50,13 @@ export const useHistoryStore = defineStore({
     async getByNumber(number) {
       this.history = { loading: true }
       try {
-        this.history = await fetchWrapper.get(`${baseUrl}/history/${number}`)
+        this.history = await fetchWrapper.get(`${baseUrl}/statuses/${number}`)
       } catch (error) {
         this.history = { error }
       }
     },
     async update(id, params) {
       await fetchWrapper.put(`${baseUrl}/status/${id}`, params)
-    },
-    async delete(id) {
-      // add isDeleting prop to user being deleted
-      this.history.find((x) => x.id === id).isDeleting = true
-
-      await fetchWrapper.delete(`${baseUrl}/status/${id}`)
-
-      // remove user from list after deleted
-      this.statuses = this.statuses.filter((x) => x.id !== id)
     }
   }
 })
