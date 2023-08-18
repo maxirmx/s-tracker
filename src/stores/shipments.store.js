@@ -25,8 +25,9 @@
 
 import { defineStore } from 'pinia'
 import { fetchWrapper } from '@/helpers/fetch.wrapper.js'
+import { apiUrl } from '@/helpers/config.js'
 
-const baseUrl = `${import.meta.env.VITE_API_URL}/shipments`
+const baseUrl = `${apiUrl}/shipments`
 
 export const useShipmentsStore = defineStore({
   id: 'shipments',
@@ -35,7 +36,7 @@ export const useShipmentsStore = defineStore({
     shipment: {}
   }),
   actions: {
-    async register(org) {
+    async add(org) {
       await fetchWrapper.post(`${baseUrl}/add`, org)
     },
     async getAll() {

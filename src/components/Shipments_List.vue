@@ -38,18 +38,18 @@ const { shipments } = storeToRefs(shipmentsStore)
 shipmentsStore.getAll()
 
 function getStatus(item) {
-  var statusCode = item['selectable']['statusCode']
+  var statusCode = item['selectable']['status']
   return statuses.getName(statusCode)
 }
 
 function viewHistory(item) {
-  var shipmentNumber = item['selectable']['shipmentNumber']
+  var shipmentNumber = item['selectable']['number']
   router.push('shipment/' + shipmentNumber)
 }
 
 const itemsPerPage = 10
 const headers = [
-  { title: 'Номер', align: 'start', key: 'shipmentNumber' },
+  { title: 'Номер', align: 'start', key: 'number' },
   { title: 'Место', align: 'center', key: 'location' },
   { title: 'Статус', align: 'center', key: 'statuses' },
   { title: 'Дата', align: 'center', key: 'date' },
@@ -62,7 +62,7 @@ const headers = [
     <h1 class="orange">Отправления</h1>
     <hr class="hr" />
 
-    <div class="wrapper" v-if="authStore.isManager()">
+    <div class="wrapper" v-if="authStore.user?.isManager">
       <router-link :to="'/shipment/add'" class="link">
         <font-awesome-icon
           size="1x"

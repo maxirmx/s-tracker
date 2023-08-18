@@ -35,9 +35,6 @@ export const useAuthStore = defineStore({
     // initialize state from local storage to enable user to stay logged in
     user: JSON.parse(localStorage.getItem('user')),
     returnUrl: null,
-    isAdmin: () => { return this.user?.isAdmin },
-    isManager: () => { return this.user?.isManager },
-    isEnabled: () => { return this.user?.isEnabled }
   }),
   actions: {
     async login(email, password) {

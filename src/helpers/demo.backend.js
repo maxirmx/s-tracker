@@ -165,9 +165,9 @@ function fakeBackend() {
   window.fetch = function (url, opts) {
     return new Promise((resolve, reject) => {
       // wrap in timeout to simulate server api call
-      setTimeout(handleRoute, 5)
+//      setTimeout(handleRoute, 5)
 
-      function handleRoute() {
+//      function handleRoute() {
         switch (true) {
 //          case url.endsWith('/users/authenticate') && opts.method === 'POST':
 //            return authenticate()
@@ -187,8 +187,8 @@ function fakeBackend() {
 //            return updateOrg()
 //          case url.match(/\/orgs\/\d+$/) && opts.method === 'DELETE':
 //            return deleteOrg()
-          case url.endsWith('/shipments') && opts.method === 'GET':
-            return getShipments()
+//          case url.endsWith('/shipments') && opts.method === 'GET':
+//            return getShipments()
           case url.match(/\/shipments\/.+$/) && opts.method === 'GET':
             return getShipmentByNumber()
           case url.match(/\/shipments\/.+$/) && opts.method === 'PUT':
@@ -209,7 +209,7 @@ function fakeBackend() {
               .then((response) => resolve(response))
               .catch((error) => reject(error))
         }
-      }
+//      }
 
       // route functions
 
@@ -304,10 +304,10 @@ function fakeBackend() {
 //        return ok()
 //      }
 
-      function getShipments() {
-        if (!isAuthenticated()) return unauthorized()
-        return ok(shipments)
-      }
+//      function getShipments() {
+//        if (!isAuthenticated()) return unauthorized()
+//        return ok(shipments)
+//      }
 
       function getShipmentByNumber() {
         if (!isAuthenticated()) return unauthorized()

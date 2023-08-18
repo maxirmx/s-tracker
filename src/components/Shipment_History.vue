@@ -81,7 +81,7 @@ function getDest() {
     </button>
   </h1>
   <hr class="hr" />
-  <div class="wrapper" v-if="authStore.isManager()">
+  <div class="wrapper" v-if="authStore.user?.isManager">
     <router-link
       v-if="getLastStatus()?.status != stcodes.DELIVERED"
       :to="'/status/add/' + props.shipmentNumber"

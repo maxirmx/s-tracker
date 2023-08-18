@@ -27,10 +27,18 @@
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
 import moment from 'moment'
-
 import router from '@/router'
-
 import { stcodes, statuses } from '@/helpers/statuses.js'
+
+//import { useUsersStore } from '@/stores/users.store.js'
+//import { useAuthStore } from '@/stores/auth.store.js'
+//import { useOrgsStore } from '@/stores/orgs.store.js'
+//import { useShipmentsStore } from '@/stores/shipments.store.js'
+
+//const usersStore = useUsersStore()
+//const authStore = useAuthStore()
+//const orgsStore = useOrgsStore()
+//const shipmentsStore = useShipmentsStore()
 
 const schema = Yup.object().shape({
   shipmentNumber: Yup.string().required('Укажите номер отправления'),

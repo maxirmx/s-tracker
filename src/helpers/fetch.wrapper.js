@@ -68,22 +68,19 @@ function handleResponse(response) {
   console.log(response)
   return response.text().then((text) => {
     const data = text && JSON.parse(text)
-    let msg = null
 
     if (!response.ok) {
+      console.log(response.status, response.statusText, data)
+
       const { user, logout } = useAuthStore()
-      if ([401, 403].includes(response.status)) {
-        // auto logout if 401 Unauthorized or 403 Forbidden response returned from api
+      if ([401].includes(response.status)) {
+        // auto logout if 401 Unauthorized response returned from api
         if (user) {
           logout()
-          msg = "Необходимо войти в систему."
-        }
-        else {
-          msg = "Введён неправильный адрес электронной почты или пароль, либо вход запрещён администратором."
         }
       }
 
-      const error = msg || (data && data.message) || response.statusText
+      const error = (data && data.message) || response.statusText
       return Promise.reject(error)
     }
 
