@@ -53,7 +53,6 @@ const historyStore = useHistoryStore()
 const { history } = storeToRefs(historyStore)
 
 historyStore.getByNumber(props.shipmentNumber)
-
 </script>
 
 <template>
@@ -63,8 +62,9 @@ historyStore.getByNumber(props.shipmentNumber)
       <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-from-bracket" class="btn" />
     </button>
   </h1>
-  <div class="orange customer" v-if="authStore.user?.isManager"> Клиент: {{ shipment.lastName }} {{ shipment.firstName }} {{ shipment.patronimic }}
-    {{ shipment.name ? '(' + shipment.name.trim() + ')' :'' }}
+  <div class="orange customer" v-if="authStore.user?.isManager">
+    Клиент: {{ shipment.lastName }} {{ shipment.firstName }} {{ shipment.patronimic }}
+    {{ shipment.name ? '(' + shipment.name.trim() + ')' : '' }}
   </div>
   <hr class="hr" />
   <div class="wrapper" v-if="authStore.user?.isManager">
@@ -77,8 +77,7 @@ historyStore.getByNumber(props.shipmentNumber)
       Добавить новый статус
     </router-link>
     &nbsp;&nbsp;&nbsp;
-    <router-link
-      :to="'/status/edit/' + shipment.statusId + '/' + props.shipmentNumber" class="link"
+    <router-link :to="'/status/edit/' + shipment.statusId + '/' + props.shipmentNumber" class="link"
       ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить
       последний статус</router-link
     >
@@ -91,7 +90,9 @@ historyStore.getByNumber(props.shipmentNumber)
         <component :is="DeliveryTimeIcon"></component>
       </template>
       <template #heading> Ожидаемая дата прибытия в пункт назначения</template>
-      {{  shipment.ddate ? moment(shipment.ddate, 'YYYY-MM-DD').format('DD.MM.YYYY') : ''  }}&nbsp;&nbsp;&nbsp;{{ shipment.dest }}
+      {{
+        shipment.ddate ? moment(shipment.ddate, 'YYYY-MM-DD').format('DD.MM.YYYY') : ''
+      }}&nbsp;&nbsp;&nbsp;{{ shipment.dest }}
     </HistoryItem>
     <hr class="hr-light" />
   </div>
@@ -100,7 +101,10 @@ historyStore.getByNumber(props.shipmentNumber)
       <component :is="statuses.getIcon(item.status)"></component>
     </template>
     <template #heading> {{ statuses.getName(item.status) }} </template>
-    {{ item.date ? moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY') : '' }}&nbsp;&nbsp;&nbsp;{{ item.location }} <br />
+    {{ item.date ? moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY') : '' }}&nbsp;&nbsp;&nbsp;{{
+      item.location
+    }}
+    <br />
     <span v-if="item.comment">{{ item.comment }}</span>
   </HistoryItem>
   <div v-if="history?.loading || shipment?.loading" class="text-center m-5">
@@ -110,7 +114,9 @@ historyStore.getByNumber(props.shipmentNumber)
     <div class="text-danger">Ошибка при загрузке истории отправления: {{ history.error }}</div>
   </div>
   <div v-if="shipment?.error" class="text-center m-5">
-    <div class="text-danger">Ошибка при загрузке информации об отправлении: {{ shipment.error }}</div>
+    <div class="text-danger">
+      Ошибка при загрузке информации об отправлении: {{ shipment.error }}
+    </div>
   </div>
 </template>
 

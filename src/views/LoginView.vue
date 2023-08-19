@@ -27,8 +27,10 @@
 import { ref } from 'vue'
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
+import { storeToRefs } from 'pinia'
 import router from '@/router'
 import { useAuthStore } from '@/stores/auth.store.js'
+import { useAlertStore } from '@/stores/alert.store.js'
 
 const schema = Yup.object().shape({
   login_email: Yup.string()
@@ -40,6 +42,9 @@ const schema = Yup.object().shape({
 })
 
 const showPassword = ref(false)
+
+const alertStore = useAlertStore()
+const { alert } = storeToRefs(alertStore)
 
 function onSubmit(values, { setErrors }) {
   const authStore = useAuthStore()
@@ -95,9 +100,18 @@ function onSubmit(values, { setErrors }) {
           Войти
         </button>
       </div>
-      <div v-if="errors.login_email" class="alert alert-danger mt-3 mb-0">{{ errors.login_email }}</div>
-      <div v-if="errors.login_password" class="alert alert-danger mt-3 mb-0">{{ errors.login_password }}</div>
+      <div v-if="errors.login_email" class="alert alert-danger mt-3 mb-0">
+        {{ errors.login_email }}
+      </div>
+      <div v-if="errors.login_password" class="alert alert-danger mt-3 mb-0">
+        {{ errors.login_password }}
+      </div>
       <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{ errors.apiError }}</div>
+      <div v-if="alert" class="alert alert-dismissable mt-3 mb-0" :class="alert.type">
+        <button @click="alertStore.clear()" class="btn btn-link close">×</button>
+        {{ alert.message }}
+      </div>
+
     </Form>
   </div>
 </template>

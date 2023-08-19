@@ -34,9 +34,15 @@ export const useAuthStore = defineStore({
   state: () => ({
     // initialize state from local storage to enable user to stay logged in
     user: JSON.parse(localStorage.getItem('user')),
-    returnUrl: null,
+    returnUrl: null
   }),
   actions: {
+    async register(user) {
+      await fetchWrapper.post(`${baseUrl}/register`, user)
+    },
+    async recover(user) {
+      await fetchWrapper.post(`${baseUrl}/recover`, user)
+    },
     async login(email, password) {
       const user = await fetchWrapper.post(`${baseUrl}/login`, { email, password })
       // update pinia state

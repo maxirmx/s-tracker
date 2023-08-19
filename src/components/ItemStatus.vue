@@ -49,7 +49,6 @@ const props = defineProps({
   }
 })
 
-
 import { useHistoryStore } from '@/stores/history.store.js'
 const historyStore = useHistoryStore()
 const { status } = storeToRefs(historyStore)
@@ -62,36 +61,43 @@ const shipmentStore = useShipmentsStore()
 const { shipment } = storeToRefs(shipmentStore)
 shipmentStore.getByNumber(props.shipmentNumber)
 
-const sts = computed(() => { return {
-      status: props.create ? '' : status.value.status,
-      location: props.create ? '' : status.value.location,
-      date: props.create ?  moment().format('YYYY-MM-DD') : moment(status.value.date).format('YYYY-MM-DD'),
-      dest: shipment && !shipment.value.loading ? shipment.value.dest : 'загружается ...',
-      ddate: '',
-      comment: props.create ?  '' : status.value.comment
-}})
+const sts = computed(() => {
+  return {
+    status: props.create ? '' : status.value.status,
+    location: props.create ? '' : status.value.location,
+    date: props.create
+      ? moment().format('YYYY-MM-DD')
+      : moment(status.value.date).format('YYYY-MM-DD'),
+    dest: shipment && !shipment.value.loading ? shipment.value.dest : 'загружается ...',
+    ddate: '',
+    comment: props.create ? '' : status.value.comment
+  }
+})
 
 const schema = Yup.object().shape({
   status: Yup.string().required('Выберите статус'),
   location: Yup.string().required('Укажите местонахождение'),
   date: Yup.string().required('Укажите дату'),
-  ddate: Yup.string().required('Укажите ожидаемую дату прибытия' ),
+  ddate: Yup.string().required('Укажите ожидаемую дату прибытия')
 })
 
-function onSubmit(values, { setErrors } ) {
-  values.shipmentNumber = props.shipmentNumber;
+function onSubmit(values, { setErrors }) {
+  values.shipmentNumber = props.shipmentNumber
   if (props.create) {
     return historyStore
       .add(values)
-      .then(() => { router.go(-1) })
+      .then(() => {
+        router.go(-1)
+      })
       .catch((error) => setErrors({ apiError: error }))
-  }
-  else {
+  } else {
     console.log('Shall update: ', values)
     router.go(-1)
     return historyStore
       .update(props.statusId, values)
-      .then(() => { router.go(-1) })
+      .then(() => {
+        router.go(-1)
+      })
       .catch((error) => setErrors({ apiError: error }))
   }
 }
@@ -99,13 +105,10 @@ function onSubmit(values, { setErrors } ) {
 function getHeader() {
   return props.create ? 'Новый статус' : 'Изменение статуса'
 }
-
 </script>
 
 <template>
-  <h1 class="orange">
-    {{ getHeader() }} отправления {{ props.shipmentNumber }}
-  </h1>
+  <h1 class="orange">{{ getHeader() }} отправления {{ props.shipmentNumber }}</h1>
   <hr class="hr" />
   <div class="settings">
     <Form
@@ -167,7 +170,7 @@ function getHeader() {
           class="form-control input"
           :class="{ 'is-invalid': errors.dest }"
           placeholder="Город, Страна"
-          :disabled = "true"
+          :disabled="true"
         />
       </div>
 

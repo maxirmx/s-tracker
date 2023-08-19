@@ -27,7 +27,7 @@ import { defineStore } from 'pinia'
 import { fetchWrapper } from '@/helpers/fetch.wrapper.js'
 import { apiUrl } from '@/helpers/config.js'
 
-const baseUrl = `${ apiUrl }`
+const baseUrl = `${apiUrl}`
 
 export const useHistoryStore = defineStore({
   id: 'history',

@@ -27,6 +27,7 @@
 import { RouterLink, RouterView } from 'vue-router'
 import router from '@/router'
 import HelloScreen from '@/components/HelloScreen.vue'
+import AlertScreen from '@/components/Alert.vue'
 
 import { useAuthStore } from '@/stores/auth.store.js'
 const authStore = useAuthStore()
@@ -65,7 +66,6 @@ deauth()
       </nav>
     </div>
   </header>
-
   <RouterView />
 </template>
 

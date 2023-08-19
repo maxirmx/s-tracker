@@ -86,7 +86,6 @@ const headers = [
       item-value="name"
       class="elevation-1"
     >
-
       <template v-slot:[`item.date`]="{ item }">
         {{ getDate(item) }}
       </template>

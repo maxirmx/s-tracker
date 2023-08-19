@@ -31,9 +31,9 @@ import { apiUrl } from '@/helpers/config.js'
 const baseUrl = `${apiUrl}/users`
 
 function translate(param) {
-  param.isEnabled = (param.isEnabled === "ENABLED")
-  param.isManager = (param.isManager === "MANAGER")
-  param.isAdmin = (param.isAdmin === "ADMIN")
+  param.isEnabled = param.isEnabled === 'ENABLED'
+  param.isManager = param.isManager === 'MANAGER'
+  param.isAdmin = param.isAdmin === 'ADMIN'
   return param
 }
 
@@ -46,7 +46,7 @@ export const useUsersStore = defineStore({
   getters: {
     getUserById: (state) => {
       return (userId) => state.users.find((user) => user.id === userId)
-    },
+    }
   },
   actions: {
     async add(user, trnslt = false) {
@@ -54,12 +54,6 @@ export const useUsersStore = defineStore({
         user = translate(user)
       }
       await fetchWrapper.post(`${baseUrl}/add`, user)
-    },
-    async register(user, trnslt = false) {
-      if (trnslt) {
-        user = translate(user)
-      }
-      await fetchWrapper.post(`${baseUrl}/register`, user)
     },
     async getAll() {
       this.users = { loading: true }
@@ -74,9 +68,9 @@ export const useUsersStore = defineStore({
       try {
         this.user = await fetchWrapper.get(`${baseUrl}/${id}`)
         if (trnslt) {
-          this.user.isEnabled = this.user.isEnabled ? "ENABLED" : "JERK"
-          this.user.isManager = this.user.isManager ? "MANAGER" : "JERK"
-          this.user.isAdmin = this.user.isAdmin ? "ADMIN" : "JERK"
+          this.user.isEnabled = this.user.isEnabled ? 'ENABLED' : 'JERK'
+          this.user.isManager = this.user.isManager ? 'MANAGER' : 'JERK'
+          this.user.isAdmin = this.user.isAdmin ? 'ADMIN' : 'JERK'
         }
       } catch (error) {
         this.user = { error }

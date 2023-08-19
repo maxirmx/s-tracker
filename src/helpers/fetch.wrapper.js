@@ -69,7 +69,6 @@ function handleResponse(response) {
     console.log(response.status, response.statusText, data)
 
     if (!response.ok) {
-
       const { user, logout } = useAuthStore()
       if ([401].includes(response.status)) {
         // auto logout if 401 Unauthorized response returned from api
