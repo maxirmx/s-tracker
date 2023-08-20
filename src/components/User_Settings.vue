@@ -329,7 +329,7 @@ function onSubmit(values, { setErrors }) {
       </div>
 
       <div class="form-group">
-        <button class="button" type="submit" :disabled="isSubmitting">
+        <button class="button" :disabled="isSubmitting">
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           {{ getButton() }}
         </button>

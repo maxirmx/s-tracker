@@ -46,17 +46,9 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/recover/:jwt',
-      redirect: () => '/user/edit/0'
-    },
-    {
       path: '/register',
       name: 'Регистрация',
       component: () => import('@/views/User_RegisterView.vue')
-    },
-    {
-      path: '/register/:jwt',
-      redirect: '/shipments'
     },
     {
       path: '/users',
