@@ -78,7 +78,7 @@ const headers = [
       </template>
     </v-data-table>
     <div v-if="orgs?.error" class="text-center m-5">
-        <div class="text-danger">Ошибка при загрузке списка организаций: {{ orgs.error }}</div>
+      <div class="text-danger">Ошибка при загрузке списка организаций: {{ orgs.error }}</div>
     </div>
     <div v-if="orgs?.loading" class="text-center m-5">
       <span class="spinner-border spinner-border-lg align-center"></span>

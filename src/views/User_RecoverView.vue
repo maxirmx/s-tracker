@@ -26,7 +26,9 @@
 
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
-//import router from '@/router'
+import router from '@/router'
+import { useAuthStore } from '@/stores/auth.store.js'
+import { useAlertStore } from '@/stores/alert.store.js'
 
 const schema = Yup.object().shape({
   email: Yup.string()
@@ -34,11 +36,24 @@ const schema = Yup.object().shape({
     .email('Неверный формат электронной почты')
 })
 
-function onSubmit(values /*, { setErrors } */) {
-  const { email } = values
-  console.log('Отправим ссылку по адресу: ' + email)
-  //    router.push('/login')
-  //    setErrors - если вдруг письмо не послалось
+function onSubmit(values, { setErrors }) {
+  const authStore = useAuthStore()
+  values.host = window.location.href
+  values.host = values.host.substring(0, values.host.lastIndexOf('/'))
+  return authStore
+    .recover(values)
+    .then(() => {
+      router.push('/').then(() => {
+        const alertStore = useAlertStore()
+        alertStore.success(
+          'На Ваш адрес электронной почты отправлено письмо со ссылкой для восстановления пароля. ' +
+            'Обратите внимание, что ссылка одноразовая и действует 4 часа. ' +
+            'Если Вы не можете найти письма, проверьте папку с нежелательной почтой (спамом). ' +
+            'Если письмо не пришло, обратитесь к администратору.'
+        )
+      })
+    })
+    .catch((error) => setErrors({ apiError: error }))
 }
 </script>
 

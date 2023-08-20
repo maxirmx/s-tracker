@@ -62,26 +62,27 @@ const orgsStore = useOrgsStore()
 let org = null
 
 if (!isRegister()) {
-  ({ org } = storeToRefs(orgsStore))
+  ;({ org } = storeToRefs(orgsStore))
   orgsStore.getById(props.id)
 }
 
 function onSubmit(values, { setErrors }) {
-
   if (isRegister()) {
     return orgsStore
       .add(values)
-      .then(() => { router.go(-1) })
+      .then(() => {
+        router.go(-1)
+      })
       .catch((error) => setErrors({ apiError: error }))
-  }
-  else {
+  } else {
     return orgsStore
       .update(props.id, values)
-      .then(() => { router.go(-1) })
+      .then(() => {
+        router.go(-1)
+      })
       .catch((error) => setErrors({ apiError: error }))
   }
 }
-
 </script>
 
 <template>
@@ -117,7 +118,9 @@ function onSubmit(values, { setErrors }) {
       </div>
       <div v-if="errors.name" class="alert alert-danger mt-3 mb-0">{{ errors.name }}</div>
       <div v-if="org?.error" class="text-center m-5">
-        <div class="text-danger">Ошибка при загрузке информации об организации: {{ org.error }}</div>
+        <div class="text-danger">
+          Ошибка при загрузке информации об организации: {{ org.error }}
+        </div>
       </div>
       <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">
         <div class="text-danger">{{ errors.apiError }}</div>

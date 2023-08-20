@@ -25,13 +25,13 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { ref } from 'vue'
-import { computed } from 'vue'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
 import { Form, Field } from 'vee-validate'
 import * as Yup from 'yup'
 import { useUsersStore } from '@/stores/users.store.js'
 import { useAuthStore } from '@/stores/auth.store.js'
+import { useAlertStore } from '@/stores/alert.store.js'
 import { useOrgsStore } from '@/stores/orgs.store.js'
 
 const props = defineProps({
@@ -45,24 +45,27 @@ const props = defineProps({
   }
 })
 
-const schema =
-  Yup.object().shape({
-    firstName: Yup.string().required('Необходимо указать имя'),
-    lastName: Yup.string().required('Необходимо указать фамилию'),
-    patronimic: Yup.string(),
-    email: Yup.string()
-      .required('Необходимо указать электронную почту')
-      .email('Неверный формат электронной почты'),
-    password: Yup.string()
-      .concat(isRegister() ?
-        Yup.string().required('Необходимо указать пароль').min(4, 'Пароль не может быть короче 4 символов') :
-        null),
-    password2: Yup.string()
-      .when('password', (password, schema) => {
-        if ((password && password !='') || isRegister()) return schema.required('Необходимо подтвердить пароль');
-      })
-      .oneOf([Yup.ref('password')], 'Пароли должны совпадать')
-  })
+const schema = Yup.object().shape({
+  firstName: Yup.string().required('Необходимо указать имя'),
+  lastName: Yup.string().required('Необходимо указать фамилию'),
+  patronimic: Yup.string(),
+  email: Yup.string()
+    .required('Необходимо указать электронную почту')
+    .email('Неверный формат электронной почты'),
+  password: Yup.string().concat(
+    isRegister()
+      ? Yup.string()
+          .required('Необходимо указать пароль')
+          .min(6, 'Пароль не может быть короче 4 символов')
+      : null
+  ),
+  password2: Yup.string()
+    .when('password', (password, schema) => {
+      if ((password && password != '') || isRegister())
+        return schema.required('Необходимо подтвердить пароль')
+    })
+    .oneOf([Yup.ref('password')], 'Пароли должны совпадать')
+})
 
 const showPassword = ref(false)
 const showPassword2 = ref(false)
@@ -70,17 +73,25 @@ const showPassword2 = ref(false)
 const usersStore = useUsersStore()
 const authStore = useAuthStore()
 
-const orgsStore = useOrgsStore()
-const { orgs } = storeToRefs(orgsStore)
-orgsStore.getAll()
-
 let user = {
   isEnabled: 'ENABLED'
 }
 
 if (!isRegister()) {
-  ({ user } = storeToRefs(usersStore))
+  ;({ user } = storeToRefs(usersStore))
   usersStore.getById(props.id, true)
+}
+
+const orgsStore = useOrgsStore()
+const { orgs } = storeToRefs(orgsStore)
+const { org } = storeToRefs(orgsStore)
+
+if (asAdmin()) {
+  orgsStore.getAll()
+} else {
+  if (authStore.user) {
+    orgsStore.getById(authStore.user.orgId)
+  }
 }
 
 function isRegister() {
@@ -97,17 +108,6 @@ function getTitle() {
 
 function getButton() {
   return isRegister() ? 'Зарегистрировать' + (asAdmin() ? '' : 'ся') : 'Сохранить'
-}
-
-function getOrg() {
-  let org = computed(() => {
-    let org = null
-    if (!orgs.value.loading) {
-      org = orgs.value.find((o) => o.id === user.value.orgId)
-    }
-    return org ? org.name : ''
-  })
-  return org.value
 }
 
 function showCredentials() {
@@ -132,32 +132,48 @@ function getCredentials() {
   return crd
 }
 
-function onSubmit(values , { setErrors } ) {
+function onSubmit(values, { setErrors }) {
   if (isRegister()) {
     if (asAdmin()) {
       return usersStore
         .add(values, true)
         .then(() => router.go(-1))
         .catch((error) => setErrors({ apiError: error }))
-    }
-    else {
+    } else {
       values.isEnabled = true
       values.isManager = false
       values.isAdmin = false
-      return usersStore
-        .register(values, true)
-        .then(() => router.go(-1))
+      values.host = window.location.href
+      values.host = values.host.substring(0, values.host.lastIndexOf('/'))
+      return authStore
+        .register(values)
+        .then(() => {
+          router.push('/').then(() => {
+            const alertStore = useAlertStore()
+            alertStore.success(
+              'На Ваш адрес электронной почты отправлено письмо с подтверждением. ' +
+                'Пожалуйста, перейдите по ссылке для завершения регистрации. ' +
+                'Обратите внимание, что ссылка одноразовая и действует 4 часа. ' +
+                'Если Вы не можете найти письма, проверьте папку с нежелательной почтой (спамом). ' +
+                'Если письмо не пришло, обратитесь к администратору.'
+            )
+          })
+        })
         .catch((error) => setErrors({ apiError: error }))
     }
-  }
-  else {
+  } else {
     return usersStore
       .update(props.id, values, true)
-      .then(() => router.go(-1))
+      .then(() => {
+        if (window.history.length > 0) {
+          router.go(-1)
+        } else {
+          router.push('/shipments')
+        }
+      })
       .catch((error) => setErrors({ apiError: error }))
   }
 }
-
 </script>
 
 <template>
@@ -258,7 +274,7 @@ function onSubmit(values , { setErrors } ) {
       <div v-if="showCredentials()" class="form-group">
         <label for="orgId" class="label">Организация:</label>
         <span id="orgId"
-          ><em>{{ getOrg() }}</em></span
+          ><em>{{ org?.name }}</em></span
         >
       </div>
       <div v-if="showAndEditCredentials()" class="form-group">
@@ -291,7 +307,7 @@ function onSubmit(values , { setErrors } ) {
           name="isEnabled"
           type="checkbox"
           class="checkbox checkbox-styled"
-          value='ENABLED'
+          value="ENABLED"
         />
         <label for="isEnabled">Пользователь</label>
         <Field
@@ -299,15 +315,15 @@ function onSubmit(values , { setErrors } ) {
           name="isManager"
           type="checkbox"
           class="checkbox checkbox-styled"
-          value='MANAGER'
-          />
+          value="MANAGER"
+        />
         <label for="isManager">Менеджер</label>
         <Field
           id="isAdmin"
           type="checkbox"
           name="isAdmin"
           class="checkbox checkbox-styled"
-          value='ADMIN'
+          value="ADMIN"
         />
         <label for="isAdmin">Администратор</label>
       </div>

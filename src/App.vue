@@ -65,7 +65,6 @@ deauth()
       </nav>
     </div>
   </header>
-
   <RouterView />
 </template>
 

@@ -25,6 +25,7 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { version } from '@/../package'
+import { useAuthStore } from '@/stores/auth.store.js'
 
 defineProps({
   appName: {
@@ -32,11 +33,16 @@ defineProps({
     required: true
   }
 })
+
+const authStore = useAuthStore()
 </script>
 
 <template>
   <div class="greetings">
     <h1 class="orange">{{ appName }}</h1>
+    <div class="orange customer" v-if="authStore.user">
+      {{ authStore.user.lastName }} {{ authStore.user.firstName }} {{ authStore.user.patronimic }}
+    </div>
     <img alt="Сargo Management" class="logo" src="@/assets/logo.svg" width="250" height="125" />
     <div class="orange version">{{ version }}</div>
   </div>
@@ -64,6 +70,13 @@ h3 {
   text-align: center;
 }
 
+.customer {
+  font-size: 1.5 rem;
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+  text-align: center;
+}
+
 @media (min-width: 768px) {
   h1 {
     font-size: 2.6rem;
@@ -77,6 +90,9 @@ h3 {
   }
 
   .version {
+    text-align: left;
+  }
+  .customer {
     text-align: left;
   }
 }

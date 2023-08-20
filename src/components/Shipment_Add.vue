@@ -49,16 +49,17 @@ const schema = Yup.object().shape({
   location: Yup.string().required('Укажите местонахождение'),
   date: Yup.string().required('Укажите дату'),
   ddate: Yup.string().required('Укажите ожидаемую дату прибытия'),
-  userId: Yup.number(userIdError).typeError(userIdError).
-              integer(userIdError).required(userIdError)
+  userId: Yup.number(userIdError).typeError(userIdError).integer(userIdError).required(userIdError)
 })
 
-function onSubmit(values , { setErrors }) {
+function onSubmit(values, { setErrors }) {
   values.orgId = getUserById.value(values.userId).orgId
   return shipmentsStore
-      .add(values)
-      .then(() => { router.go(-1) })
-      .catch((error) => setErrors({ apiError: error }))
+    .add(values)
+    .then(() => {
+      router.go(-1)
+    })
+    .catch((error) => setErrors({ apiError: error }))
 }
 
 const status = {

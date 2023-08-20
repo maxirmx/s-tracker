@@ -25,6 +25,7 @@
 
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.store.js'
+import { useAlertStore } from '@/stores/alert.store.js'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,12 +42,21 @@ const router = createRouter({
     {
       path: '/recover',
       name: 'Восстановление пароля',
-      component: () => import('@/views/User_RecoverView.vue')
+      component: () => import('@/views/User_RecoverView.vue'),
+      props: true
+    },
+    {
+      path: '/recover/:jwt',
+      redirect: () => '/user/edit/0'
     },
     {
       path: '/register',
       name: 'Регистрация',
       component: () => import('@/views/User_RegisterView.vue')
+    },
+    {
+      path: '/register/:jwt',
+      redirect: '/shipments'
     },
     {
       path: '/users',
@@ -107,10 +117,29 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
-  // redirect to login page if not logged in and trying to access a restricted page
+  const auth = useAuthStore()
+  const alert = useAlertStore()
+  alert.clear()
+
+  if (auth.re_jwt) {
+    return auth
+      .re()
+      .then(() => {
+        console.log('re() success', auth.re_tgt)
+        return auth.re_tgt == 'register' ? '/shipments/' : '/user/edit/' + auth.user.id
+      })
+      .catch((error) => {
+        router.push('/login').then(() => {
+          alert.error(
+            auth.re_tgt === 'register'
+              ? 'Не удалось завершить регистрацию. '
+              : 'Не удалось восстановить пароль. ' + error
+          )
+        })
+      })
+  }
   const publicPages = ['/login', '/recover', '/register']
   const authRequired = !publicPages.includes(to.path)
-  const auth = useAuthStore()
   if (authRequired && !auth.user) {
     auth.returnUrl = to.fullPath
     return '/login'
