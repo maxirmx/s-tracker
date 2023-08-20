@@ -37,17 +37,26 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Вход',
-      component: () => import('@/views/LoginView.vue')
+      component: () => import('@/views/LoginView.vue'),
     },
     {
       path: '/recover',
       name: 'Восстановление пароля',
-      component: () => import('@/views/User_RecoverView.vue')
+      component: () => import('@/views/User_RecoverView.vue'),
+      props: true
+    },
+    {
+      path: '/recover/:jwt',
+      redirect: () => '/user/edit/0'
     },
     {
       path: '/register',
       name: 'Регистрация',
       component: () => import('@/views/User_RegisterView.vue')
+    },
+    {
+      path: '/register/:jwt',
+      redirect: '/shipments'
     },
     {
       path: '/users',
@@ -108,13 +117,27 @@ const router = createRouter({
 })
 
 router.beforeEach(async (to) => {
-  // clear alert on route change
-//  const alertStore = useAlertStore()
-//  alertStore.clear()
-  // redirect to login page if not logged in and trying to access a restricted page
+  const auth = useAuthStore()
+  const alert = useAlertStore()
+  alert.clear()
+
+  if (auth.re_jwt) {
+    return auth.re()
+      .then(() => {
+        return '/' + auth.re_tgt === 'register' ?
+                     '/shipments/':
+                     '/user/edit/' + auth.user.id
+      })
+      .catch((error) => {
+        router.push('/login').then(() => {
+          alert.error(auth.re_tgt === 'register' ?
+                        'Не удалось завершить регистрацию. ' :
+                        'Не удалось восстановить пароль. ' + error)
+        })
+      })
+  }
   const publicPages = ['/login', '/recover', '/register']
   const authRequired = !publicPages.includes(to.path)
-  const auth = useAuthStore()
   if (authRequired && !auth.user) {
     auth.returnUrl = to.fullPath
     return '/login'

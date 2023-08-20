@@ -37,10 +37,9 @@ const schema = Yup.object().shape({
 })
 
 function onSubmit(values, { setErrors }) {
-  const alertStore = useAlertStore()
   const authStore = useAuthStore()
-
-  alertStore.success('Registration successful')
+  values.host = window.location.href;
+  values.host = values.host.substring(0, values.host.lastIndexOf('/'));
   return authStore
     .recover(values)
     .then(() => {

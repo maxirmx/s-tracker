@@ -74,12 +74,6 @@ const showPassword2 = ref(false)
 const usersStore = useUsersStore()
 const authStore = useAuthStore()
 
-const orgsStore = useOrgsStore()
-const { orgs } = storeToRefs(orgsStore)
-if (!isRegister() || asAdmin()) {
-  orgsStore.getAll()
-}
-
 let user = {
   isEnabled: 'ENABLED'
 }
@@ -87,6 +81,19 @@ let user = {
 if (!isRegister()) {
   ({ user } = storeToRefs(usersStore))
   usersStore.getById(props.id, true)
+}
+
+const orgsStore = useOrgsStore()
+const { orgs } = storeToRefs(orgsStore)
+const { org } = storeToRefs(orgsStore)
+
+if (asAdmin()) {
+  orgsStore.getAll()
+}
+else {
+  if (authStore.user) {
+    orgsStore.getById(authStore.user.orgId)
+  }
 }
 
 function isRegister() {
@@ -106,14 +113,16 @@ function getButton() {
 }
 
 function getOrg() {
-  let org = computed(() => {
-    let org = null
-    if (!orgs.value.loading) {
-      org = orgs.value.find((o) => o.id === user.value.orgId)
-    }
-    return org ? org.name : ''
-  })
-  return org.value
+  if (asAdmin()) {
+    org = computed(() => {
+      let org = null
+      if (!orgs.value.loading) {
+        org = orgs.value.find((o) => o.id === user.value.orgId)
+      }
+      return org ? org.name : ''
+    })
+  }
+  return org ? org.value : -1
 }
 
 function showCredentials() {
@@ -149,6 +158,8 @@ function onSubmit(values, { setErrors }) {
       values.isEnabled = true
       values.isManager = false
       values.isAdmin = false
+      values.host = window.location.href;
+      values.host.substring(0, values.host.lastIndexOf('/'));
       return authStore
         .register(values)
         .then(() => {

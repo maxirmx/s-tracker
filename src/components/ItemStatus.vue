@@ -91,8 +91,6 @@ function onSubmit(values, { setErrors }) {
       })
       .catch((error) => setErrors({ apiError: error }))
   } else {
-    console.log('Shall update: ', values)
-    router.go(-1)
     return historyStore
       .update(props.statusId, values)
       .then(() => {
