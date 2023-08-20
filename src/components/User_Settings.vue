@@ -25,7 +25,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { ref } from 'vue'
-import { computed } from 'vue'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
 import { Form, Field } from 'vee-validate'
@@ -79,7 +78,7 @@ let user = {
 }
 
 if (!isRegister()) {
-  ({ user } = storeToRefs(usersStore))
+  ;({ user } = storeToRefs(usersStore))
   usersStore.getById(props.id, true)
 }
 
@@ -89,8 +88,7 @@ const { org } = storeToRefs(orgsStore)
 
 if (asAdmin()) {
   orgsStore.getAll()
-}
-else {
+} else {
   if (authStore.user) {
     orgsStore.getById(authStore.user.orgId)
   }
@@ -110,19 +108,6 @@ function getTitle() {
 
 function getButton() {
   return isRegister() ? 'Зарегистрировать' + (asAdmin() ? '' : 'ся') : 'Сохранить'
-}
-
-function getOrg() {
-  if (asAdmin()) {
-    org = computed(() => {
-      let org = null
-      if (!orgs.value.loading) {
-        org = orgs.value.find((o) => o.id === user.value.orgId)
-      }
-      return org ? org.name : ''
-    })
-  }
-  return org ? org.name : ''
 }
 
 function showCredentials() {
@@ -166,11 +151,12 @@ function onSubmit(values, { setErrors }) {
           router.push('/').then(() => {
             const alertStore = useAlertStore()
             alertStore.success(
-              'На Ваш адрес электронной почты отправлено письмо с подтверждением. '               +
-              'Пожалуйста, перейдите по ссылке для завершения регистрации. '                      +
-              'Обратите внимание, что ссылка одноразовая и действует 4 часа. '                    +
-              'Если Вы не можете найти письма, проверьте папку с нежелательной почтой (спамом). ' +
-              'Если письмо не пришло, обратитесь к администратору.')
+              'На Ваш адрес электронной почты отправлено письмо с подтверждением. ' +
+                'Пожалуйста, перейдите по ссылке для завершения регистрации. ' +
+                'Обратите внимание, что ссылка одноразовая и действует 4 часа. ' +
+                'Если Вы не можете найти письма, проверьте папку с нежелательной почтой (спамом). ' +
+                'Если письмо не пришло, обратитесь к администратору.'
+            )
           })
         })
         .catch((error) => setErrors({ apiError: error }))
@@ -181,8 +167,7 @@ function onSubmit(values, { setErrors }) {
       .then(() => {
         if (window.history.length > 0) {
           router.go(-1)
-        }
-        else {
+        } else {
           router.push('/shipments')
         }
       })

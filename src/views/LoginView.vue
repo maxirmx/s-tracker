@@ -110,7 +110,6 @@ function onSubmit(values, { setErrors }) {
         <button @click="alertStore.clear()" class="btn btn-link close">×</button>
         {{ alert.message }}
       </div>
-
     </Form>
   </div>
 </template>

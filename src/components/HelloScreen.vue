@@ -35,7 +35,6 @@ defineProps({
 })
 
 const authStore = useAuthStore()
-
 </script>
 
 <template>
@@ -94,7 +93,7 @@ h3 {
     text-align: left;
   }
   .customer {
-  text-align: left;
-}
+    text-align: left;
+  }
 }
 </style>

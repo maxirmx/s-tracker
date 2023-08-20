@@ -48,7 +48,7 @@ export const useAuthStore = defineStore({
     async re() {
       const re_jwt = this.re_jwt
       this.re_jwt = null
-      const user = await fetchWrapper.put(`${baseUrl}/${this.re_tgt}`, {"jwt" : re_jwt} )
+      const user = await fetchWrapper.put(`${baseUrl}/${this.re_tgt}`, { jwt: re_jwt })
       this.user = user
       localStorage.setItem('user', JSON.stringify(user))
     },

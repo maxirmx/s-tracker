@@ -38,19 +38,20 @@ const schema = Yup.object().shape({
 
 function onSubmit(values, { setErrors }) {
   const authStore = useAuthStore()
-  values.host = window.location.href;
-  values.host = values.host.substring(0, values.host.lastIndexOf('/'));
+  values.host = window.location.href
+  values.host = values.host.substring(0, values.host.lastIndexOf('/'))
   return authStore
     .recover(values)
     .then(() => {
-          router.push('/').then(() => {
-            const alertStore = useAlertStore()
-            alertStore.success(
-              'На Ваш адрес электронной почты отправлено письмо со ссылкой для восстановления пароля. ' +
-              'Обратите внимание, что ссылка одноразовая и действует 4 часа. '                          +
-              'Если Вы не можете найти письма, проверьте папку с нежелательной почтой (спамом). '       +
-              'Если письмо не пришло, обратитесь к администратору.')
-          })
+      router.push('/').then(() => {
+        const alertStore = useAlertStore()
+        alertStore.success(
+          'На Ваш адрес электронной почты отправлено письмо со ссылкой для восстановления пароля. ' +
+            'Обратите внимание, что ссылка одноразовая и действует 4 часа. ' +
+            'Если Вы не можете найти письма, проверьте папку с нежелательной почтой (спамом). ' +
+            'Если письмо не пришло, обратитесь к администратору.'
+        )
+      })
     })
     .catch((error) => setErrors({ apiError: error }))
 }

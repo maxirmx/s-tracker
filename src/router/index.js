@@ -37,7 +37,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Вход',
-      component: () => import('@/views/LoginView.vue'),
+      component: () => import('@/views/LoginView.vue')
     },
     {
       path: '/recover',
@@ -122,18 +122,19 @@ router.beforeEach(async (to) => {
   alert.clear()
 
   if (auth.re_jwt) {
-    return auth.re()
+    return auth
+      .re()
       .then(() => {
         console.log('re() success', auth.re_tgt)
-        return (auth.re_tgt == 'register' ?
-                     '/shipments/':
-                     '/user/edit/' + auth.user.id)
+        return auth.re_tgt == 'register' ? '/shipments/' : '/user/edit/' + auth.user.id
       })
       .catch((error) => {
         router.push('/login').then(() => {
-          alert.error(auth.re_tgt === 'register' ?
-                        'Не удалось завершить регистрацию. ' :
-                        'Не удалось восстановить пароль. ' + error)
+          alert.error(
+            auth.re_tgt === 'register'
+              ? 'Не удалось завершить регистрацию. '
+              : 'Не удалось восстановить пароль. ' + error
+          )
         })
       })
   }

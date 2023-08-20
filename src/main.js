@@ -88,24 +88,23 @@ const app = createApp(App)
   .use(router)
   .use(vuetify, { components: { VDataTable } })
 
-  var j = window.location.href.lastIndexOf('/recover/')
-  var jwt = null
-  var tgt = null
+var j = window.location.href.lastIndexOf('/recover/')
+var jwt = null
+var tgt = null
+if (j > 0) {
+  jwt = window.location.href.substring(j + 9)
+  tgt = 'recover'
+} else {
+  j = window.location.href.lastIndexOf('/register/')
   if (j > 0) {
-    jwt = window.location.href.substring(j + 9);
-    tgt = 'recover'
+    jwt = window.location.href.substring(j + 10)
+    tgt = 'register'
   }
-  else {
-    j = window.location.href.lastIndexOf('/register/');
-    if (j > 0) {
-      jwt = window.location.href.substring(j + 10);
-      tgt = 'register'
-    }
-  }
-  if (jwt) {
-    const authStore = useAuthStore()
-    authStore.re_jwt = jwt
-    authStore.re_tgt = tgt
-  }
+}
+if (jwt) {
+  const authStore = useAuthStore()
+  authStore.re_jwt = jwt
+  authStore.re_tgt = tgt
+}
 
 app.mount('#app')
