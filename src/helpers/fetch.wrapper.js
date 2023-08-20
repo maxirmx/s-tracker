@@ -25,6 +25,7 @@
 
 import { useAuthStore } from '@/stores/auth.store.js'
 import { apiUrl } from '@/helpers/config.js'
+import { enableLog } from '@/helpers/config.js'
 const baseUrl = `${apiUrl}`
 
 export const fetchWrapper = {
@@ -44,7 +45,9 @@ function request(method) {
       requestOptions.headers['Content-Type'] = 'application/json'
       requestOptions.body = JSON.stringify(body)
     }
-    console.log(url, requestOptions)
+    if (enableLog) {
+      console.log(url, requestOptions)
+    }
     const response = await fetch(url, requestOptions)
     return handleResponse(response)
   }
@@ -66,8 +69,9 @@ function authHeader(url) {
 function handleResponse(response) {
   return response.text().then((text) => {
     const data = text && JSON.parse(text)
-    console.log(response.status, response.statusText, data)
-
+    if (enableLog) {
+      console.log(response.status, response.statusText, data)
+    }
     if (!response.ok) {
       const { user, logout } = useAuthStore()
       if ([401].includes(response.status)) {

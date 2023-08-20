@@ -124,9 +124,10 @@ router.beforeEach(async (to) => {
   if (auth.re_jwt) {
     return auth.re()
       .then(() => {
-        return '/' + auth.re_tgt === 'register' ?
+        console.log('re() success', auth.re_tgt)
+        return (auth.re_tgt == 'register' ?
                      '/shipments/':
-                     '/user/edit/' + auth.user.id
+                     '/user/edit/' + auth.user.id)
       })
       .catch((error) => {
         router.push('/login').then(() => {

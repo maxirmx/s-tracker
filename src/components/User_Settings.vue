@@ -122,7 +122,7 @@ function getOrg() {
       return org ? org.name : ''
     })
   }
-  return org ? org.value : -1
+  return org ? org.name : ''
 }
 
 function showCredentials() {
@@ -158,8 +158,8 @@ function onSubmit(values, { setErrors }) {
       values.isEnabled = true
       values.isManager = false
       values.isAdmin = false
-      values.host = window.location.href;
-      values.host.substring(0, values.host.lastIndexOf('/'));
+      values.host = window.location.href
+      values.host = values.host.substring(0, values.host.lastIndexOf('/'))
       return authStore
         .register(values)
         .then(() => {
@@ -178,7 +178,14 @@ function onSubmit(values, { setErrors }) {
   } else {
     return usersStore
       .update(props.id, values, true)
-      .then(() => router.go(-1))
+      .then(() => {
+        if (window.history.length > 0) {
+          router.go(-1)
+        }
+        else {
+          router.push('/shipments')
+        }
+      })
       .catch((error) => setErrors({ apiError: error }))
   }
 }
@@ -282,7 +289,7 @@ function onSubmit(values, { setErrors }) {
       <div v-if="showCredentials()" class="form-group">
         <label for="orgId" class="label">Организация:</label>
         <span id="orgId"
-          ><em>{{ getOrg() }}</em></span
+          ><em>{{ org?.name }}</em></span
         >
       </div>
       <div v-if="showAndEditCredentials()" class="form-group">

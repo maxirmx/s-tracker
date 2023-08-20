@@ -24,3 +24,4 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 export const apiUrl = 'https://tracker.sw.consulting/backend'
+export const enableLog = true
