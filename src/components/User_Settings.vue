@@ -45,6 +45,10 @@ const props = defineProps({
   }
 })
 
+const pwdErr =
+  'Пароль должен быть не короче 8 символов и содержать хотя бы одну цифру и один специальный символ (!@#$%^&*()\\-_=+{};:,<.>)'
+const pwdReg = /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})((?=.*\d){1}).*$/
+
 const schema = Yup.object().shape({
   firstName: Yup.string().required('Необходимо указать имя'),
   lastName: Yup.string().required('Необходимо указать фамилию'),
@@ -56,13 +60,15 @@ const schema = Yup.object().shape({
     isRegister()
       ? Yup.string()
           .required('Необходимо указать пароль')
-          .min(6, 'Пароль не может быть короче 4 символов')
+          .matches(pwdReg, pwdErr)
       : null
   ),
   password2: Yup.string()
     .when('password', (password, schema) => {
       if ((password && password != '') || isRegister())
-        return schema.required('Необходимо подтвердить пароль')
+        return schema
+          .required('Необходимо подтвердить пароль')
+          .matches(pwdReg, pwdErr)
     })
     .oneOf([Yup.ref('password')], 'Пароли должны совпадать')
 })
