@@ -23,5 +23,5 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-export const apiUrl = 'https://tracker.sw.consulting/backend'
+export const apiUrl = `${import.meta.env.VITE_API_URL}`
 export const enableLog = true

@@ -88,10 +88,9 @@ const app = createApp(App)
   .use(router)
   .use(vuetify, { components: { VDataTable } })
 
-
-const queryString = window.location.search;
-console.log(queryString);
-const urlParams = new URLSearchParams(queryString);
+const queryString = window.location.search
+console.log(queryString)
+const urlParams = new URLSearchParams(queryString)
 
 var jwt = null
 var tgt = null
@@ -99,8 +98,7 @@ var tgt = null
 if (urlParams.has('recover')) {
   jwt = urlParams.get('recover')
   tgt = 'recover'
-}
-else if (urlParams.has('register')) {
+} else if (urlParams.has('register')) {
   jwt = urlParams.get('register')
   tgt = 'register'
 }
