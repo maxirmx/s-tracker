@@ -69,7 +69,7 @@ const sts = computed(() => {
       ? moment().format('YYYY-MM-DD')
       : moment(status.value.date).format('YYYY-MM-DD'),
     dest: shipment && !shipment.value.loading ? shipment.value.dest : 'загружается ...',
-    ddate: '',
+    ddate: shipment && !shipment.value.loading ? shipment.value.ddate : 'загружается ...',
     comment: props.create ? '' : status.value.comment
   }
 })

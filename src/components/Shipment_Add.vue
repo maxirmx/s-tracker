@@ -31,17 +31,16 @@ import moment from 'moment'
 import router from '@/router'
 import { stcodes, statuses } from '@/helpers/statuses.js'
 
-import { useUsersStore } from '@/stores/users.store.js'
+import { useOrgsStore } from '@/stores/orgs.store.js'
 import { useShipmentsStore } from '@/stores/shipments.store.js'
 
-const usersStore = useUsersStore()
-const { users } = storeToRefs(usersStore)
-const { getUserById } = storeToRefs(usersStore)
-usersStore.getAll()
+const orgsStore = useOrgsStore()
+const { orgs } = storeToRefs(orgsStore)
+orgsStore.getAll()
 
 const shipmentsStore = useShipmentsStore()
 
-const userIdError = 'Выберите клиента. Клиент и его организация смогут отслеживать отправление.'
+const orgIdError = 'Выберите организацию. Сотрудники организации смогут отслеживать отправление.'
 const schema = Yup.object().shape({
   number: Yup.string().required('Укажите номер отправления'),
   status: Yup.string().required('Выберите статус'),
@@ -49,11 +48,11 @@ const schema = Yup.object().shape({
   location: Yup.string().required('Укажите местонахождение'),
   date: Yup.string().required('Укажите дату'),
   ddate: Yup.string().required('Укажите ожидаемую дату прибытия'),
-  userId: Yup.number(userIdError).typeError(userIdError).integer(userIdError).required(userIdError)
+  orgId: Yup.number(orgIdError).typeError(orgIdError).integer(orgIdError).required(orgIdError)
 })
 
 function onSubmit(values, { setErrors }) {
-  values.orgId = getUserById.value(values.userId).orgId
+  values.userId = -1
   return shipmentsStore
     .add(values)
     .then(() => {
@@ -162,16 +161,16 @@ const status = {
         </div>
 
         <div class="form-group">
-          <label for="userId" class="label">Клиент:</label>
+          <label for="orgId" class="label">Организация:</label>
           <Field
-            name="userId"
+            name="orgId"
             as="select"
             class="form-control input select"
-            :class="{ 'is-invalid': errors.userId }"
+            :class="{ 'is-invalid': errors.orgId }"
           >
-            <option value="">Выберите клиента:</option>
-            <option v-for="user in users" :key="user" :value="user.id">
-              {{ user.lastName }} {{ user.firstName }} {{ user.patronimic }}
+            <option value="">Выберите организацию:</option>
+            <option v-for="org in orgs" :key="org" :value="org.id">
+              {{ org.name }}
             </option>
           </Field>
         </div>
@@ -195,12 +194,12 @@ const status = {
         <div v-if="errors.dest" class="alert alert-danger mt-3 mb-0">{{ errors.dest }}</div>
         <div v-if="errors.ddate" class="alert alert-danger mt-3 mb-0">{{ errors.ddate }}</div>
         <div v-if="errors.comment" class="alert alert-danger mt-3 mb-0">{{ errors.comment }}</div>
-        <div v-if="errors.userId" class="alert alert-danger mt-3 mb-0">{{ errors.userId }}</div>
+        <div v-if="errors.orgId" class="alert alert-danger mt-3 mb-0">{{ errors.orgId }}</div>
         <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{ errors.apiError }}</div>
       </Form>
     </div>
   </div>
-  <div v-if="user?.loading" class="text-center m-5">
+  <div v-if="orgs?.loading" class="text-center m-5">
     <span class="spinner-border spinner-border-lg align-center"></span>
   </div>
 </template>

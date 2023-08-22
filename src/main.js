@@ -33,6 +33,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
+import VuetifyUseDialog from 'vuetify-use-dialog'
 
 import App from '@/App.vue'
 import router from '@/router'
@@ -59,6 +60,7 @@ import {
   faArrowRightFromBracket,
   faArrowRightToBracket,
   faCalendarPlus,
+  faXmark,
   faEye,
   faEyeSlash,
   faHouseChimneyMedical,
@@ -73,6 +75,7 @@ library.add(
   faArrowRightFromBracket,
   faArrowRightToBracket,
   faCalendarPlus,
+  faXmark,
   faEye,
   faEyeSlash,
   faHouseChimneyMedical,
@@ -87,6 +90,7 @@ const app = createApp(App)
   .use(createPinia())
   .use(router)
   .use(vuetify, { components: { VDataTable } })
+  .use(VuetifyUseDialog)
 
 const queryString = window.location.search
 console.log(queryString)

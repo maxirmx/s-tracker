@@ -59,25 +59,14 @@ const schema = Yup.object().shape({
   email: Yup.string()
     .required('Необходимо указать электронную почту')
     .email('Неверный формат электронной почты'),
-  orgId: Yup.number().concat(
-    asAdmin()
-      ? Yup.number()
-          .required('Необходимо указать организацию')
-          .min(0, 'Необходимо указать организацию')
-      : null) ,
+  orgId: Yup.number().concat(asAdmin() ? Yup.number().required(orgErr).min(0, orgErr) : null),
   password: Yup.string().concat(
-    isRegister()
-      ? Yup.string()
-          .required('Необходимо указать пароль')
-          .matches(pwdReg, pwdErr)
-      : null
+    isRegister() ? Yup.string().required('Необходимо указать пароль').matches(pwdReg, pwdErr) : null
   ),
   password2: Yup.string()
     .when('password', (password, schema) => {
       if ((password && password != '') || isRegister())
-        return schema
-          .required('Необходимо подтвердить пароль')
-          .matches(pwdReg, pwdErr)
+        return schema.required('Необходимо подтвердить пароль').matches(pwdReg, pwdErr)
     })
     .oneOf([Yup.ref('password')], 'Пароли должны совпадать')
 })
@@ -87,11 +76,11 @@ const showPassword2 = ref(false)
 
 let user = {
   isEnabled: 'ENABLED',
-  orgId : -1
+  orgId: -1
 }
 
 if (!isRegister()) {
-  ({ user } = storeToRefs(usersStore))
+  ;({ user } = storeToRefs(usersStore))
   usersStore.getById(props.id, true)
 }
 
