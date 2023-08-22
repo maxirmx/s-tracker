@@ -161,14 +161,14 @@ const status = {
         </div>
 
         <div class="form-group">
-          <label for="orgId" class="label">Клиент:</label>
+          <label for="orgId" class="label">Организация:</label>
           <Field
             name="orgId"
             as="select"
             class="form-control input select"
             :class="{ 'is-invalid': errors.orgId }"
           >
-            <option value="">Выберите клиента:</option>
+            <option value="">Выберите организацию:</option>
             <option v-for="org in orgs" :key="org" :value="org.id">
               {{ org.name }}
             </option>

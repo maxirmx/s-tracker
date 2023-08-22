@@ -30,13 +30,22 @@ import router from '@/router'
 import { storeToRefs } from 'pinia'
 import { statuses } from '@/helpers/statuses.js'
 
+import { useConfirm } from 'vuetify-use-dialog'
+
+const confirm = useConfirm()
+
 import { useShipmentsStore } from '@/stores/shipments.store.js'
 import { useAuthStore } from '@/stores/auth.store.js'
+import { useAlertStore } from '@/stores/alert.store.js'
+
 const authStore = useAuthStore()
 
 const shipmentsStore = useShipmentsStore()
 const { shipments } = storeToRefs(shipmentsStore)
 shipmentsStore.getAll()
+
+const alertStore = useAlertStore()
+const { alert } = storeToRefs(alertStore)
 
 function getStatus(item) {
   var statusCode = item['selectable']['status']
@@ -51,6 +60,26 @@ function getDate(item) {
 function viewHistory(item) {
   var shipmentNumber = item['selectable']['number']
   router.push('shipment/' + shipmentNumber)
+}
+
+async function deleteShipment(item) {
+  const content = 'Удалить отправление "' + item['selectable']['number'] + '" ?'
+  const result = await confirm({
+      title: 'Подтверждение',
+      confirmationText: 'Удалить',
+      cancellationText: 'Не удалять',
+      dialogProps: {
+        width: '50%',
+        minWidth: '250px',
+      },
+      content: content,
+    })
+
+    if (!result) return
+    shipmentsStore
+        .deleteByNumber(item['selectable']['number'])
+        .then(() => { shipmentsStore.getAll() })
+        .catch((error) => {alertStore.error(error)})
 }
 
 const itemsPerPage = 10
@@ -103,7 +132,7 @@ const headers = [
               class="anti-btn"
             />
           </button>
-          <button @click="viewHistory(item)" class="anti-btn">
+          <button v-if="authStore.user?.isAdmin" @click="deleteShipment(item)" class="anti-btn">
             <font-awesome-icon size="1x" icon="fa-solid fa-xmark" class="anti-btn" />
           </button>
         </h4>
@@ -114,6 +143,10 @@ const headers = [
     </div>
     <div v-if="shipments?.error" class="text-center m-5">
       <div class="text-danger">Ошибка при загрузке списка отправлений: {{ shipments.error }}</div>
+    </div>
+    <div v-if="alert" class="alert alert-dismissable mt-3 mb-0" :class="alert.type">
+      <button @click="alertStore.clear()" class="btn btn-link close">×</button>
+      {{ alert.message }}
     </div>
   </div>
 </template>

@@ -55,6 +55,14 @@ export const useShipmentsStore = defineStore({
         this.shipment = { error }
       }
     },
+    async deleteByNumber(number) {
+      this.shipment = { loading: true }
+      try {
+        await fetchWrapper.delete(`${baseUrl}/${number}`, {})
+      } catch (error) {
+        this.shipment = { error }
+      }
+    },
     async update(number, params) {
       await fetchWrapper.put(`${baseUrl}/${number}`, params)
     }
