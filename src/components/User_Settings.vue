@@ -59,7 +59,7 @@ const schema = Yup.object().shape({
   email: Yup.string()
     .required('Необходимо указать электронную почту')
     .email('Неверный формат электронной почты'),
-  orgId: Yup.number().concat(asAdmin() ? Yup.number().required(orgErr).min(0, orgErr) : null),
+  orgId: Yup.number().concat(asAdmin() ? Yup.number().typeError(orgErr).required(orgErr).min(0, orgErr) : null),
   password: Yup.string().concat(
     isRegister() ? Yup.string().required('Необходимо указать пароль').matches(pwdReg, pwdErr) : null
   ),
