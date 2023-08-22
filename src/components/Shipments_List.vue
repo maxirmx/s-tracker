@@ -103,6 +103,9 @@ const headers = [
               class="anti-btn"
             />
           </button>
+          <button @click="viewHistory(item)" class="anti-btn">
+            <font-awesome-icon size="1x" icon="fa-solid fa-xmark" class="anti-btn" />
+          </button>
         </h4>
       </template>
     </v-data-table>

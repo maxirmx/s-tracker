@@ -62,9 +62,7 @@ historyStore.getByNumber(props.shipmentNumber)
       <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-from-bracket" class="btn" />
     </button>
   </h1>
-  <div class="orange customer" v-if="authStore.user?.isManager">
-    Клиент: {{ shipment.name }}
-  </div>
+  <div class="orange customer" v-if="authStore.user?.isManager">Клиент: {{ shipment.name }}</div>
   <hr class="hr" />
   <div class="wrapper" v-if="authStore.user?.isManager">
     <router-link
