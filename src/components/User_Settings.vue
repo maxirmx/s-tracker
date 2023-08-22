@@ -45,17 +45,26 @@ const props = defineProps({
   }
 })
 
+const usersStore = useUsersStore()
+const authStore = useAuthStore()
+
 const pwdErr =
   'Пароль должен быть не короче 8 символов и содержать хотя бы одну цифру и один специальный символ (!@#$%^&*()\\-_=+{};:,<.>)'
 const pwdReg = /^.*(?=.{8,})((?=.*[!@#$%^&*()\-_=+{};:,<.>]){1})((?=.*\d){1}).*$/
+const orgErr = 'Необходимо указать организацию'
 
 const schema = Yup.object().shape({
   firstName: Yup.string().required('Необходимо указать имя'),
   lastName: Yup.string().required('Необходимо указать фамилию'),
-  patronimic: Yup.string(),
   email: Yup.string()
     .required('Необходимо указать электронную почту')
     .email('Неверный формат электронной почты'),
+  orgId: Yup.number().concat(
+    asAdmin()
+      ? Yup.number()
+          .required('Необходимо указать организацию')
+          .min(0, 'Необходимо указать организацию')
+      : null) ,
   password: Yup.string().concat(
     isRegister()
       ? Yup.string()
@@ -76,15 +85,13 @@ const schema = Yup.object().shape({
 const showPassword = ref(false)
 const showPassword2 = ref(false)
 
-const usersStore = useUsersStore()
-const authStore = useAuthStore()
-
 let user = {
-  isEnabled: 'ENABLED'
+  isEnabled: 'ENABLED',
+  orgId : -1
 }
 
 if (!isRegister()) {
-  ;({ user } = storeToRefs(usersStore))
+  ({ user } = storeToRefs(usersStore))
   usersStore.getById(props.id, true)
 }
 
@@ -139,6 +146,8 @@ function getCredentials() {
 }
 
 function onSubmit(values, { setErrors }) {
+  // Если там было отчество, то мы его сохраним
+  values.patronimic = user.patronimic
   if (isRegister()) {
     if (asAdmin()) {
       return usersStore
@@ -213,16 +222,6 @@ function onSubmit(values, { setErrors }) {
         />
       </div>
       <div class="form-group">
-        <label for="patronimic" class="label">Отчество:</label>
-        <Field
-          name="patronimic"
-          type="text"
-          class="form-control input"
-          :class="{ 'is-invalid': errors.patronimic }"
-          placeholder="Отчество"
-        />
-      </div>
-      <div class="form-group">
         <label for="email" class="label">Адрес электронной почты:</label>
         <Field
           name="email"
@@ -292,7 +291,6 @@ function onSubmit(values, { setErrors }) {
           :class="{ 'is-invalid': errors.orgId }"
         >
           <option value="">Выберите организацию:</option>
-          <option value="-1">(без организации)</option>
           <option v-for="org in orgs" :key="org" :value="org.id">
             {{ org.name }}
           </option>
@@ -351,10 +349,8 @@ function onSubmit(values, { setErrors }) {
       </div>
       <div v-if="errors.lastName" class="alert alert-danger mt-3 mb-0">{{ errors.lastName }}</div>
       <div v-if="errors.firstName" class="alert alert-danger mt-3 mb-0">{{ errors.firstName }}</div>
-      <div v-if="errors.patronimic" class="alert alert-danger mt-3 mb-0">
-        {{ errors.patronimic }}
-      </div>
       <div v-if="errors.email" class="alert alert-danger mt-3 mb-0">{{ errors.email }}</div>
+      <div v-if="errors.orgId" class="alert alert-danger mt-3 mb-0">{{ errors.orgId }}</div>
       <div v-if="errors.password" class="alert alert-danger mt-3 mb-0">{{ errors.password }}</div>
       <div v-if="errors.password2" class="alert alert-danger mt-3 mb-0">{{ errors.password2 }}</div>
       <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{ errors.apiError }}</div>

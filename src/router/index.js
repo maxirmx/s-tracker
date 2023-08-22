@@ -117,7 +117,6 @@ router.beforeEach(async (to) => {
     return auth
       .re()
       .then(() => {
-        console.log('re() success', auth.re_tgt)
         return auth.re_tgt == 'register' ? '/shipments/' : '/user/edit/' + auth.user.id
       })
       .catch((error) => {
