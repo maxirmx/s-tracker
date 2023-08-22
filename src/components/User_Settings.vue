@@ -62,8 +62,8 @@ const schema = Yup.object().shape({
   orgId: Yup.number().concat(
     asAdmin()
       ? Yup.number()
-          .required('Необходимо указать организацию')
-          .min(0, 'Необходимо указать организацию')
+          .required(orgErr)
+          .min(0, orgErr)
       : null) ,
   password: Yup.string().concat(
     isRegister()

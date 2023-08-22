@@ -63,8 +63,7 @@ historyStore.getByNumber(props.shipmentNumber)
     </button>
   </h1>
   <div class="orange customer" v-if="authStore.user?.isManager">
-    Клиент: {{ shipment.lastName }} {{ shipment.firstName }} {{ shipment.patronimic }}
-    {{ shipment.name ? '(' + shipment.name.trim() + ')' : '' }}
+    Клиент: {{ shipment.name }}
   </div>
   <hr class="hr" />
   <div class="wrapper" v-if="authStore.user?.isManager">
