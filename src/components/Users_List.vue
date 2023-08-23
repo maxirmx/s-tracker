@@ -25,12 +25,15 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { computed } from 'vue'
+import { ref } from 'vue'
+
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 import router from '@/router'
 
 import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/stores/users.store.js'
 import { useOrgsStore } from '@/stores/orgs.store.js'
+import { itemsPerPageOptions } from '@/helpers/items.per.page.js'
 
 const usersStore = useUsersStore()
 const { users } = storeToRefs(usersStore)
@@ -73,7 +76,7 @@ function getCredentials(item) {
   return crd
 }
 
-const itemsPerPage = 10
+const itemsPerPage = ref(10)
 
 const headers = [
   { title: 'Пользователь', align: 'start', key: 'lastName', sortable: 'true' },
@@ -101,8 +104,11 @@ const headers = [
     <v-data-table
       v-if="users?.length"
       v-model:items-per-page="itemsPerPage"
+      items-per-page-text="Пользователей на странице"
+      :items-per-page-options="itemsPerPageOptions"
       :headers="headers"
       :items="users"
+      item-value="name"
       class="elevation-1"
     >
       <template v-slot:[`item.lastName`]="{ item }">

@@ -75,14 +75,14 @@ library.add(
   faArrowRightFromBracket,
   faArrowRightToBracket,
   faCalendarPlus,
-  faXmark,
   faEye,
   faEyeSlash,
   faHouseChimneyMedical,
   faPen,
   faPenToSquare,
   faTruckFast,
-  faUserPlus
+  faUserPlus,
+  faXmark
 )
 
 const app = createApp(App)

@@ -35,8 +35,6 @@ function deauth() {
   authStore.logout()
   router.push('')
 }
-
-deauth()
 </script>
 
 <template>

@@ -24,10 +24,13 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+import { ref } from 'vue'
+
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
-import router from '../router'
+import router from '@/router'
 import { storeToRefs } from 'pinia'
 import { useOrgsStore } from '@/stores/orgs.store.js'
+import { itemsPerPageOptions } from '@/helpers/items.per.page.js'
 
 const orgsStore = useOrgsStore()
 const { orgs } = storeToRefs(orgsStore)
@@ -38,7 +41,7 @@ function orgSettings(item) {
   router.push('org/edit/' + id)
 }
 
-const itemsPerPage = 10
+const itemsPerPage = ref(10)
 
 const headers = [
   { title: 'Организация', align: 'start', key: 'name' },
@@ -64,6 +67,8 @@ const headers = [
     <v-data-table
       v-if="orgs?.length"
       v-model:items-per-page="itemsPerPage"
+      items-per-page-text="Организаций на странице"
+      :items-per-page-options="itemsPerPageOptions"
       :headers="headers"
       :items="orgs"
       class="elevation-1"
