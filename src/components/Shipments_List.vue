@@ -25,10 +25,13 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import moment from 'moment'
+import { ref } from 'vue'
+
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 import router from '@/router'
 import { storeToRefs } from 'pinia'
 import { statuses } from '@/helpers/statuses.js'
+import { itemsPerPageOptions } from '@/helpers/items.per.page.js'
 
 import { useConfirm } from 'vuetify-use-dialog'
 
@@ -65,24 +68,28 @@ function viewHistory(item) {
 async function deleteShipment(item) {
   const content = 'Удалить отправление "' + item['selectable']['number'] + '" ?'
   const result = await confirm({
-      title: 'Подтверждение',
-      confirmationText: 'Удалить',
-      cancellationText: 'Не удалять',
-      dialogProps: {
-        width: '50%',
-        minWidth: '250px',
-      },
-      content: content,
-    })
+    title: 'Подтверждение',
+    confirmationText: 'Удалить',
+    cancellationText: 'Не удалять',
+    dialogProps: {
+      width: '50%',
+      minWidth: '250px'
+    },
+    content: content
+  })
 
-    if (!result) return
-    shipmentsStore
-        .deleteByNumber(item['selectable']['number'])
-        .then(() => { shipmentsStore.getAll() })
-        .catch((error) => {alertStore.error(error)})
+  if (!result) return
+  shipmentsStore
+    .deleteByNumber(item['selectable']['number'])
+    .then(() => {
+      shipmentsStore.getAll()
+    })
+    .catch((error) => {
+      alertStore.error(error)
+    })
 }
 
-const itemsPerPage = 10
+const itemsPerPage = ref(10)
 const headers = [
   { title: 'Номер', align: 'start', key: 'number' },
   { title: 'Место', align: 'center', key: 'location' },
@@ -110,6 +117,8 @@ const headers = [
     <v-data-table
       v-if="shipments?.length"
       v-model:items-per-page="itemsPerPage"
+      items-per-page-text="Отправлений на странице"
+      :items-per-page-options="itemsPerPageOptions"
       :headers="headers"
       :items="shipments"
       item-value="name"

@@ -131,6 +131,7 @@ router.beforeEach(async (to) => {
   }
   const publicPages = ['/login', '/recover', '/register']
   const authRequired = !publicPages.includes(to.path)
+
   if (authRequired && !auth.user) {
     auth.returnUrl = to.fullPath
     return '/login'
