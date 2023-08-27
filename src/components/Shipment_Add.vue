@@ -45,7 +45,7 @@ const schema = Yup.object().shape({
   number: Yup.string().required('Укажите номер отправления'),
   status: Yup.string().required('Выберите статус'),
   dest: Yup.string().required('Укажите пункт назначения'),
-  location: Yup.string().required('Укажите местонахождение'),
+  location: Yup.string().required('Укажите место отправления'),
   date: Yup.string().required('Укажите дату'),
   ddate: Yup.string().required('Укажите ожидаемую дату прибытия'),
   orgId: Yup.number(orgIdError).typeError(orgIdError).integer(orgIdError).required(orgIdError)
@@ -109,7 +109,7 @@ const status = {
           </Field>
         </div>
         <div class="form-group">
-          <label for="location" class="label">Местонахождение:</label>
+          <label for="location" class="label">Место отправления:</label>
           <Field
             name="location"
             type="text"

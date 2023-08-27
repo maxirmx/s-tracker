@@ -157,7 +157,7 @@ const headers = [
       <v-text-field
         v-model="search"
         :append-inner-icon="mdiMagnify"
-        label="Поиск"
+        label="Поиск по любой информации об отправлении"
         variant="solo"
         hide-details
       />
