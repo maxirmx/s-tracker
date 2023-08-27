@@ -91,7 +91,7 @@ const headers = [
       <v-text-field
         v-model="search"
         :append-inner-icon="mdiMagnify"
-        label="Поиск"
+        label="Поиск по названию организации"
         variant="solo"
         hide-details
       ></v-text-field>

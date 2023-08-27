@@ -26,6 +26,7 @@
 import { defineStore } from 'pinia'
 import { fetchWrapper } from '@/helpers/fetch.wrapper.js'
 import { apiUrl } from '@/helpers/config.js'
+import router from '@/router'
 
 const baseUrl = `${apiUrl}/auth`
 
@@ -60,6 +61,7 @@ export const useAuthStore = defineStore({
     logout() {
       this.user = null
       localStorage.removeItem('user')
+      router.push('/login')
     }
   }
 })
