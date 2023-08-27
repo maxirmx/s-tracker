@@ -136,6 +136,10 @@ router.beforeEach(async (to) => {
     auth.returnUrl = to.fullPath
     return '/login'
   }
+
+  if (!authRequired && auth.user) {
+    return '/shipments'
+  }
 })
 
 export default router
