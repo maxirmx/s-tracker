@@ -27,10 +27,12 @@
 import { ref } from 'vue'
 
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
+
 import router from '@/router'
 import { storeToRefs } from 'pinia'
 import { useOrgsStore } from '@/stores/orgs.store.js'
 import { itemsPerPageOptions } from '@/helpers/items.per.page.js'
+import { mdiMagnify } from '@mdi/js'
 
 const orgsStore = useOrgsStore()
 const { orgs } = storeToRefs(orgsStore)
@@ -42,10 +44,10 @@ function orgSettings(item) {
 }
 
 const itemsPerPage = ref(10)
-
+const search = ref('')
 const headers = [
-  { title: 'Организация', align: 'start', key: 'name' },
-  { title: '', align: 'center', key: 'actions', sortable: 'false' }
+  { title: 'Организация', align: 'start', key: 'name', sortable: true },
+  { title: '', align: 'center', key: 'actions', sortable: false }
 ]
 </script>
 
@@ -64,24 +66,36 @@ const headers = [
       </router-link>
     </div>
 
-    <v-data-table
-      v-if="orgs?.length"
-      v-model:items-per-page="itemsPerPage"
-      items-per-page-text="Организаций на странице"
-      :items-per-page-options="itemsPerPageOptions"
-      :headers="headers"
-      :items="orgs"
-      class="elevation-1"
-    >
-      <template v-slot:[`item.actions`]="{ item }">
-        <font-awesome-icon
-          size="1x"
-          icon="fa-solid fa-pen"
-          class="anti-btn"
-          @click="orgSettings(item)"
-        />
-      </template>
-    </v-data-table>
+    <v-card>
+      <v-data-table
+        v-if="orgs?.length"
+        v-model:items-per-page="itemsPerPage"
+        items-per-page-text="Организаций на странице"
+        page-text="{0}-{1} из {2}"
+        :items-per-page-options="itemsPerPageOptions"
+        :headers="headers"
+        :items="orgs"
+        :search="search"
+        class="elevation-1"
+      >
+        <template v-slot:[`item.actions`]="{ item }">
+          <font-awesome-icon
+            size="1x"
+            icon="fa-solid fa-pen"
+            class="anti-btn"
+            @click="orgSettings(item)"
+          />
+        </template>
+      </v-data-table>
+      <v-spacer></v-spacer>
+      <v-text-field
+        v-model="search"
+        :append-inner-icon="mdiMagnify"
+        label="Поиск"
+        variant="solo"
+        hide-details
+      ></v-text-field>
+    </v-card>
     <div v-if="orgs?.error" class="text-center m-5">
       <div class="text-danger">Ошибка при загрузке списка организаций: {{ orgs.error }}</div>
     </div>

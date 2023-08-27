@@ -34,6 +34,7 @@ import { storeToRefs } from 'pinia'
 import { useUsersStore } from '@/stores/users.store.js'
 import { useOrgsStore } from '@/stores/orgs.store.js'
 import { itemsPerPageOptions } from '@/helpers/items.per.page.js'
+import { mdiMagnify } from '@mdi/js'
 
 const usersStore = useUsersStore()
 const { users } = storeToRefs(usersStore)
@@ -77,12 +78,29 @@ function getCredentials(item) {
 }
 
 const itemsPerPage = ref(10)
+const search = ref('')
+
+function filterUsers(value, query, item) {
+  if (query == null) return false
+  const q = query.toLocaleUpperCase()
+  const u = users.value.find((x) => x.id === item.id)
+  if (
+    u != null &&
+    (u.lastName.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.firstName.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.patronimic.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.email.toLocaleUpperCase().indexOf(q) !== -1)
+  )
+    return true
+  const o = orgs.value.find((x) => x.id === item.orgId)
+  return o != null && o.name.toLocaleUpperCase().indexOf(q) !== -1
+}
 
 const headers = [
-  { title: 'Пользователь', align: 'start', key: 'lastName', sortable: 'true' },
+  { title: 'Пользователь', align: 'start', key: 'id' },
   { title: 'Организация', align: 'start', key: 'orgId' },
-  { title: 'Права', align: 'start', key: 'credentials', sortable: 'false' },
-  { title: '', align: 'center', key: 'actions', sortable: 'false' }
+  { title: 'Права', align: 'start', key: 'credentials', sortable: false },
+  { title: '', align: 'center', key: 'actions', sortable: false }
 ]
 </script>
 
@@ -101,35 +119,48 @@ const headers = [
       </router-link>
     </div>
 
-    <v-data-table
-      v-if="users?.length"
-      v-model:items-per-page="itemsPerPage"
-      items-per-page-text="Пользователей на странице"
-      :items-per-page-options="itemsPerPageOptions"
-      :headers="headers"
-      :items="users"
-      item-value="name"
-      class="elevation-1"
-    >
-      <template v-slot:[`item.lastName`]="{ item }">
-        {{ item['selectable']['lastName'] }} {{ item['selectable']['firstName'] }}
-        {{ item['selectable']['patronimic'] }} ({{ item['selectable']['email'] }})
-      </template>
-      <template v-slot:[`item.orgId`]="{ item }">
-        {{ getOrg(item['selectable']) }}
-      </template>
-      <template v-slot:[`item.credentials`]="{ item }">
-        {{ getCredentials(item['selectable']) }}
-      </template>
-      <template v-slot:[`item.actions`]="{ item }">
-        <font-awesome-icon
-          size="1x"
-          icon="fa-solid fa-pen"
-          class="anti-btn"
-          @click="userSettings(item['selectable'])"
-        />
-      </template>
-    </v-data-table>
+    <v-card>
+      <v-data-table
+        v-if="users?.length"
+        v-model:items-per-page="itemsPerPage"
+        items-per-page-text="Пользователей на странице"
+        :items-per-page-options="itemsPerPageOptions"
+        page-text="{0}-{1} из {2}"
+        :headers="headers"
+        :items="users"
+        :search="search"
+        :custom-filter="filterUsers"
+        item-value="name"
+        class="elevation-1"
+      >
+        <template v-slot:[`item.id`]="{ item }">
+          {{ item['selectable']['lastName'] }} {{ item['selectable']['firstName'] }}
+          {{ item['selectable']['patronimic'] }} ({{ item['selectable']['email'] }})
+        </template>
+        <template v-slot:[`item.orgId`]="{ item }">
+          {{ getOrg(item['selectable']) }}
+        </template>
+        <template v-slot:[`item.credentials`]="{ item }">
+          {{ getCredentials(item['selectable']) }}
+        </template>
+        <template v-slot:[`item.actions`]="{ item }">
+          <font-awesome-icon
+            size="1x"
+            icon="fa-solid fa-pen"
+            class="anti-btn"
+            @click="userSettings(item['selectable'])"
+          />
+        </template>
+      </v-data-table>
+      <v-spacer></v-spacer>
+      <v-text-field
+        v-model="search"
+        :append-inner-icon="mdiMagnify"
+        label="Поиск"
+        variant="solo"
+        hide-details
+      />
+    </v-card>
     <div v-if="users?.loading" class="text-center m-5">
       <span class="spinner-border spinner-border-lg align-center"></span>
     </div>

@@ -32,6 +32,7 @@ import router from '@/router'
 import { storeToRefs } from 'pinia'
 import { statuses } from '@/helpers/statuses.js'
 import { itemsPerPageOptions } from '@/helpers/items.per.page.js'
+import { mdiMagnify } from '@mdi/js'
 
 import { useConfirm } from 'vuetify-use-dialog'
 
@@ -90,12 +91,14 @@ async function deleteShipment(item) {
 }
 
 const itemsPerPage = ref(10)
+const search = ref('')
+
 const headers = [
   { title: 'Номер', align: 'start', key: 'number' },
   { title: 'Место', align: 'center', key: 'location' },
-  { title: 'Статус', align: 'center', key: 'statuses' },
+  { title: 'Статус', align: 'center', key: 'statuses', sortable: false },
   { title: 'Дата', align: 'center', key: 'date' },
-  { title: '', align: 'center', key: 'actions', sortable: 'false' }
+  { title: '', align: 'center', key: 'actions', sortable: false }
 ]
 </script>
 
@@ -114,39 +117,51 @@ const headers = [
       </router-link>
     </div>
 
-    <v-data-table
-      v-if="shipments?.length"
-      v-model:items-per-page="itemsPerPage"
-      items-per-page-text="Отправлений на странице"
-      :items-per-page-options="itemsPerPageOptions"
-      :headers="headers"
-      :items="shipments"
-      item-value="name"
-      class="elevation-1"
-    >
-      <template v-slot:[`item.date`]="{ item }">
-        {{ getDate(item) }}
-      </template>
+    <v-card>
+      <v-data-table
+        v-if="shipments?.length"
+        v-model:items-per-page="itemsPerPage"
+        items-per-page-text="Отправлений на странице"
+        :items-per-page-options="itemsPerPageOptions"
+        page-text="{0}-{1} из {2}"
+        :headers="headers"
+        :items="shipments"
+        :search="search"
+        item-value="name"
+        class="elevation-1"
+      >
+        <template v-slot:[`item.date`]="{ item }">
+          {{ getDate(item) }}
+        </template>
 
-      <template v-slot:[`item.statuses`]="{ item }">
-        {{ getStatus(item) }}
-      </template>
+        <template v-slot:[`item.statuses`]="{ item }">
+          {{ getStatus(item) }}
+        </template>
 
-      <template v-slot:[`item.actions`]="{ item }">
-        <h4 class="orange btn-wrapper">
-          <button @click="viewHistory(item)" class="anti-btn">
-            <font-awesome-icon
-              size="1x"
-              icon="fa-solid fa-arrow-right-to-bracket"
-              class="anti-btn"
-            />
-          </button>
-          <button v-if="authStore.user?.isAdmin" @click="deleteShipment(item)" class="anti-btn">
-            <font-awesome-icon size="1x" icon="fa-solid fa-xmark" class="anti-btn" />
-          </button>
-        </h4>
-      </template>
-    </v-data-table>
+        <template v-slot:[`item.actions`]="{ item }">
+          <h4 class="orange btn-wrapper">
+            <button @click="viewHistory(item)" class="anti-btn">
+              <font-awesome-icon
+                size="2xs"
+                icon="fa-solid fa-arrow-right-to-bracket"
+                class="anti-btn"
+              />
+            </button>
+            <button v-if="authStore.user?.isAdmin" @click="deleteShipment(item)" class="anti-btn">
+              <font-awesome-icon size="2xs" icon="fa-solid fa-trash-can" class="anti-btn" />
+            </button>
+          </h4>
+        </template>
+      </v-data-table>
+      <v-spacer></v-spacer>
+      <v-text-field
+        v-model="search"
+        :append-inner-icon="mdiMagnify"
+        label="Поиск"
+        variant="solo"
+        hide-details
+      />
+    </v-card>
     <div v-if="shipments?.loading" class="text-center m-5">
       <span class="spinner-border spinner-border-lg align-center"></span>
     </div>

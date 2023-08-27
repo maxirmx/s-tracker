@@ -28,34 +28,10 @@ import '@/assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
-import 'vuetify/styles'
-import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
-import { VDataTable } from 'vuetify/lib/labs/components.mjs'
-import VuetifyUseDialog from 'vuetify-use-dialog'
-
-import App from '@/App.vue'
-import router from '@/router'
-
-import { useAuthStore } from '@/stores/auth.store.js'
-
-//setup fake backend
-//import { fakeBackend } from '@/helpers/demo.backend.js'
-//fakeBackend()
-
-const vuetify = createVuetify({
-  components,
-  directives
-})
-
-/* import the fontawesome core */
+// ------------ fontawesome --------------
 import { library } from '@fortawesome/fontawesome-svg-core'
-
-/* import font awesome icon component */
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-/* import specific icons */
 import {
   faArrowRightFromBracket,
   faArrowRightToBracket,
@@ -66,11 +42,11 @@ import {
   faHouseChimneyMedical,
   faPen,
   faPenToSquare,
+  faTrashCan,
   faTruckFast,
   faUserPlus
 } from '@fortawesome/free-solid-svg-icons'
 
-/* add icons to the library */
 library.add(
   faArrowRightFromBracket,
   faArrowRightToBracket,
@@ -80,10 +56,38 @@ library.add(
   faHouseChimneyMedical,
   faPen,
   faPenToSquare,
+  faTrashCan,
   faTruckFast,
   faUserPlus,
   faXmark
 )
+
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+import { VDataTable } from 'vuetify/lib/labs/components.mjs'
+import VuetifyUseDialog from 'vuetify-use-dialog'
+//import { aliases, fa } from 'vuetify/iconsets/fa'
+import { aliases, mdi } from 'vuetify/iconsets/mdi-svg'
+
+import App from '@/App.vue'
+import router from '@/router'
+
+import { useAuthStore } from '@/stores/auth.store.js'
+
+const vuetify = createVuetify({
+  components,
+  directives,
+  icons: {
+    defaultSet: 'mdi',
+    aliases,
+    sets: {
+      mdi
+      //      fa,
+    }
+  }
+})
 
 const app = createApp(App)
   .component('font-awesome-icon', FontAwesomeIcon)
