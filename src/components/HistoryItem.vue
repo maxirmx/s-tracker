@@ -7,7 +7,10 @@
       <h3>
         <slot name="heading"></slot>
       </h3>
-      <slot></slot>
+      <slot name="info"></slot>
+    </div>
+    <div class="actions">
+      <slot name="actions"></slot>
     </div>
   </div>
 </template>
@@ -33,6 +36,12 @@ i {
   color: var(--color-text);
 }
 
+.actions {
+  display: flex;
+  place-items: center;
+  place-content: center;
+}
+
 h3 {
   font-size: 1.1rem;
   font-weight: 500;
@@ -44,6 +53,10 @@ h3 {
   .item {
     margin-top: 0;
     padding: 0.4rem 0 1rem calc(var(--section-gap) / 2);
+  }
+
+  .actions {
+    top: calc(50% - 25px);
   }
 
   i {
