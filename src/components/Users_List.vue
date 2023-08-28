@@ -135,7 +135,7 @@ const headers = [
       >
         <template v-slot:[`item.id`]="{ item }">
           {{ item['selectable']['lastName'] }} {{ item['selectable']['firstName'] }}
-          {{ item['selectable']['patronimic'] }} ({{ item['selectable']['email'] }})
+           ({{ item['selectable']['email'] }})
         </template>
         <template v-slot:[`item.orgId`]="{ item }">
           {{ getOrg(item['selectable']) }}

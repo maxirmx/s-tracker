@@ -99,6 +99,7 @@ function onSubmit(values, { setErrors }) {
         <label for="lastName" class="label">Название:</label>
         <Field
           name="name"
+          id="name"
           type="text"
           class="form-control input"
           :class="{ 'is-invalid': errors.name }"

@@ -144,6 +144,10 @@ body {
   font-size: 1rem;
 }
 
+a:hover {
+  cursor: pointer;
+}
+
 a,
 .orange {
   text-decoration: none;

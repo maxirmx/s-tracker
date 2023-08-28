@@ -196,6 +196,7 @@ function onSubmit(values, { setErrors }) {
         <label for="lastName" class="label">Фамилия:</label>
         <Field
           name="lastName"
+          id="lastName"
           type="text"
           class="form-control input"
           :class="{ 'is-invalid': errors.lastName }"
@@ -206,6 +207,7 @@ function onSubmit(values, { setErrors }) {
         <label for="firstName" class="label">Имя:</label>
         <Field
           name="firstName"
+          id="firstName"
           type="text"
           class="form-control input"
           :class="{ 'is-invalid': errors.firstName }"
@@ -216,6 +218,7 @@ function onSubmit(values, { setErrors }) {
         <label for="email" class="label">Адрес электронной почты:</label>
         <Field
           name="email"
+          id="email"
           type="text"
           class="form-control input"
           :class="{ 'is-invalid': errors.email }"
@@ -226,6 +229,7 @@ function onSubmit(values, { setErrors }) {
         <label for="password" class="label">Пароль:</label>
         <Field
           name="password"
+          id="password"
           ref="password"
           :type="showPassword ? 'text' : 'password'"
           class="form-control input password"
@@ -249,6 +253,7 @@ function onSubmit(values, { setErrors }) {
         <label for="password2" class="label">Пароль ещё раз:</label>
         <Field
           name="password2"
+          id="password2"
           :type="showPassword2 ? 'text' : 'password'"
           class="form-control input password"
           :class="{ 'is-invalid': errors.password2 }"
@@ -277,6 +282,7 @@ function onSubmit(values, { setErrors }) {
         <label for="orgId" class="label">Организация:</label>
         <Field
           name="orgId"
+          id="orgId"
           as="select"
           class="form-control input select"
           :class="{ 'is-invalid': errors.orgId }"

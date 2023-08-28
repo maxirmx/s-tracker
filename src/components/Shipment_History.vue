@@ -36,6 +36,8 @@ import DeliveryTimeIcon from '@/components/icons/IconDeliveryTime.vue'
 import { useAuthStore } from '@/stores/auth.store.js'
 const authStore = useAuthStore()
 
+import { read, utils, writeFileXLSX } from 'xlsx';
+
 const props = defineProps({
   shipmentNumber: {
     type: String,
@@ -53,6 +55,44 @@ const historyStore = useHistoryStore()
 const { history } = storeToRefs(historyStore)
 
 historyStore.getByNumber(props.shipmentNumber)
+
+function exportData() {
+
+  var index = history.value.length
+
+  const rowsm = history.value.map(row => ({
+    id: (index--).toString(),
+    date: moment(row.date, 'YYYY-MM-DD').format('DD.MM.YYYY'),
+    location: row.location,
+    status: statuses.getName(row.status),
+    comment: row.comment
+  }))
+
+  const row0 = [{
+      id: (history.value.length + 1).toString(),
+      date: shipment.value?.ddate ? moment(shipment.value.ddate, 'YYYY-MM-DD').format('DD.MM.YYYY') : moment().format('DD.MM.YYYY'),
+      location: shipment.value?.dest ? shipment.value.dest: '',
+      status: 'Ожидаемая дата прибытия в пункт назначения',
+      comment: ''
+  }]
+
+  const rows = (shipment.value?.status != stcodes.DELIVERED) ? row0.concat(rowsm) : rowsm
+
+  const worksheet = utils.json_to_sheet(rows);
+  const workbook = utils.book_new();
+  utils.book_append_sheet(workbook, worksheet, 'История отправления ' + shipment.value?.number);
+
+  utils.sheet_add_aoa(worksheet, [[ '№', 'Дата', 'Местонахождение', 'Статус', 'Комментарий' ]], { origin: 'A1' });
+  const mw0 = rows.reduce((w, r) => Math.max(w, r.id.length), 1);
+  const mw1 = 'DD.MM.YYYY'.length
+  const mw2 = rows.reduce((w, r) => Math.max(w, r.location.length), 'Местонахождение'.length);
+  const mw3 = rows.reduce((w, r) => Math.max(w, r.status.length), 'Статус'.length);
+  const mw4 = rows.reduce((w, r) => Math.max(w, r.comment.length), '"Комментарий'.length);
+  worksheet["!cols"] = [ { wch: mw0+2 }, { wch: mw1+2 }, { wch: mw2+2 }, { wch: mw3+2 }, { wch: mw4+2 }  ];
+
+  writeFileXLSX(workbook, props.shipmentNumber + '.xlsx', { compression: true });
+}
+
 </script>
 
 <template>
@@ -76,8 +116,17 @@ historyStore.getByNumber(props.shipmentNumber)
     &nbsp;&nbsp;&nbsp;
     <router-link :to="'/status/edit/' + shipment.statusId + '/' + props.shipmentNumber" class="link"
       ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить
-      последний статус</router-link
-    >
+      последний статус
+    </router-link>
+    &nbsp;&nbsp;&nbsp;
+    <a class="link" @click="exportData()">
+              <font-awesome-icon
+                size="1x"
+                icon="fa-solid fa-download"
+                class="link"
+              />
+      Загрузить историю
+    </a>
   </div>
   <br /><br />
 
@@ -98,9 +147,8 @@ historyStore.getByNumber(props.shipmentNumber)
       <component :is="statuses.getIcon(item.status)"></component>
     </template>
     <template #heading> {{ statuses.getName(item.status) }} </template>
-    {{ item.date ? moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY') : '' }}&nbsp;&nbsp;&nbsp;{{
-      item.location
-    }}
+    {{ item.date ? moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY') : '' }}&nbsp;&nbsp;&nbsp;
+    {{ item.location }}
     <br />
     <span v-if="item.comment">{{ item.comment }}</span>
   </HistoryItem>
