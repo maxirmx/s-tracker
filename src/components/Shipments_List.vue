@@ -35,7 +35,6 @@ import { itemsPerPageOptions } from '@/helpers/items.per.page.js'
 import { mdiMagnify } from '@mdi/js'
 
 import { useConfirm } from 'vuetify-use-dialog'
-
 const confirm = useConfirm()
 
 import { useShipmentsStore } from '@/stores/shipments.store.js'

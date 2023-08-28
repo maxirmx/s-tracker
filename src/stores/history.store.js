@@ -48,7 +48,7 @@ export const useHistoryStore = defineStore({
       }
     },
     async getByNumber(number) {
-      this.history = { loading: true }
+      this.status = { loading: true }
       try {
         this.history = await fetchWrapper.get(`${baseUrl}/history/${number}`)
       } catch (error) {
@@ -56,7 +56,16 @@ export const useHistoryStore = defineStore({
       }
     },
     async update(id, params) {
+      this.history = { loading: true }
       await fetchWrapper.put(`${baseUrl}/statuses/${id}`, params)
+    },
+    async delete(id) {
+      this.history = { loading: true }
+      try {
+        await fetchWrapper.delete(`${baseUrl}/statuses/${id}`, {})
+      } catch (error) {
+        this.history = { error }
+      }
     }
   }
 })

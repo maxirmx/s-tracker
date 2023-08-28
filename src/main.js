@@ -36,7 +36,7 @@ import {
   faArrowRightFromBracket,
   faArrowRightToBracket,
   faCalendarPlus,
-  faXmark,
+  faDownload,
   faEye,
   faEyeSlash,
   faHouseChimneyMedical,
@@ -44,13 +44,15 @@ import {
   faPenToSquare,
   faTrashCan,
   faTruckFast,
-  faUserPlus
+  faUserPlus,
+  faXmark
 } from '@fortawesome/free-solid-svg-icons'
 
 library.add(
   faArrowRightFromBracket,
   faArrowRightToBracket,
   faCalendarPlus,
+  faDownload,
   faEye,
   faEyeSlash,
   faHouseChimneyMedical,

@@ -28,13 +28,23 @@ import '@fortawesome/fontawesome-free/css/all.css'
 
 import { storeToRefs } from 'pinia'
 import moment from 'moment'
+import router from '@/router'
 
 import HistoryItem from '@/components/HistoryItem.vue'
 import { statuses, stcodes } from '@/helpers/statuses.js'
 import DeliveryTimeIcon from '@/components/icons/IconDeliveryTime.vue'
 
+import { useConfirm } from 'vuetify-use-dialog'
+const confirm = useConfirm()
+
 import { useAuthStore } from '@/stores/auth.store.js'
 const authStore = useAuthStore()
+
+import { useAlertStore } from '@/stores/alert.store.js'
+const alertStore = useAlertStore()
+const { alert } = storeToRefs(alertStore)
+
+import { utils, writeFileXLSX } from 'xlsx'
 
 const props = defineProps({
   shipmentNumber: {
@@ -53,6 +63,83 @@ const historyStore = useHistoryStore()
 const { history } = storeToRefs(historyStore)
 
 historyStore.getByNumber(props.shipmentNumber)
+
+function exportData() {
+  var index = history.value.length
+
+  const rowsm = history.value.map((row) => ({
+    id: (index--).toString(),
+    date: moment(row.date, 'YYYY-MM-DD').format('DD.MM.YYYY'),
+    location: row.location,
+    status: statuses.getName(row.status),
+    comment: row.comment
+  }))
+
+  const row0 = [
+    {
+      id: (history.value.length + 1).toString(),
+      date: shipment.value?.ddate
+        ? moment(shipment.value.ddate, 'YYYY-MM-DD').format('DD.MM.YYYY')
+        : moment().format('DD.MM.YYYY'),
+      location: shipment.value?.dest ? shipment.value.dest : '',
+      status: 'Ожидаемая дата прибытия в пункт назначения',
+      comment: ''
+    }
+  ]
+
+  const rows = shipment.value?.status != stcodes.DELIVERED ? row0.concat(rowsm) : rowsm
+
+  const worksheet = utils.json_to_sheet(rows)
+  const workbook = utils.book_new()
+  utils.book_append_sheet(workbook, worksheet, 'История отправления ' + shipment.value?.number)
+
+  utils.sheet_add_aoa(worksheet, [['№', 'Дата', 'Местонахождение', 'Статус', 'Комментарий']], {
+    origin: 'A1'
+  })
+  const mw0 = rows.reduce((w, r) => Math.max(w, r.id.length), 1)
+  const mw1 = 'DD.MM.YYYY'.length
+  const mw2 = rows.reduce((w, r) => Math.max(w, r.location.length), 'Местонахождение'.length)
+  const mw3 = rows.reduce((w, r) => Math.max(w, r.status.length), 'Статус'.length)
+  const mw4 = rows.reduce((w, r) => Math.max(w, r.comment.length), '"Комментарий'.length)
+  worksheet['!cols'] = [
+    { wch: mw0 + 2 },
+    { wch: mw1 + 2 },
+    { wch: mw2 + 2 },
+    { wch: mw3 + 2 },
+    { wch: mw4 + 2 }
+  ]
+
+  writeFileXLSX(workbook, props.shipmentNumber + '.xlsx', { compression: true })
+}
+
+async function deleteStatus(item) {
+  const content =
+    'Удалить из истории статус "' +
+    statuses.getName(item.status) +
+    '" от ' +
+    moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY') +
+    ' ?'
+  const result = await confirm({
+    title: 'Подтверждение',
+    confirmationText: 'Удалить',
+    cancellationText: 'Не удалять',
+    dialogProps: {
+      width: '50%',
+      minWidth: '250px'
+    },
+    content: content
+  })
+
+  if (!result) return
+  historyStore
+    .delete(item.id)
+    .then(() => {
+      historyStore.getByNumber(props.shipmentNumber)
+    })
+    .catch((error) => {
+      alertStore.error(error)
+    })
+}
 </script>
 
 <template>
@@ -74,10 +161,18 @@ historyStore.getByNumber(props.shipmentNumber)
       Добавить новый статус
     </router-link>
     &nbsp;&nbsp;&nbsp;
-    <router-link :to="'/status/edit/' + shipment.statusId + '/' + props.shipmentNumber" class="link"
+    <router-link
+      v-if="!authStore.user?.isAdmin"
+      :to="'/status/edit/' + shipment.statusId + '/' + props.shipmentNumber"
+      class="link"
       ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить
-      последний статус</router-link
-    >
+      последний статус
+    </router-link>
+    &nbsp;&nbsp;&nbsp;
+    <a class="link" @click="exportData()">
+      <font-awesome-icon size="1x" icon="fa-solid fa-download" class="link" />
+      Загрузить историю
+    </a>
   </div>
   <br /><br />
 
@@ -98,11 +193,24 @@ historyStore.getByNumber(props.shipmentNumber)
       <component :is="statuses.getIcon(item.status)"></component>
     </template>
     <template #heading> {{ statuses.getName(item.status) }} </template>
-    {{ item.date ? moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY') : '' }}&nbsp;&nbsp;&nbsp;{{
-      item.location
-    }}
-    <br />
-    <span v-if="item.comment">{{ item.comment }}</span>
+    <template #info>
+      {{ item.date ? moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY') : '' }}&nbsp;&nbsp;&nbsp;
+      {{ item.location }}
+      <br />
+      <span v-if="item.comment">{{ item.comment }}</span>
+    </template>
+    <template #actions>
+      <button
+        v-if="authStore.user?.isAdmin"
+        @click="router.push('/status/edit/' + item.id + '/' + props.shipmentNumber)"
+        class="anti-btn"
+      >
+        <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />
+      </button>
+      <button v-if="authStore.user?.isAdmin" @click="deleteStatus(item)" class="anti-btn">
+        <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
+      </button>
+    </template>
   </HistoryItem>
   <div v-if="history?.loading || shipment?.loading" class="text-center m-5">
     <span class="spinner-border spinner-border-lg align-center"></span>
@@ -114,6 +222,10 @@ historyStore.getByNumber(props.shipmentNumber)
     <div class="text-danger">
       Ошибка при загрузке информации об отправлении: {{ shipment.error }}
     </div>
+  </div>
+  <div v-if="alert" class="alert alert-dismissable mt-3 mb-0" :class="alert.type">
+    <button @click="alertStore.clear()" class="btn btn-link close">×</button>
+    {{ alert.message }}
   </div>
 </template>
 

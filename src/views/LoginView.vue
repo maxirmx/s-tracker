@@ -65,6 +65,7 @@ function onSubmit(values, { setErrors }) {
         <label for="login_email" class="label">Адрес электронной почты:</label>
         <Field
           name="login_email"
+          id="login_email"
           type="text"
           class="form-control input"
           :class="{ 'is-invalid': errors.login_email }"
@@ -75,6 +76,7 @@ function onSubmit(values, { setErrors }) {
         <label for="login_password" class="label">Пароль:</label>
         <Field
           name="login_password"
+          id="login_password"
           :type="showPassword ? 'text' : 'password'"
           class="form-control input password"
           :class="{ 'is-invalid': errors.login_password }"

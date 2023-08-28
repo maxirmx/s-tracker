@@ -66,6 +66,7 @@ function onSubmit(values, { setErrors }) {
         <label for="email" class="label">Адрес электронной почты:</label>
         <Field
           name="email"
+          id="email"
           type="text"
           class="form-control input"
           :class="{ 'is-invalid': errors.email }"
