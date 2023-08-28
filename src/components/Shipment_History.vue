@@ -182,9 +182,11 @@ async function deleteStatus(item) {
         <component :is="DeliveryTimeIcon"></component>
       </template>
       <template #heading> Ожидаемая дата прибытия в пункт назначения</template>
+      <template #info>
       {{
         shipment.ddate ? moment(shipment.ddate, 'YYYY-MM-DD').format('DD.MM.YYYY') : ''
       }}&nbsp;&nbsp;&nbsp;{{ shipment.dest }}
+      </template>
     </HistoryItem>
     <hr class="hr-light" />
   </div>
