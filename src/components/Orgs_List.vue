@@ -34,19 +34,52 @@ import { useOrgsStore } from '@/stores/orgs.store.js'
 import { itemsPerPageOptions } from '@/helpers/items.per.page.js'
 import { mdiMagnify } from '@mdi/js'
 
+import { useAlertStore } from '@/stores/alert.store.js'
+const alertStore = useAlertStore()
+const { alert } = storeToRefs(alertStore)
+
+import { useConfirm } from 'vuetify-use-dialog'
+const confirm = useConfirm()
+
 const orgsStore = useOrgsStore()
 const { orgs } = storeToRefs(orgsStore)
 orgsStore.getAll()
 
 function orgSettings(item) {
-  var id = item['selectable']['id']
+  var id = item.selectable.id
   router.push('org/edit/' + id)
+}
+
+async function deleteOrg(item) {
+  const content = 'Удалить организацию "' + item.selectable.name + '" ?'
+  const result = await confirm({
+    title: 'Подтверждение',
+    confirmationText: 'Удалить',
+    cancellationText: 'Не удалять',
+    dialogProps: {
+      width: '50%',
+      minWidth: '250px'
+    },
+    content: content
+  })
+
+  if (!result) return
+  orgsStore
+    .delete(item.selectable.id)
+    .then(() => {
+      orgsStore.getAll()
+    })
+    .catch((error) => {
+      alertStore.error(error)
+    })
 }
 
 const itemsPerPage = ref(10)
 const search = ref('')
 const headers = [
   { title: 'Организация', align: 'start', key: 'name', sortable: true },
+  { title: 'Пользователей', align: 'center', key: 'num_users', sortable: true },
+  { title: 'Отправлений', align: 'center', key: 'num_shipments', sortable: true },
   { title: '', align: 'center', key: 'actions', sortable: false }
 ]
 </script>
@@ -79,12 +112,16 @@ const headers = [
         class="elevation-1"
       >
         <template v-slot:[`item.actions`]="{ item }">
-          <font-awesome-icon
-            size="1x"
-            icon="fa-solid fa-pen"
+          <button @click="orgSettings(item)" class="anti-btn">
+            <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />
+          </button>
+          <button
+            @click="deleteOrg(item)"
             class="anti-btn"
-            @click="orgSettings(item)"
-          />
+            v-if="item.selectable.num_shipments == 0 && item.selectable.num_users == 0"
+          >
+            <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
+          </button>
         </template>
       </v-data-table>
       <v-spacer></v-spacer>
@@ -101,6 +138,10 @@ const headers = [
     </div>
     <div v-if="orgs?.loading" class="text-center m-5">
       <span class="spinner-border spinner-border-lg align-center"></span>
+    </div>
+    <div v-if="alert" class="alert alert-dismissable mt-3 mb-0" :class="alert.type">
+      <button @click="alertStore.clear()" class="btn btn-link close">×</button>
+      {{ alert.message }}
     </div>
   </div>
 </template>

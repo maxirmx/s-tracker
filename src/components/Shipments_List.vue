@@ -138,18 +138,16 @@ const headers = [
         </template>
 
         <template v-slot:[`item.actions`]="{ item }">
-          <h4 class="orange btn-wrapper">
-            <button @click="viewHistory(item)" class="anti-btn">
-              <font-awesome-icon
-                size="2xs"
-                icon="fa-solid fa-arrow-right-to-bracket"
-                class="anti-btn"
-              />
-            </button>
-            <button v-if="authStore.user?.isAdmin" @click="deleteShipment(item)" class="anti-btn">
-              <font-awesome-icon size="2xs" icon="fa-solid fa-trash-can" class="anti-btn" />
-            </button>
-          </h4>
+          <button @click="viewHistory(item)" class="anti-btn">
+            <font-awesome-icon
+              size="1x"
+              icon="fa-solid fa-arrow-right-to-bracket"
+              class="anti-btn"
+            />
+          </button>
+          <button v-if="authStore.user?.isAdmin" @click="deleteShipment(item)" class="anti-btn">
+            <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
+          </button>
         </template>
       </v-data-table>
       <v-spacer></v-spacer>

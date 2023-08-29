@@ -92,6 +92,13 @@ export const useUsersStore = defineStore({
         // update auth user in pinia state
         authStore.user = user
       }
+    },
+    async delete(id) {
+      const authStore = useAuthStore()
+      if (id === authStore.user.id) {
+        authStore.logout()
+      }
+      await fetchWrapper.delete(`${baseUrl}/${id}`, {})
     }
   }
 })

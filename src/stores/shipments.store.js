@@ -56,7 +56,6 @@ export const useShipmentsStore = defineStore({
       }
     },
     async deleteByNumber(number) {
-      this.shipment = { loading: true }
       try {
         await fetchWrapper.delete(`${baseUrl}/${number}`, {})
       } catch (error) {

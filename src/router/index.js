@@ -137,9 +137,9 @@ router.beforeEach(async (to) => {
     return '/login'
   }
 
-//  if (!authRequired && auth.user) {
-//    return '/shipments'
-//  }
+  //  if (!authRequired && auth.user) {
+  //    return '/shipments'
+  //  }
 })
 
 export default router

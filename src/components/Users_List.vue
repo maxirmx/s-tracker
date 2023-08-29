@@ -44,6 +44,13 @@ const orgsStore = useOrgsStore()
 const { orgs } = storeToRefs(orgsStore)
 orgsStore.getAll()
 
+import { useAlertStore } from '@/stores/alert.store.js'
+const alertStore = useAlertStore()
+const { alert } = storeToRefs(alertStore)
+
+import { useConfirm } from 'vuetify-use-dialog'
+const confirm = useConfirm()
+
 function userSettings(item) {
   var id = item['id']
   router.push('user/edit/' + id)
@@ -96,6 +103,30 @@ function filterUsers(value, query, item) {
   return o != null && o.name.toLocaleUpperCase().indexOf(q) !== -1
 }
 
+async function deleteUser(item) {
+  const content = 'Удалить пользователя "' + item.firstName + ' ' + item.lastName + '" ?'
+  const result = await confirm({
+    title: 'Подтверждение',
+    confirmationText: 'Удалить',
+    cancellationText: 'Не удалять',
+    dialogProps: {
+      width: '50%',
+      minWidth: '250px'
+    },
+    content: content
+  })
+
+  if (!result) return
+  usersStore
+    .delete(item.id)
+    .then(() => {
+      usersStore.getAll()
+    })
+    .catch((error) => {
+      alertStore.error(error)
+    })
+}
+
 const headers = [
   { title: 'Пользователь', align: 'start', key: 'id' },
   { title: 'Организация', align: 'start', key: 'orgId' },
@@ -145,12 +176,12 @@ const headers = [
           {{ getCredentials(item['selectable']) }}
         </template>
         <template v-slot:[`item.actions`]="{ item }">
-          <font-awesome-icon
-            size="1x"
-            icon="fa-solid fa-pen"
-            class="anti-btn"
-            @click="userSettings(item['selectable'])"
-          />
+          <button @click="userSettings(item.selectable)" class="anti-btn">
+            <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />
+          </button>
+          <button @click="deleteUser(item.selectable)" class="anti-btn">
+            <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
+          </button>
         </template>
       </v-data-table>
       <v-spacer></v-spacer>
@@ -167,6 +198,10 @@ const headers = [
     </div>
     <div v-if="users?.error" class="text-center m-5">
       <div class="text-danger">Ошибка при загрузке списка пользователей: {{ users.error }}</div>
+    </div>
+    <div v-if="alert" class="alert alert-dismissable mt-3 mb-0" :class="alert.type">
+      <button @click="alertStore.clear()" class="btn btn-link close">×</button>
+      {{ alert.message }}
     </div>
   </div>
 </template>

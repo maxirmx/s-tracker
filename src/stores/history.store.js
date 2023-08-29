@@ -60,7 +60,6 @@ export const useHistoryStore = defineStore({
       await fetchWrapper.put(`${baseUrl}/statuses/${id}`, params)
     },
     async delete(id) {
-      this.history = { loading: true }
       try {
         await fetchWrapper.delete(`${baseUrl}/statuses/${id}`, {})
       } catch (error) {
