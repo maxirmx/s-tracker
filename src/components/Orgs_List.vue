@@ -24,8 +24,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { ref } from 'vue'
-
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 
 import router from '@/router'
@@ -40,6 +38,9 @@ const { alert } = storeToRefs(alertStore)
 
 import { useConfirm } from 'vuetify-use-dialog'
 const confirm = useConfirm()
+
+import { useAuthStore } from '@/stores/auth.store.js'
+const authStore = useAuthStore()
 
 const orgsStore = useOrgsStore()
 const { orgs } = storeToRefs(orgsStore)
@@ -74,13 +75,12 @@ async function deleteOrg(item) {
     })
 }
 
-const itemsPerPage = ref(10)
-const search = ref('')
 const headers = [
   { title: 'Организация', align: 'start', key: 'name', sortable: true },
   { title: 'Пользователей', align: 'center', key: 'num_users', sortable: true },
   { title: 'Отправлений', align: 'center', key: 'num_shipments', sortable: true },
-  { title: '', align: 'center', key: 'actions', sortable: false }
+  { title: '', align: 'center', key: 'actions1', sortable: false },
+  { title: '', align: 'center', key: 'actions2', sortable: false }
 ]
 </script>
 
@@ -102,19 +102,22 @@ const headers = [
     <v-card>
       <v-data-table
         v-if="orgs?.length"
-        v-model:items-per-page="itemsPerPage"
+        v-model:items-per-page="authStore.orgs_per_page"
         items-per-page-text="Организаций на странице"
         page-text="{0}-{1} из {2}"
         :items-per-page-options="itemsPerPageOptions"
         :headers="headers"
         :items="orgs"
-        :search="search"
+        :search="authStore.orgs_search"
+        v-model:sort-by="authStore.orgs_sort_by"
         class="elevation-1"
       >
-        <template v-slot:[`item.actions`]="{ item }">
+        <template v-slot:[`item.actions1`]="{ item }">
           <button @click="orgSettings(item)" class="anti-btn">
-            <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />
+            <font-awesome-icon @click="orgSettings(item)" size="1x" icon="fa-solid fa-pen" class="anti-btn" />
           </button>
+        </template>
+          <template v-slot:[`item.actions2`]="{ item }">
           <button
             @click="deleteOrg(item)"
             class="anti-btn"
@@ -126,7 +129,7 @@ const headers = [
       </v-data-table>
       <v-spacer></v-spacer>
       <v-text-field
-        v-model="search"
+        v-model="authStore.orgs_search"
         :append-inner-icon="mdiMagnify"
         label="Поиск по названию организации"
         variant="solo"

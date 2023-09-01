@@ -25,7 +25,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import moment from 'moment'
-import { ref } from 'vue'
 
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 import router from '@/router'
@@ -60,8 +59,13 @@ function getDate(item) {
   return moment(date, 'YYYY-MM-DD').format('DD.MM.YYYY')
 }
 
+function editShipment(item) {
+  var shipmentNumber = item.selectable.number
+  router.push('shipment/edit/' + shipmentNumber)
+}
+
 function viewHistory(item) {
-  var shipmentNumber = item['selectable']['number']
+  var shipmentNumber = item.selectable.number
   router.push('shipment/' + shipmentNumber)
 }
 
@@ -89,15 +93,14 @@ async function deleteShipment(item) {
     })
 }
 
-const itemsPerPage = ref(10)
-const search = ref('')
-
 const headers = [
   { title: 'Номер', align: 'start', key: 'number' },
   { title: 'Место', align: 'center', key: 'location' },
   { title: 'Статус', align: 'center', key: 'statuses', sortable: false },
   { title: 'Дата', align: 'center', key: 'date' },
-  { title: '', align: 'center', key: 'actions', sortable: false }
+  { title: '', align: 'center', key: 'actions1', sortable: false },
+  { title: '', align: 'center', key: 'actions2', sortable: false },
+  { title: '', align: 'center', key: 'actions3', sortable: false }
 ]
 </script>
 
@@ -119,13 +122,14 @@ const headers = [
     <v-card>
       <v-data-table
         v-if="shipments?.length"
-        v-model:items-per-page="itemsPerPage"
+        v-model:items-per-page="authStore.shipments_per_page"
         items-per-page-text="Отправлений на странице"
         :items-per-page-options="itemsPerPageOptions"
         page-text="{0}-{1} из {2}"
         :headers="headers"
         :items="shipments"
-        :search="search"
+        :search="authStore.shipments_search"
+        v-model:sort-by="authStore.shipments_sort_by"
         item-value="name"
         class="elevation-1"
       >
@@ -137,7 +141,7 @@ const headers = [
           {{ getStatus(item) }}
         </template>
 
-        <template v-slot:[`item.actions`]="{ item }">
+        <template v-slot:[`item.actions1`]="{ item }">
           <button @click="viewHistory(item)" class="anti-btn">
             <font-awesome-icon
               size="1x"
@@ -145,6 +149,13 @@ const headers = [
               class="anti-btn"
             />
           </button>
+        </template>
+          <template v-slot:[`item.actions2`]="{ item }">
+          <button v-if="authStore.user?.isAdmin" @click="editShipment(item)" class="anti-btn">
+            <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />
+          </button>
+        </template>
+          <template v-slot:[`item.actions3`]="{ item }">
           <button v-if="authStore.user?.isAdmin" @click="deleteShipment(item)" class="anti-btn">
             <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
           </button>
@@ -152,7 +163,7 @@ const headers = [
       </v-data-table>
       <v-spacer></v-spacer>
       <v-text-field
-        v-model="search"
+        v-model="authStore.shipments_search"
         :append-inner-icon="mdiMagnify"
         label="Поиск по любой информации об отправлении"
         variant="solo"

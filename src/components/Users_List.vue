@@ -25,7 +25,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import { computed } from 'vue'
-import { ref } from 'vue'
 
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 import router from '@/router'
@@ -35,6 +34,9 @@ import { useUsersStore } from '@/stores/users.store.js'
 import { useOrgsStore } from '@/stores/orgs.store.js'
 import { itemsPerPageOptions } from '@/helpers/items.per.page.js'
 import { mdiMagnify } from '@mdi/js'
+
+import { useAuthStore } from '@/stores/auth.store.js'
+const authStore = useAuthStore()
 
 const usersStore = useUsersStore()
 const { users } = storeToRefs(usersStore)
@@ -52,18 +54,18 @@ import { useConfirm } from 'vuetify-use-dialog'
 const confirm = useConfirm()
 
 function userSettings(item) {
-  var id = item['id']
+  var id = item.id
   router.push('user/edit/' + id)
 }
 
 function getOrg(item) {
-  if (item['orgId'] == -1) {
+  if (item.orgId == -1) {
     return ''
   }
   let org = computed(() => {
     let org = null
-    if (!orgs.value.loading) {
-      org = orgs.value.find((o) => o.id === item['orgId'])
+    if (!orgs.value?.loading) {
+      org = orgs.value?.find((o) => o.id === item['orgId'])
     }
     return org ? org.name : 'загружается...'
   })
@@ -84,13 +86,10 @@ function getCredentials(item) {
   return crd
 }
 
-const itemsPerPage = ref(10)
-const search = ref('')
-
 function filterUsers(value, query, item) {
   if (query == null) return false
   const q = query.toLocaleUpperCase()
-  const u = users.value.find((x) => x.id === item.id)
+  const u = users.value?.loading ? null : users.value?.find((x) => x.id === item.id)
   if (
     u != null &&
     (u.lastName.toLocaleUpperCase().indexOf(q) !== -1 ||
@@ -98,8 +97,8 @@ function filterUsers(value, query, item) {
       u.patronimic.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.email.toLocaleUpperCase().indexOf(q) !== -1)
   )
-    return true
-  const o = orgs.value.find((x) => x.id === item.orgId)
+  return true
+  const o = orgs.value?.loading ? null : orgs.value?.find((x) => x.id === item.orgId)
   return o != null && o.name.toLocaleUpperCase().indexOf(q) !== -1
 }
 
@@ -131,7 +130,8 @@ const headers = [
   { title: 'Пользователь', align: 'start', key: 'id' },
   { title: 'Организация', align: 'start', key: 'orgId' },
   { title: 'Права', align: 'start', key: 'credentials', sortable: false },
-  { title: '', align: 'center', key: 'actions', sortable: false }
+  { title: '', align: 'center', key: 'actions1', sortable: false },
+  { title: '', align: 'center', key: 'actions2', sortable: false }
 ]
 </script>
 
@@ -153,13 +153,14 @@ const headers = [
     <v-card>
       <v-data-table
         v-if="users?.length"
-        v-model:items-per-page="itemsPerPage"
+        v-model:items-per-page="authStore.users_per_page"
         items-per-page-text="Пользователей на странице"
         :items-per-page-options="itemsPerPageOptions"
         page-text="{0}-{1} из {2}"
         :headers="headers"
         :items="users"
-        :search="search"
+        :search="authStore.users_search"
+        v-model:sort-by="authStore.users_sort_by"
         :custom-filter="filterUsers"
         item-value="name"
         class="elevation-1"
@@ -175,18 +176,20 @@ const headers = [
         <template v-slot:[`item.credentials`]="{ item }">
           {{ getCredentials(item['selectable']) }}
         </template>
-        <template v-slot:[`item.actions`]="{ item }">
+        <template v-slot:[`item.actions1`]="{ item }">
           <button @click="userSettings(item.selectable)" class="anti-btn">
-            <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />
+            <font-awesome-icon @click="userSettings(item.selectable)" size="1x" icon="fa-solid fa-pen" class="anti-btn" />
           </button>
+        </template>
+          <template v-slot:[`item.actions2`]="{ item }">
           <button @click="deleteUser(item.selectable)" class="anti-btn">
-            <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
+            <font-awesome-icon @click="deleteUser(item.selectable)" size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
           </button>
         </template>
       </v-data-table>
       <v-spacer></v-spacer>
       <v-text-field
-        v-model="search"
+        v-model="authStore.users_search"
         :append-inner-icon="mdiMagnify"
         label="Поиск по любой информации о пользователе"
         variant="solo"

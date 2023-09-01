@@ -149,11 +149,11 @@ async function deleteStatus(item) {
       <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-from-bracket" class="btn" />
     </button>
   </h1>
-  <div class="orange customer" v-if="authStore.user?.isManager">Клиент: {{ shipment.name }}</div>
+  <div class="orange customer">Клиент: {{ shipment.name }}</div>
   <hr class="hr" />
-  <div class="wrapper" v-if="authStore.user?.isManager">
+  <div class="wrapper">
     <router-link
-      v-if="shipment.status != stcodes.DELIVERED"
+      v-if="shipment.status != stcodes.DELIVERED && authStore.user?.isManager"
       :to="'/status/add/' + props.shipmentNumber"
       class="link"
     >
@@ -162,7 +162,7 @@ async function deleteStatus(item) {
     </router-link>
     &nbsp;&nbsp;&nbsp;
     <router-link
-      v-if="!authStore.user?.isAdmin"
+      v-if="!authStore.user?.isAdmin && authStore.user?.isManager"
       :to="'/status/edit/' + shipment.statusId + '/' + props.shipmentNumber"
       class="link"
       ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить

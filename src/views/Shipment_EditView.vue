@@ -25,10 +25,18 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import Shipment from '@/components/Shipment_Settings.vue'
+
+const props = defineProps({
+  shipmentNumber: {
+    type: String,
+    required: true
+  }
+})
+
 </script>
 
 <template>
   <main>
-    <Shipment :create="true"/>
+    <Shipment :create="false" :shipmentNumber="props.shipmentNumber"/>
   </main>
 </template>

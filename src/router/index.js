@@ -95,6 +95,12 @@ const router = createRouter({
       component: () => import('@/views/Shipments_View.vue')
     },
     {
+      path: '/shipment/edit/:shipmentNumber',
+      name: 'Редактировать информацию об отправлении',
+      component: () => import('@/views/Shipment_EditView.vue'),
+      props: true
+    },
+    {
       path: '/shipment/:shipmentNumber',
       name: 'Отправлениe',
       component: () => import('@/views/Shipment_View.vue'),
