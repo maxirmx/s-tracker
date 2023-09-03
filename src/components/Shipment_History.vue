@@ -149,6 +149,7 @@ async function deleteStatus(item) {
       <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-from-bracket" class="btn" />
     </button>
   </h1>
+  <div class="orange customer">Маршрут: {{ shipment.origin }} - {{ shipment.dest }}</div>
   <div class="orange customer">Клиент: {{ shipment.name }}</div>
   <hr class="hr" />
   <div class="wrapper">

@@ -24,6 +24,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+import { computed } from 'vue'
 import { Form, Field } from 'vee-validate'
 import { storeToRefs } from 'pinia'
 import * as Yup from 'yup'
@@ -39,8 +40,8 @@ const props = defineProps({
     type: Boolean,
     required: true
   },
-  shipmentNumber: {
-    type: String,
+  shipmentId: {
+    type: Number,
     required: false
   }
 })
@@ -50,11 +51,15 @@ const { orgs } = storeToRefs(orgsStore)
 orgsStore.getAll()
 
 const shipmentsStore = useShipmentsStore()
+const { shipment } = storeToRefs(shipmentsStore)
+if (!props.create) {
+  shipmentsStore.get(props.shipmentId)
+}
 
 const orgIdError = 'Выберите организацию. Сотрудники организации смогут отслеживать отправление.'
 const schema = Yup.object().shape({
   number: Yup.string().required('Укажите номер отправления'),
-  status: Yup.string().required('Выберите статус'),
+  status: isRegister() ? Yup.string().required('Выберите статус') : Yup.string(),
   dest: Yup.string().required('Укажите пункт назначения'),
   location: Yup.string().required('Укажите место отправления'),
   date: Yup.string().required('Укажите дату'),
@@ -63,34 +68,46 @@ const schema = Yup.object().shape({
 })
 
 function isRegister() {
-  return props.register
+  return props.create
 }
 
 function getTitle() {
   return (isRegister() ? 'Новое отправление' : 'Редактирование отправления')
 }
 
-
 function onSubmit(values, { setErrors }) {
   values.userId = -1
+  if (props.create) {
   return shipmentsStore
     .add(values)
     .then(() => {
       router.go(-1)
     })
     .catch((error) => setErrors({ apiError: error }))
+  }
+  else {
+    return shipmentsStore
+      .update(props.shipmentId, values)
+      .then(() => {
+        router.go(-1)
+      })
+      .catch((error) => setErrors({ apiError: error }))
+  }
 }
 
-const status = {
-  number: '',
-  status: stcodes.REGISTERED,
-  location: '',
-  date: moment().format('YYYY-MM-DD'),
-  ddate: '',
-  dest: '',
-  comment: '',
-  userId: ''
-}
+const status = computed(() => {
+  return {
+    number: props.create ? '' : shipment.value.number,
+    status: props.create ? stcodes.REGISTERED : shipment.value.status,
+    location: '_',
+    date: moment().format('YYYY-MM-DD'),
+    ddate: props.create ? '' : shipment.value.ddate,
+    dest: props.create ? '' : shipment.value.dest,
+    comment: '',
+    userId: '',
+    orgId: props.create ? '' : shipment.value.orgId,
+  }
+})
 </script>
 
 <template>
@@ -110,11 +127,11 @@ const status = {
             name="number"
             type="text"
             class="form-control input"
-            :class="{ 'is-invalid': errors.тгьиук }"
+            :class="{ 'is-invalid': errors.number }"
             placeholder="Номер отправления"
           />
         </div>
-        <div class="form-group" v-if="!isRegister()">
+        <div class="form-group" v-if="isRegister()">
           <label for="status" class="label">Статус:</label>
           <Field
             name="status"
@@ -128,7 +145,7 @@ const status = {
             </option>
           </Field>
         </div>
-        <div class="form-group" v-if="!isRegister()">
+        <div class="form-group" v-if="isRegister()">
           <label for="location" class="label">Место отправления:</label>
           <Field
             name="location"
@@ -139,7 +156,7 @@ const status = {
           />
         </div>
 
-        <div class="form-group" v-if="!isRegister()">
+        <div class="form-group" v-if="isRegister()">
           <label for="date" class="label">Дата:</label>
           <Field
             name="date"
@@ -149,7 +166,7 @@ const status = {
           />
         </div>
 
-        <div class="form-group">
+        <div class="form-group" v-if="isRegister()">
           <label for="comment" class="label">Комментарий:</label>
           <Field
             name="comment"

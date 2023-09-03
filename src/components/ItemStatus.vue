@@ -161,18 +161,6 @@ function getHeader() {
       </div>
 
       <div class="form-group">
-        <label for="dest" class="label">Пункт назначения:</label>
-        <Field
-          name="dest"
-          type="text"
-          class="form-control input"
-          :class="{ 'is-invalid': errors.dest }"
-          placeholder="Город, Страна"
-          :disabled="true"
-        />
-      </div>
-
-      <div class="form-group">
         <label for="ddate" class="label">Ожидаемая дата прибытия:</label>
         <Field
           name="ddate"
@@ -195,7 +183,6 @@ function getHeader() {
       <div v-if="errors.status" class="alert alert-danger mt-3 mb-0">{{ errors.status }}</div>
       <div v-if="errors.location" class="alert alert-danger mt-3 mb-0">{{ errors.location }}</div>
       <div v-if="errors.date" class="alert alert-danger mt-3 mb-0">{{ errors.date }}</div>
-      <div v-if="errors.dest" class="alert alert-danger mt-3 mb-0">{{ errors.ddate }}</div>
       <div v-if="errors.ddate" class="alert alert-danger mt-3 mb-0">{{ errors.ddate }}</div>
       <div v-if="errors.comment" class="alert alert-danger mt-3 mb-0">{{ errors.comment }}</div>
     </Form>

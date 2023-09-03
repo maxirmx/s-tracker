@@ -58,7 +58,7 @@ function getDate(item) {
 }
 
 function editShipment(item) {
-  router.push('shipment/edit/' + item.shipmentId + '/' + item.id)
+  router.push('shipment/edit/' + item.id)
 }
 
 function viewHistory(item) {
