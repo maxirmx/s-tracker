@@ -62,6 +62,11 @@ function deauth() {
         <RouterLink to="/recover" class="link">Восстановление пароля</RouterLink>
       </nav>
     </div>
+    <template>
+  <div class="bg-purple-darken-2 text-center">
+    <span>Lorem ipsum</span>
+  </div>
+</template>
   </header>
   <RouterView />
 </template>

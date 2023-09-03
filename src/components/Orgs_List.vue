@@ -58,7 +58,7 @@ async function deleteOrg(item) {
     confirmationText: 'Удалить',
     cancellationText: 'Не удалять',
     dialogProps: {
-      width: '50%',
+      width: '30%',
       minWidth: '250px'
     },
     content: content
@@ -78,7 +78,7 @@ async function deleteOrg(item) {
 const headers = [
   { title: 'Организация', align: 'start', key: 'name', sortable: true },
   { title: 'Пользователей', align: 'center', key: 'num_users', sortable: true },
-  { title: 'Отправлений', align: 'center', key: 'num_shipments', sortable: true },
+  { title: 'Отправлений / В архиве', align: 'center', key: 'num_shipments', sortable: true },
   { title: '', align: 'center', key: 'actions1', sortable: false },
   { title: '', align: 'center', key: 'actions2', sortable: false }
 ]
@@ -105,6 +105,7 @@ const headers = [
         v-model:items-per-page="authStore.orgs_per_page"
         items-per-page-text="Организаций на странице"
         page-text="{0}-{1} из {2}"
+        v-model:page="authStore.orgs_page"
         :items-per-page-options="itemsPerPageOptions"
         :headers="headers"
         :items="orgs"
@@ -112,6 +113,9 @@ const headers = [
         v-model:sort-by="authStore.orgs_sort_by"
         class="elevation-1"
       >
+        <template v-slot:[`item.num_shipments`]="{ item }">
+          {{ item.selectable.num_shipments }} / 0
+        </template>
         <template v-slot:[`item.actions1`]="{ item }">
           <button @click="orgSettings(item)" class="anti-btn">
             <font-awesome-icon @click="orgSettings(item)" size="1x" icon="fa-solid fa-pen" class="anti-btn" />

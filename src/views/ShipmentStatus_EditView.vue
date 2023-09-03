@@ -31,16 +31,19 @@ const props = defineProps({
     type: String,
     required: true
   },
-  shipmentNumber: {
+  shipmentId: {
     type: String,
     required: true
   }
 })
-const id = parseInt(props.statusId)
+
+console.log(props.statusId, props.shipmentId)
+const statusId = parseInt(props.statusId)
+const shipmentId = parseInt(props.shipmentId)
 </script>
 
 <template>
   <main>
-    <ItemStatus :create="false" :statusId="id" :shipmentNumber="props.shipmentNumber" />
+    <ItemStatus :create="false" :statusId="statusId" :shipmentId="shipmentId"/>
   </main>
 </template>

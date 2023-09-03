@@ -39,8 +39,8 @@ const props = defineProps({
     type: Boolean,
     required: true
   },
-  shipmentNumber: {
-    type: String,
+  shipmentId: {
+    type: Number,
     required: true
   },
   statusId: {
@@ -53,13 +53,13 @@ import { useHistoryStore } from '@/stores/history.store.js'
 const historyStore = useHistoryStore()
 const { status } = storeToRefs(historyStore)
 if (!props.create) {
-  historyStore.getById(props.statusId)
+  historyStore.getByStatusId(props.statusId)
 }
 
 import { useShipmentsStore } from '@/stores/shipments.store.js'
 const shipmentStore = useShipmentsStore()
 const { shipment } = storeToRefs(shipmentStore)
-shipmentStore.getByNumber(props.shipmentNumber)
+shipmentStore.get(props.shipmentId)
 
 const sts = computed(() => {
   return {
@@ -82,7 +82,7 @@ const schema = Yup.object().shape({
 })
 
 function onSubmit(values, { setErrors }) {
-  values.shipmentNumber = props.shipmentNumber
+  values.shipmentId = props.shipmentId
   if (props.create) {
     return historyStore
       .add(values)
@@ -106,7 +106,7 @@ function getHeader() {
 </script>
 
 <template>
-  <h1 class="orange">{{ getHeader() }} отправления {{ props.shipmentNumber }}</h1>
+  <h1 class="orange">{{ getHeader() }} отправления {{ shipment.number }}</h1>
   <hr class="hr" />
   <div class="settings">
     <Form

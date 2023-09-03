@@ -27,15 +27,17 @@
 import ItemStatus from '@/components/ItemStatus.vue'
 
 const props = defineProps({
-  shipmentNumber: {
+  shipmentId: {
     type: String,
     required: true
   }
 })
+const id = parseInt(props.shipmentId)
+
 </script>
 
 <template>
   <main>
-    <ItemStatus :create="true" :shipmentNumber="props.shipmentNumber" />
+    <ItemStatus :create="true" :shipmentId="id" />
   </main>
 </template>

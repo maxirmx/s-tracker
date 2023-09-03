@@ -27,16 +27,17 @@
 import Shipment from '@/components/Shipment_Settings.vue'
 
 const props = defineProps({
-  shipmentNumber: {
+  shipmentId: {
     type: String,
     required: true
   }
 })
+const id = parseInt(props.shipmentId)
 
 </script>
 
 <template>
   <main>
-    <Shipment :create="false" :shipmentNumber="props.shipmentNumber"/>
+    <Shipment :create="false" :shipmentId="id"/>
   </main>
 </template>

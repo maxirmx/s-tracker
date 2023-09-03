@@ -47,23 +47,23 @@ export const useShipmentsStore = defineStore({
         this.shipments = { error }
       }
     },
-    async getByNumber(number) {
+    async get(id) {
       this.shipment = { loading: true }
       try {
-        this.shipment = await fetchWrapper.get(`${baseUrl}/${number}`)
+        this.shipment = await fetchWrapper.get(`${baseUrl}/${id}`)
       } catch (error) {
         this.shipment = { error }
       }
     },
-    async deleteByNumber(number) {
+    async delete(id) {
       try {
-        await fetchWrapper.delete(`${baseUrl}/${number}`, {})
+        await fetchWrapper.delete(`${baseUrl}/${id}`, {})
       } catch (error) {
         this.shipment = { error }
       }
     },
-    async update(number, params) {
-      await fetchWrapper.put(`${baseUrl}/${number}`, params)
+    async update(id, params) {
+      await fetchWrapper.put(`${baseUrl}/${id}`, params)
     }
   }
 })

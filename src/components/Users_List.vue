@@ -109,7 +109,7 @@ async function deleteUser(item) {
     confirmationText: 'Удалить',
     cancellationText: 'Не удалять',
     dialogProps: {
-      width: '50%',
+      width: '30%',
       minWidth: '250px'
     },
     content: content
@@ -157,6 +157,7 @@ const headers = [
         items-per-page-text="Пользователей на странице"
         :items-per-page-options="itemsPerPageOptions"
         page-text="{0}-{1} из {2}"
+        v-model:page="authStore.users_page"
         :headers="headers"
         :items="users"
         :search="authStore.users_search"

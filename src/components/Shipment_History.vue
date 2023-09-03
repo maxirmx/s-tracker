@@ -47,8 +47,8 @@ const { alert } = storeToRefs(alertStore)
 import { utils, writeFileXLSX } from 'xlsx'
 
 const props = defineProps({
-  shipmentNumber: {
-    type: String,
+  shipmentId: {
+    type: Number,
     required: true
   }
 })
@@ -56,13 +56,13 @@ const props = defineProps({
 import { useShipmentsStore } from '@/stores/shipments.store.js'
 const shipmentStore = useShipmentsStore()
 const { shipment } = storeToRefs(shipmentStore)
-shipmentStore.getByNumber(props.shipmentNumber)
+shipmentStore.get(props.shipmentId)
 
 import { useHistoryStore } from '@/stores/history.store.js'
 const historyStore = useHistoryStore()
 const { history } = storeToRefs(historyStore)
 
-historyStore.getByNumber(props.shipmentNumber)
+historyStore.getByShipmentId(props.shipmentId)
 
 function exportData() {
   var index = history.value.length
@@ -134,7 +134,7 @@ async function deleteStatus(item) {
   historyStore
     .delete(item.id)
     .then(() => {
-      historyStore.getByNumber(props.shipmentNumber)
+      historyStore.getByShipmentId(props.shipmentId)
     })
     .catch((error) => {
       alertStore.error(error)
@@ -144,7 +144,7 @@ async function deleteStatus(item) {
 
 <template>
   <h1 class="orange btn-wrapper">
-    <span>История отправления {{ props.shipmentNumber }}</span>
+    <span>История отправления {{ shipment.number }}</span>
     <button @click="$router.push('/shipments')">
       <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-from-bracket" class="btn" />
     </button>
@@ -154,7 +154,7 @@ async function deleteStatus(item) {
   <div class="wrapper">
     <router-link
       v-if="shipment.status != stcodes.DELIVERED && authStore.user?.isManager"
-      :to="'/status/add/' + props.shipmentNumber"
+      :to="'/status/add/' + props.shipmentId"
       class="link"
     >
       <font-awesome-icon size="1x" icon="fa-solid fa-calendar-plus" class="link" />
@@ -163,7 +163,7 @@ async function deleteStatus(item) {
     &nbsp;&nbsp;&nbsp;
     <router-link
       v-if="!authStore.user?.isAdmin && authStore.user?.isManager"
-      :to="'/status/edit/' + shipment.statusId + '/' + props.shipmentNumber"
+      :to="'/status/edit/' + shipment.id + '/' + shipment.statusId"
       class="link"
       ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить
       последний статус
@@ -204,7 +204,7 @@ async function deleteStatus(item) {
     <template #actions>
       <button
         v-if="authStore.user?.isAdmin"
-        @click="router.push('/status/edit/' + item.id + '/' + props.shipmentNumber)"
+        @click="router.push('/status/edit/' + shipment.id + '/' + item.id)"
         class="anti-btn"
       >
         <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />

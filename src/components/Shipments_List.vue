@@ -50,33 +50,29 @@ const alertStore = useAlertStore()
 const { alert } = storeToRefs(alertStore)
 
 function getStatus(item) {
-  var statusCode = item['selectable']['status']
-  return statuses.getName(statusCode)
+  return statuses.getName(item.status)
 }
 
 function getDate(item) {
-  var date = item['selectable']['date']
-  return moment(date, 'YYYY-MM-DD').format('DD.MM.YYYY')
+  return moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY')
 }
 
 function editShipment(item) {
-  var shipmentNumber = item.selectable.number
-  router.push('shipment/edit/' + shipmentNumber)
+  router.push('shipment/edit/' + item.shipmentId + '/' + item.id)
 }
 
 function viewHistory(item) {
-  var shipmentNumber = item.selectable.number
-  router.push('shipment/' + shipmentNumber)
+  router.push('shipment/' + item.id)
 }
 
 async function deleteShipment(item) {
-  const content = 'Удалить отправление "' + item['selectable']['number'] + '" ?'
+  const content = 'Удалить отправление "' + item['number'] + '" ?'
   const result = await confirm({
     title: 'Подтверждение',
     confirmationText: 'Удалить',
     cancellationText: 'Не удалять',
     dialogProps: {
-      width: '50%',
+      width: '30%',
       minWidth: '250px'
     },
     content: content
@@ -84,7 +80,7 @@ async function deleteShipment(item) {
 
   if (!result) return
   shipmentsStore
-    .deleteByNumber(item['selectable']['number'])
+    .delete(item['id'])
     .then(() => {
       shipmentsStore.getAll()
     })
@@ -126,6 +122,7 @@ const headers = [
         items-per-page-text="Отправлений на странице"
         :items-per-page-options="itemsPerPageOptions"
         page-text="{0}-{1} из {2}"
+        v-model:page="authStore.shipments_page"
         :headers="headers"
         :items="shipments"
         :search="authStore.shipments_search"
@@ -134,15 +131,15 @@ const headers = [
         class="elevation-1"
       >
         <template v-slot:[`item.date`]="{ item }">
-          {{ getDate(item) }}
+          {{ getDate(item.selectable) }}
         </template>
 
         <template v-slot:[`item.statuses`]="{ item }">
-          {{ getStatus(item) }}
+          {{ getStatus(item.selectable) }}
         </template>
 
         <template v-slot:[`item.actions1`]="{ item }">
-          <button @click="viewHistory(item)" class="anti-btn">
+          <button @click="viewHistory(item.selectable)" class="anti-btn">
             <font-awesome-icon
               size="1x"
               icon="fa-solid fa-arrow-right-to-bracket"
@@ -151,12 +148,12 @@ const headers = [
           </button>
         </template>
           <template v-slot:[`item.actions2`]="{ item }">
-          <button v-if="authStore.user?.isAdmin" @click="editShipment(item)" class="anti-btn">
+          <button v-if="authStore.user?.isAdmin" @click="editShipment(item.selectable)" class="anti-btn">
             <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />
           </button>
         </template>
           <template v-slot:[`item.actions3`]="{ item }">
-          <button v-if="authStore.user?.isAdmin" @click="deleteShipment(item)" class="anti-btn">
+          <button v-if="authStore.user?.isAdmin" @click="deleteShipment(item.selectable)" class="anti-btn">
             <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
           </button>
         </template>
