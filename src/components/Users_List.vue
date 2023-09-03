@@ -97,7 +97,7 @@ function filterUsers(value, query, item) {
       u.patronimic.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.email.toLocaleUpperCase().indexOf(q) !== -1)
   )
-  return true
+    return true
   const o = orgs.value?.loading ? null : orgs.value?.find((x) => x.id === item.orgId)
   return o != null && o.name.toLocaleUpperCase().indexOf(q) !== -1
 }
@@ -179,12 +179,22 @@ const headers = [
         </template>
         <template v-slot:[`item.actions1`]="{ item }">
           <button @click="userSettings(item.selectable)" class="anti-btn">
-            <font-awesome-icon @click="userSettings(item.selectable)" size="1x" icon="fa-solid fa-pen" class="anti-btn" />
+            <font-awesome-icon
+              @click="userSettings(item.selectable)"
+              size="1x"
+              icon="fa-solid fa-pen"
+              class="anti-btn"
+            />
           </button>
         </template>
-          <template v-slot:[`item.actions2`]="{ item }">
+        <template v-slot:[`item.actions2`]="{ item }">
           <button @click="deleteUser(item.selectable)" class="anti-btn">
-            <font-awesome-icon @click="deleteUser(item.selectable)" size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
+            <font-awesome-icon
+              @click="deleteUser(item.selectable)"
+              size="1x"
+              icon="fa-solid fa-trash-can"
+              class="anti-btn"
+            />
           </button>
         </template>
       </v-data-table>

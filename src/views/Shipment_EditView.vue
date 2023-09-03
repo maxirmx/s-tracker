@@ -33,11 +33,10 @@ const props = defineProps({
   }
 })
 const id = parseInt(props.shipmentId)
-
 </script>
 
 <template>
   <main>
-    <Shipment :create="false" :shipmentId="id"/>
+    <Shipment :create="false" :shipmentId="id" />
   </main>
 </template>

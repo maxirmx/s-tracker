@@ -44,6 +44,6 @@ const shipmentId = parseInt(props.shipmentId)
 
 <template>
   <main>
-    <ItemStatus :create="false" :statusId="statusId" :shipmentId="shipmentId"/>
+    <ItemStatus :create="false" :statusId="statusId" :shipmentId="shipmentId" />
   </main>
 </template>

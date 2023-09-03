@@ -79,8 +79,8 @@ import router from '@/router'
 import { useAuthStore } from '@/stores/auth.store.js'
 
 const vuetify = createVuetify({
-//  components,
-//  directives,
+  //  components,
+  //  directives,
   icons: {
     defaultSet: 'mdi',
     aliases,

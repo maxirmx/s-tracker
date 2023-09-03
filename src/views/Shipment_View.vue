@@ -34,7 +34,6 @@ const props = defineProps({
 })
 
 const id = parseInt(props.shipmentId)
-
 </script>
 
 <template>

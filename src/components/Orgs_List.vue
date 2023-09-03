@@ -118,10 +118,15 @@ const headers = [
         </template>
         <template v-slot:[`item.actions1`]="{ item }">
           <button @click="orgSettings(item)" class="anti-btn">
-            <font-awesome-icon @click="orgSettings(item)" size="1x" icon="fa-solid fa-pen" class="anti-btn" />
+            <font-awesome-icon
+              @click="orgSettings(item)"
+              size="1x"
+              icon="fa-solid fa-pen"
+              class="anti-btn"
+            />
           </button>
         </template>
-          <template v-slot:[`item.actions2`]="{ item }">
+        <template v-slot:[`item.actions2`]="{ item }">
           <button
             @click="deleteOrg(item)"
             class="anti-btn"

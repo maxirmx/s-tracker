@@ -89,11 +89,34 @@ async function deleteShipment(item) {
     })
 }
 
+function filterShipments(value, query, item) {
+  if (query == null) return false
+  const q = query.toLocaleUpperCase()
+  const u = shipments.value?.loading ? null : shipments.value?.find((x) => x.number === item.number)
+  if (
+    u != null &&
+    (u.origin.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.dest.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.number.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.name.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.ddate.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.date.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.location.toLocaleUpperCase().indexOf(q) !== -1 ||
+      getStatus(u).toLocaleUpperCase().indexOf(q) !== -1)
+  )
+    return true
+
+  return false
+}
+
 const headers = [
   { title: 'Номер', align: 'start', key: 'number' },
-  { title: 'Место', align: 'center', key: 'location' },
-  { title: 'Статус', align: 'center', key: 'statuses', sortable: false },
-  { title: 'Дата', align: 'center', key: 'date' },
+  { title: 'Маршрут', align: 'start', key: 'route' },
+  { title: 'Ожидаемая дата доставки', align: 'start', key: 'ddate' },
+  { title: 'Клиент', align: 'start', key: 'name' },
+  { title: 'Место', align: 'start', key: 'location' },
+  { title: 'Статус', align: 'start', key: 'statuses', sortable: false },
+  { title: 'Текущая дата', align: 'start', key: 'date' },
   { title: '', align: 'center', key: 'actions1', sortable: false },
   { title: '', align: 'center', key: 'actions2', sortable: false },
   { title: '', align: 'center', key: 'actions3', sortable: false }
@@ -126,10 +149,15 @@ const headers = [
         :headers="headers"
         :items="shipments"
         :search="authStore.shipments_search"
+        :custom-filter="filterShipments"
         v-model:sort-by="authStore.shipments_sort_by"
-        item-value="name"
+        item-value="number"
         class="elevation-1"
       >
+        <template v-slot:[`item.route`]="{ item }">
+          {{ item.selectable.origin }} - {{ item.selectable.dest }}
+        </template>
+
         <template v-slot:[`item.date`]="{ item }">
           {{ getDate(item.selectable) }}
         </template>
@@ -147,13 +175,21 @@ const headers = [
             />
           </button>
         </template>
-          <template v-slot:[`item.actions2`]="{ item }">
-          <button v-if="authStore.user?.isAdmin" @click="editShipment(item.selectable)" class="anti-btn">
+        <template v-slot:[`item.actions2`]="{ item }">
+          <button
+            v-if="authStore.user?.isAdmin"
+            @click="editShipment(item.selectable)"
+            class="anti-btn"
+          >
             <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />
           </button>
         </template>
-          <template v-slot:[`item.actions3`]="{ item }">
-          <button v-if="authStore.user?.isAdmin" @click="deleteShipment(item.selectable)" class="anti-btn">
+        <template v-slot:[`item.actions3`]="{ item }">
+          <button
+            v-if="authStore.user?.isAdmin"
+            @click="deleteShipment(item.selectable)"
+            class="anti-btn"
+          >
             <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
           </button>
         </template>

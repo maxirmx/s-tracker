@@ -72,20 +72,19 @@ function isRegister() {
 }
 
 function getTitle() {
-  return (isRegister() ? 'Новое отправление' : 'Редактирование отправления')
+  return isRegister() ? 'Новое отправление' : 'Редактирование отправления'
 }
 
 function onSubmit(values, { setErrors }) {
   values.userId = -1
   if (props.create) {
-  return shipmentsStore
-    .add(values)
-    .then(() => {
-      router.go(-1)
-    })
-    .catch((error) => setErrors({ apiError: error }))
-  }
-  else {
+    return shipmentsStore
+      .add(values)
+      .then(() => {
+        router.go(-1)
+      })
+      .catch((error) => setErrors({ apiError: error }))
+  } else {
     return shipmentsStore
       .update(props.shipmentId, values)
       .then(() => {
@@ -105,7 +104,7 @@ const status = computed(() => {
     dest: props.create ? '' : shipment.value.dest,
     comment: '',
     userId: '',
-    orgId: props.create ? '' : shipment.value.orgId,
+    orgId: props.create ? '' : shipment.value.orgId
   }
 })
 </script>
