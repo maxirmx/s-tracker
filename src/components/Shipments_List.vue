@@ -98,7 +98,7 @@ function filterShipments(value, query, item) {
     (u.origin.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.dest.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.number.toLocaleUpperCase().indexOf(q) !== -1 ||
-      u.name.toLocaleUpperCase().indexOf(q) !== -1 ||
+      (u.name.toLocaleUpperCase().indexOf(q) !== -1 && authStore.user?.isManager)||
       u.ddate.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.date.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.location.toLocaleUpperCase().indexOf(q) !== -1 ||
@@ -109,18 +109,21 @@ function filterShipments(value, query, item) {
   return false
 }
 
-const headers = [
-  { title: 'Номер', align: 'start', key: 'number' },
-  { title: 'Маршрут', align: 'start', key: 'route' },
-  { title: 'Ожидаемая дата доставки', align: 'start', key: 'ddate' },
-  { title: 'Клиент', align: 'start', key: 'name' },
-  { title: 'Место', align: 'start', key: 'location' },
-  { title: 'Статус', align: 'start', key: 'statuses', sortable: false },
-  { title: 'Текущая дата', align: 'start', key: 'date' },
-  { title: '', align: 'center', key: 'actions1', sortable: false },
-  { title: '', align: 'center', key: 'actions2', sortable: false },
-  { title: '', align: 'center', key: 'actions3', sortable: false }
-]
+const hd1 =   { title: 'Номер', align: 'start', key: 'number' }
+const hd2 =   { title: 'Маршрут', align: 'start', key: 'route' }
+const hd3 =   { title: 'Ожидаемая дата доставки', align: 'start', key: 'ddate' }
+const hd4 =   { title: 'Клиент', align: 'start', key: 'name' }
+const hd5 =   { title: 'Место', align: 'start', key: 'location' }
+const hd6 =   { title: 'Статус', align: 'start', key: 'statuses', sortable: false }
+const hd7 =   { title: 'Текущая дата', align: 'start', key: 'date' }
+const hd8 =   { title: '', align: 'center', key: 'actions1', sortable: false }
+const hd9 =   { title: '', align: 'center', key: 'actions2', sortable: false }
+const hdA =   { title: '', align: 'center', key: 'actions3', sortable: false }
+
+const headers = authStore.user?.isManager ?
+ [ hd1, hd2, hd3, hd4, hd5, hd6, hd7, hd8, hd9, hdA ] :
+ [ hd1, hd2, hd3, hd5, hd6, hd7, hd8, hd9, hdA ]
+
 </script>
 
 <template>
