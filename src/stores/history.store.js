@@ -39,7 +39,7 @@ export const useHistoryStore = defineStore({
     async add(status) {
       await fetchWrapper.post(`${baseUrl}/statuses/add`, status)
     },
-    async getById(id) {
+    async getByStatusId(id) {
       this.status = { loading: true }
       try {
         this.status = await fetchWrapper.get(`${baseUrl}/statuses/${id}`)
@@ -47,10 +47,10 @@ export const useHistoryStore = defineStore({
         this.status = { error }
       }
     },
-    async getByNumber(number) {
+    async getByShipmentId(shipmentId) {
       this.status = { loading: true }
       try {
-        this.history = await fetchWrapper.get(`${baseUrl}/history/${number}`)
+        this.history = await fetchWrapper.get(`${baseUrl}/history/${shipmentId}`)
       } catch (error) {
         this.history = { error }
       }
@@ -60,7 +60,6 @@ export const useHistoryStore = defineStore({
       await fetchWrapper.put(`${baseUrl}/statuses/${id}`, params)
     },
     async delete(id) {
-      this.history = { loading: true }
       try {
         await fetchWrapper.delete(`${baseUrl}/statuses/${id}`, {})
       } catch (error) {

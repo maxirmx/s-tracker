@@ -24,6 +24,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+import { computed } from 'vue'
 import { Form, Field } from 'vee-validate'
 import { storeToRefs } from 'pinia'
 import * as Yup from 'yup'
@@ -34,16 +35,31 @@ import { stcodes, statuses } from '@/helpers/statuses.js'
 import { useOrgsStore } from '@/stores/orgs.store.js'
 import { useShipmentsStore } from '@/stores/shipments.store.js'
 
+const props = defineProps({
+  create: {
+    type: Boolean,
+    required: true
+  },
+  shipmentId: {
+    type: Number,
+    required: false
+  }
+})
+
 const orgsStore = useOrgsStore()
 const { orgs } = storeToRefs(orgsStore)
 orgsStore.getAll()
 
 const shipmentsStore = useShipmentsStore()
+const { shipment } = storeToRefs(shipmentsStore)
+if (!props.create) {
+  shipmentsStore.get(props.shipmentId)
+}
 
 const orgIdError = 'Выберите организацию. Сотрудники организации смогут отслеживать отправление.'
 const schema = Yup.object().shape({
   number: Yup.string().required('Укажите номер отправления'),
-  status: Yup.string().required('Выберите статус'),
+  status: isRegister() ? Yup.string().required('Выберите статус') : Yup.string(),
   dest: Yup.string().required('Укажите пункт назначения'),
   location: Yup.string().required('Укажите место отправления'),
   date: Yup.string().required('Укажите дату'),
@@ -51,31 +67,51 @@ const schema = Yup.object().shape({
   orgId: Yup.number(orgIdError).typeError(orgIdError).integer(orgIdError).required(orgIdError)
 })
 
-function onSubmit(values, { setErrors }) {
-  values.userId = -1
-  return shipmentsStore
-    .add(values)
-    .then(() => {
-      router.go(-1)
-    })
-    .catch((error) => setErrors({ apiError: error }))
+function isRegister() {
+  return props.create
 }
 
-const status = {
-  number: '',
-  status: stcodes.REGISTERED,
-  location: '',
-  date: moment().format('YYYY-MM-DD'),
-  ddate: '',
-  dest: '',
-  comment: '',
-  userId: ''
+function getTitle() {
+  return isRegister() ? 'Новое отправление' : 'Редактирование отправления'
 }
+
+function onSubmit(values, { setErrors }) {
+  values.userId = -1
+  if (props.create) {
+    return shipmentsStore
+      .add(values)
+      .then(() => {
+        router.go(-1)
+      })
+      .catch((error) => setErrors({ apiError: error }))
+  } else {
+    return shipmentsStore
+      .update(props.shipmentId, values)
+      .then(() => {
+        router.go(-1)
+      })
+      .catch((error) => setErrors({ apiError: error }))
+  }
+}
+
+const status = computed(() => {
+  return {
+    number: props.create ? '' : shipment.value.number,
+    status: props.create ? stcodes.REGISTERED : shipment.value.status,
+    location: '_',
+    date: moment().format('YYYY-MM-DD'),
+    ddate: props.create ? '' : shipment.value.ddate,
+    dest: props.create ? '' : shipment.value.dest,
+    comment: '',
+    userId: '',
+    orgId: props.create ? '' : shipment.value.orgId
+  }
+})
 </script>
 
 <template>
   <div class="settings">
-    <h1 class="orange">Новое отправление</h1>
+    <h1 class="orange">{{ getTitle() }}</h1>
     <hr class="hr" />
     <div class="settings">
       <Form
@@ -90,11 +126,11 @@ const status = {
             name="number"
             type="text"
             class="form-control input"
-            :class="{ 'is-invalid': errors.тгьиук }"
+            :class="{ 'is-invalid': errors.number }"
             placeholder="Номер отправления"
           />
         </div>
-        <div class="form-group">
+        <div class="form-group" v-if="isRegister()">
           <label for="status" class="label">Статус:</label>
           <Field
             name="status"
@@ -108,7 +144,7 @@ const status = {
             </option>
           </Field>
         </div>
-        <div class="form-group">
+        <div class="form-group" v-if="isRegister()">
           <label for="location" class="label">Место отправления:</label>
           <Field
             name="location"
@@ -119,7 +155,7 @@ const status = {
           />
         </div>
 
-        <div class="form-group">
+        <div class="form-group" v-if="isRegister()">
           <label for="date" class="label">Дата:</label>
           <Field
             name="date"
@@ -129,7 +165,7 @@ const status = {
           />
         </div>
 
-        <div class="form-group">
+        <div class="form-group" v-if="isRegister()">
           <label for="comment" class="label">Комментарий:</label>
           <Field
             name="comment"

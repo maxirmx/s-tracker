@@ -66,8 +66,8 @@ library.add(
 
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-import * as components from 'vuetify/components'
-import * as directives from 'vuetify/directives'
+//import * as components from 'vuetify/components'
+//import * as directives from 'vuetify/directives'
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 import VuetifyUseDialog from 'vuetify-use-dialog'
 //import { aliases, fa } from 'vuetify/iconsets/fa'
@@ -79,8 +79,8 @@ import router from '@/router'
 import { useAuthStore } from '@/stores/auth.store.js'
 
 const vuetify = createVuetify({
-  components,
-  directives,
+  //  components,
+  //  directives,
   icons: {
     defaultSet: 'mdi',
     aliases,

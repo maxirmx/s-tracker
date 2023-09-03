@@ -78,13 +78,13 @@ const router = createRouter({
       props: true
     },
     {
-      path: '/status/add/:shipmentNumber',
+      path: '/status/add/:shipmentId',
       name: 'Добавить статус отправления',
       component: () => import('@/views/ShipmentStatus_AddView.vue'),
       props: true
     },
     {
-      path: '/status/edit/:statusId/:shipmentNumber',
+      path: '/status/edit/:shipmentId/:statusId',
       name: 'Изменить статус отправления',
       component: () => import('@/views/ShipmentStatus_EditView.vue'),
       props: true
@@ -95,7 +95,13 @@ const router = createRouter({
       component: () => import('@/views/Shipments_View.vue')
     },
     {
-      path: '/shipment/:shipmentNumber',
+      path: '/shipment/edit/:shipmentId',
+      name: 'Редактировать информацию об отправлении',
+      component: () => import('@/views/Shipment_EditView.vue'),
+      props: true
+    },
+    {
+      path: '/shipment/:shipmentId',
       name: 'Отправлениe',
       component: () => import('@/views/Shipment_View.vue'),
       props: true
@@ -137,9 +143,9 @@ router.beforeEach(async (to) => {
     return '/login'
   }
 
-//  if (!authRequired && auth.user) {
-//    return '/shipments'
-//  }
+  //  if (!authRequired && auth.user) {
+  //    return '/shipments'
+  //  }
 })
 
 export default router

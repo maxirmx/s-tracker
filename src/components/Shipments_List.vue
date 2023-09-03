@@ -25,7 +25,6 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 import moment from 'moment'
-import { ref } from 'vue'
 
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 import router from '@/router'
@@ -51,28 +50,29 @@ const alertStore = useAlertStore()
 const { alert } = storeToRefs(alertStore)
 
 function getStatus(item) {
-  var statusCode = item['selectable']['status']
-  return statuses.getName(statusCode)
+  return statuses.getName(item.status)
 }
 
 function getDate(item) {
-  var date = item['selectable']['date']
-  return moment(date, 'YYYY-MM-DD').format('DD.MM.YYYY')
+  return moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY')
+}
+
+function editShipment(item) {
+  router.push('shipment/edit/' + item.id)
 }
 
 function viewHistory(item) {
-  var shipmentNumber = item['selectable']['number']
-  router.push('shipment/' + shipmentNumber)
+  router.push('shipment/' + item.id)
 }
 
 async function deleteShipment(item) {
-  const content = 'Удалить отправление "' + item['selectable']['number'] + '" ?'
+  const content = 'Удалить отправление "' + item['number'] + '" ?'
   const result = await confirm({
     title: 'Подтверждение',
     confirmationText: 'Удалить',
     cancellationText: 'Не удалять',
     dialogProps: {
-      width: '50%',
+      width: '30%',
       minWidth: '250px'
     },
     content: content
@@ -80,7 +80,7 @@ async function deleteShipment(item) {
 
   if (!result) return
   shipmentsStore
-    .deleteByNumber(item['selectable']['number'])
+    .delete(item['id'])
     .then(() => {
       shipmentsStore.getAll()
     })
@@ -89,15 +89,37 @@ async function deleteShipment(item) {
     })
 }
 
-const itemsPerPage = ref(10)
-const search = ref('')
+function filterShipments(value, query, item) {
+  if (query == null) return false
+  const q = query.toLocaleUpperCase()
+  const u = shipments.value?.loading ? null : shipments.value?.find((x) => x.number === item.number)
+  if (
+    u != null &&
+    (u.origin.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.dest.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.number.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.name.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.ddate.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.date.toLocaleUpperCase().indexOf(q) !== -1 ||
+      u.location.toLocaleUpperCase().indexOf(q) !== -1 ||
+      getStatus(u).toLocaleUpperCase().indexOf(q) !== -1)
+  )
+    return true
+
+  return false
+}
 
 const headers = [
   { title: 'Номер', align: 'start', key: 'number' },
-  { title: 'Место', align: 'center', key: 'location' },
-  { title: 'Статус', align: 'center', key: 'statuses', sortable: false },
-  { title: 'Дата', align: 'center', key: 'date' },
-  { title: '', align: 'center', key: 'actions', sortable: false }
+  { title: 'Маршрут', align: 'start', key: 'route' },
+  { title: 'Ожидаемая дата доставки', align: 'start', key: 'ddate' },
+  { title: 'Клиент', align: 'start', key: 'name' },
+  { title: 'Место', align: 'start', key: 'location' },
+  { title: 'Статус', align: 'start', key: 'statuses', sortable: false },
+  { title: 'Текущая дата', align: 'start', key: 'date' },
+  { title: '', align: 'center', key: 'actions1', sortable: false },
+  { title: '', align: 'center', key: 'actions2', sortable: false },
+  { title: '', align: 'center', key: 'actions3', sortable: false }
 ]
 </script>
 
@@ -119,42 +141,62 @@ const headers = [
     <v-card>
       <v-data-table
         v-if="shipments?.length"
-        v-model:items-per-page="itemsPerPage"
+        v-model:items-per-page="authStore.shipments_per_page"
         items-per-page-text="Отправлений на странице"
         :items-per-page-options="itemsPerPageOptions"
         page-text="{0}-{1} из {2}"
+        v-model:page="authStore.shipments_page"
         :headers="headers"
         :items="shipments"
-        :search="search"
-        item-value="name"
+        :search="authStore.shipments_search"
+        :custom-filter="filterShipments"
+        v-model:sort-by="authStore.shipments_sort_by"
+        item-value="number"
         class="elevation-1"
       >
+        <template v-slot:[`item.route`]="{ item }">
+          {{ item.selectable.origin }} - {{ item.selectable.dest }}
+        </template>
+
         <template v-slot:[`item.date`]="{ item }">
-          {{ getDate(item) }}
+          {{ getDate(item.selectable) }}
         </template>
 
         <template v-slot:[`item.statuses`]="{ item }">
-          {{ getStatus(item) }}
+          {{ getStatus(item.selectable) }}
         </template>
 
-        <template v-slot:[`item.actions`]="{ item }">
-          <h4 class="orange btn-wrapper">
-            <button @click="viewHistory(item)" class="anti-btn">
-              <font-awesome-icon
-                size="2xs"
-                icon="fa-solid fa-arrow-right-to-bracket"
-                class="anti-btn"
-              />
-            </button>
-            <button v-if="authStore.user?.isAdmin" @click="deleteShipment(item)" class="anti-btn">
-              <font-awesome-icon size="2xs" icon="fa-solid fa-trash-can" class="anti-btn" />
-            </button>
-          </h4>
+        <template v-slot:[`item.actions1`]="{ item }">
+          <button @click="viewHistory(item.selectable)" class="anti-btn">
+            <font-awesome-icon
+              size="1x"
+              icon="fa-solid fa-arrow-right-to-bracket"
+              class="anti-btn"
+            />
+          </button>
+        </template>
+        <template v-slot:[`item.actions2`]="{ item }">
+          <button
+            v-if="authStore.user?.isAdmin"
+            @click="editShipment(item.selectable)"
+            class="anti-btn"
+          >
+            <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />
+          </button>
+        </template>
+        <template v-slot:[`item.actions3`]="{ item }">
+          <button
+            v-if="authStore.user?.isAdmin"
+            @click="deleteShipment(item.selectable)"
+            class="anti-btn"
+          >
+            <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
+          </button>
         </template>
       </v-data-table>
       <v-spacer></v-spacer>
       <v-text-field
-        v-model="search"
+        v-model="authStore.shipments_search"
         :append-inner-icon="mdiMagnify"
         label="Поиск по любой информации об отправлении"
         variant="solo"

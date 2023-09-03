@@ -24,7 +24,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import ItemStatus from '@/components/ItemStatus.vue'
+import Shipment from '@/components/Shipment_Settings.vue'
 
 const props = defineProps({
   shipmentId: {
@@ -37,6 +37,6 @@ const id = parseInt(props.shipmentId)
 
 <template>
   <main>
-    <ItemStatus :create="true" :shipmentId="id" />
+    <Shipment :create="false" :shipmentId="id" />
   </main>
 </template>

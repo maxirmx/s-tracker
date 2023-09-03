@@ -57,6 +57,9 @@ export const useOrgsStore = defineStore({
     },
     async update(id, params) {
       await fetchWrapper.put(`${baseUrl}/${id}`, params)
+    },
+    async delete(id) {
+      await fetchWrapper.delete(`${baseUrl}/${id}`, {})
     }
   }
 })

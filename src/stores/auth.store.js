@@ -35,6 +35,18 @@ export const useAuthStore = defineStore({
   state: () => ({
     // initialize state from local storage to enable user to stay logged in
     user: JSON.parse(localStorage.getItem('user')),
+    shipments_per_page: 10,
+    shipments_search: '',
+    shipments_sort_by: [],
+    shipments_page: 1,
+    users_per_page: 10,
+    users_search: '',
+    users_sort_by: [],
+    users_page: 1,
+    orgs_per_page: 10,
+    orgs_search: '',
+    orgs_sort_by: [],
+    orgs_page: 1,
     returnUrl: null,
     re_jwt: null,
     re_tgt: null

@@ -27,15 +27,17 @@
 import Shipment from '@/components/Shipment_History.vue'
 
 const props = defineProps({
-  shipmentNumber: {
+  shipmentId: {
     type: String,
     required: true
   }
 })
+
+const id = parseInt(props.shipmentId)
 </script>
 
 <template>
   <main>
-    <Shipment :shipmentNumber="props.shipmentNumber" />
+    <Shipment :shipmentId="id" />
   </main>
 </template>
