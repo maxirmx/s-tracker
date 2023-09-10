@@ -117,10 +117,6 @@ body {
   margin-right: 1rem;
 }
 
-.button-s {
-  min-width: 0;
-}
-
 .anti-button {
   padding: 0.5rem;
   border-radius: 0.25rem;
@@ -137,6 +133,7 @@ body {
 }
 
 .button-s {
+  min-width: 0;
   width: 40px;
   align-self: right;
   margin-top: 0rem;
@@ -285,7 +282,7 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1400px) {
   body {
     display: flex;
     place-items: center;

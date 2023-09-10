@@ -114,7 +114,7 @@ const headers = [
         class="elevation-1"
       >
         <template v-slot:[`item.num_shipments`]="{ item }">
-          {{ item.selectable.num_shipments }} / 0
+          {{ item.selectable.num_shipments }} / {{ item.selectable.num_archieved }}
         </template>
         <template v-slot:[`item.actions1`]="{ item }">
           <button @click="orgSettings(item)" class="anti-btn">
