@@ -4,7 +4,9 @@
     id="Icons"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
-    viewBox="0 0 32 32"
+    width="30px"
+    height="30px"
+    viewBox="0 0 612 612"
     xml:space="preserve"
   >
     <line class="st0" x1="3" y1="11" x2="29" y2="11" />

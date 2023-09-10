@@ -44,6 +44,7 @@ function deauth() {
 
       <nav v-if="authStore.user">
         <RouterLink to="/shipments" class="link">Отправления</RouterLink>
+        <RouterLink to="/archieve" class="link">Архив</RouterLink>
         <RouterLink
           v-if="!authStore.user.isAdmin"
           :to="'/user/edit/' + authStore.user.id"

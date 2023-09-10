@@ -43,7 +43,7 @@ import InTransitIcon from '@/components/icons/IconInTransit.vue'
 import WaitingForShipmentIcon from '@/components/icons/IconWaitingForShipment.vue'
 import WaitingIcon from '@/components/icons/IconWaiting.vue'
 
-import LoadingIcon from '@/components/icons/IconLoading.vue'
+import UnknownIcon from '@/components/icons/IconUnknown.vue'
 
 export const stcodes = {
   REGISTERED: 0,
@@ -149,11 +149,15 @@ export const statuses = reactive({
   ],
 
   getName(code) {
-    const item = this.items.find(obj => {return obj.id === code})
-    return item  ? item.name : 'загружается...'
+    const item = this.items.find((obj) => {
+      return obj.id === code
+    })
+    return item ? item.name : 'неизвестный статус'
   },
   getIcon(code) {
-    const item = this.items.find(obj => {return obj.id === code})
-    return item  ? item.icon : markRaw(LoadingIcon)
+    const item = this.items.find((obj) => {
+      return obj.id === code
+    })
+    return item ? item.icon : markRaw(UnknownIcon)
   }
 })

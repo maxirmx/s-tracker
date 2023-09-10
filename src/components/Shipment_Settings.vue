@@ -76,7 +76,6 @@ function getTitle() {
 }
 
 function onSubmit(values, { setErrors }) {
-  values.userId = -1
   if (props.create) {
     return shipmentsStore
       .add(values)
@@ -103,7 +102,6 @@ const status = computed(() => {
     ddate: props.create ? '' : shipment.value.ddate,
     dest: props.create ? '' : shipment.value.dest,
     comment: '',
-    userId: '',
     orgId: props.create ? '' : shipment.value.orgId
   }
 })

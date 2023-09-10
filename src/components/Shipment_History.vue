@@ -145,7 +145,7 @@ async function deleteStatus(item) {
 <template>
   <h1 class="orange btn-wrapper">
     <span>История отправления {{ shipment.number }}</span>
-    <button @click="$router.push('/shipments')">
+    <button @click="$router.go(-1)">
       <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-from-bracket" class="btn" />
     </button>
   </h1>
@@ -163,7 +163,7 @@ async function deleteStatus(item) {
     </router-link>
     &nbsp;&nbsp;&nbsp;
     <router-link
-      v-if="!authStore.user?.isAdmin && authStore.user?.isManager"
+      v-if="!shipment.isArchieved && !authStore.user?.isAdmin && authStore.user?.isManager"
       :to="'/status/edit/' + shipment.id + '/' + shipment.statusId"
       class="link"
       ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить

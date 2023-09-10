@@ -39,10 +39,11 @@ export const useShipmentsStore = defineStore({
     async add(shipment) {
       await fetchWrapper.post(`${baseUrl}/add`, shipment)
     },
-    async getAll() {
+    async getAll(archieve = false) {
       this.shipments = { loading: true }
       try {
-        this.shipments = await fetchWrapper.get(baseUrl)
+        const url = baseUrl + (archieve ? '/archieve' : '')
+        this.shipments = await fetchWrapper.get(url)
       } catch (error) {
         this.shipments = { error }
       }

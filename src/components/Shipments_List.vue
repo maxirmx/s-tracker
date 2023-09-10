@@ -44,7 +44,7 @@ const authStore = useAuthStore()
 
 const shipmentsStore = useShipmentsStore()
 const { shipments } = storeToRefs(shipmentsStore)
-shipmentsStore.getAll()
+shipmentsStore.getAll(false)
 
 const alertStore = useAlertStore()
 const { alert } = storeToRefs(alertStore)
@@ -53,8 +53,8 @@ function getStatus(item) {
   return statuses.getName(item.status)
 }
 
-function getDate(item) {
-  return moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY')
+function getDate(date) {
+  return moment(date, 'YYYY-MM-DD').format('DD.MM.YYYY')
 }
 
 function editShipment(item) {
@@ -160,8 +160,12 @@ const headers = authStore.user?.isManager
           {{ item.selectable.origin }} - {{ item.selectable.dest }}
         </template>
 
+        <template v-slot:[`item.ddate`]="{ item }">
+          {{ getDate(item.selectable.ddate) }}
+        </template>
+
         <template v-slot:[`item.date`]="{ item }">
-          {{ getDate(item.selectable) }}
+          {{ getDate(item.selectable.date) }}
         </template>
 
         <template v-slot:[`item.statuses`]="{ item }">
