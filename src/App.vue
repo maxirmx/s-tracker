@@ -73,7 +73,6 @@ header {
   max-height: 100vh;
 }
 
-
 nav {
   width: 100%;
   font-size: 12px;
