@@ -44,7 +44,7 @@ const authStore = useAuthStore()
 
 const shipmentsStore = useShipmentsStore()
 const { shipments } = storeToRefs(shipmentsStore)
-shipmentsStore.getAll()
+shipmentsStore.getAll(false)
 
 const alertStore = useAlertStore()
 const { alert } = storeToRefs(alertStore)
@@ -53,8 +53,8 @@ function getStatus(item) {
   return statuses.getName(item.status)
 }
 
-function getDate(item) {
-  return moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY')
+function getDate(date) {
+  return moment(date, 'YYYY-MM-DD').format('DD.MM.YYYY')
 }
 
 function editShipment(item) {
@@ -98,7 +98,7 @@ function filterShipments(value, query, item) {
     (u.origin.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.dest.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.number.toLocaleUpperCase().indexOf(q) !== -1 ||
-      (u.name.toLocaleUpperCase().indexOf(q) !== -1 && authStore.user?.isManager)||
+      (u.name.toLocaleUpperCase().indexOf(q) !== -1 && authStore.user?.isManager) ||
       u.ddate.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.date.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.location.toLocaleUpperCase().indexOf(q) !== -1 ||
@@ -109,21 +109,20 @@ function filterShipments(value, query, item) {
   return false
 }
 
-const hd1 =   { title: 'Номер', align: 'start', key: 'number' }
-const hd2 =   { title: 'Маршрут', align: 'start', key: 'route' }
-const hd3 =   { title: 'Ожидаемая дата доставки', align: 'start', key: 'ddate' }
-const hd4 =   { title: 'Клиент', align: 'start', key: 'name' }
-const hd5 =   { title: 'Место', align: 'start', key: 'location' }
-const hd6 =   { title: 'Статус', align: 'start', key: 'statuses', sortable: false }
-const hd7 =   { title: 'Текущая дата', align: 'start', key: 'date' }
-const hd8 =   { title: '', align: 'center', key: 'actions1', sortable: false }
-const hd9 =   { title: '', align: 'center', key: 'actions2', sortable: false }
-const hdA =   { title: '', align: 'center', key: 'actions3', sortable: false }
+const hd1 = { title: 'Номер', align: 'start', key: 'number' }
+const hd2 = { title: 'Маршрут', align: 'start', key: 'route' }
+const hd3 = { title: 'Ожидаемая дата доставки', align: 'start', key: 'ddate' }
+const hd4 = { title: 'Клиент', align: 'start', key: 'name' }
+const hd5 = { title: 'Место', align: 'start', key: 'location' }
+const hd6 = { title: 'Статус', align: 'start', key: 'statuses', sortable: false }
+const hd7 = { title: 'Текущая дата', align: 'start', key: 'date' }
+const hd8 = { title: '', align: 'center', key: 'actions1', sortable: false }
+const hd9 = { title: '', align: 'center', key: 'actions2', sortable: false }
+const hdA = { title: '', align: 'center', key: 'actions3', sortable: false }
 
-const headers = authStore.user?.isManager ?
- [ hd1, hd2, hd3, hd4, hd5, hd6, hd7, hd8, hd9, hdA ] :
- [ hd1, hd2, hd3, hd5, hd6, hd7, hd8, hd9, hdA ]
-
+const headers = authStore.user?.isManager
+  ? [hd1, hd2, hd3, hd4, hd5, hd6, hd7, hd8, hd9, hdA]
+  : [hd1, hd2, hd3, hd5, hd6, hd7, hd8, hd9, hdA]
 </script>
 
 <template>
@@ -161,8 +160,12 @@ const headers = authStore.user?.isManager ?
           {{ item.selectable.origin }} - {{ item.selectable.dest }}
         </template>
 
+        <template v-slot:[`item.ddate`]="{ item }">
+          {{ getDate(item.selectable.ddate) }}
+        </template>
+
         <template v-slot:[`item.date`]="{ item }">
-          {{ getDate(item.selectable) }}
+          {{ getDate(item.selectable.date) }}
         </template>
 
         <template v-slot:[`item.statuses`]="{ item }">

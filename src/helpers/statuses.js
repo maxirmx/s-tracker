@@ -32,6 +32,7 @@ import InStorageIcon from '@/components/icons/IconInStorage.vue'
 import RegisteredIcon from '@/components/icons/IconRegistered.vue'
 import CollectedIcon from '@/components/icons/IconCollected.vue'
 import DeliveredIcon from '@/components/icons/IconDelivered.vue'
+import VeryDeliveredIcon from '@/components/icons/IconVeryDelivered.vue'
 
 import OutOfCountryOfOriginIcon from '@/components/icons/IconOutOfCountryOfOrigin.vue'
 import IntoCountryOfTransitIcon from '@/components/icons/IconIntoCountryOfTransit.vue'
@@ -39,9 +40,10 @@ import OutOfCountryOfTransitIcon from '@/components/icons/IconOutOfCountryOfTran
 import IntoCountryOfDestinationIcon from '@/components/icons/IconIntoCountryOfDestination.vue'
 import WaitingForTransitIcon from '@/components/icons/IconWaitingForTransit.vue'
 import InTransitIcon from '@/components/icons/IconInTransit.vue'
+import WaitingForShipmentIcon from '@/components/icons/IconWaitingForShipment.vue'
 import WaitingIcon from '@/components/icons/IconWaiting.vue'
 
-import LoadingIcon from '@/components/icons/IconLoading.vue'
+import UnknownIcon from '@/components/icons/IconUnknown.vue'
 
 export const stcodes = {
   REGISTERED: 0,
@@ -52,12 +54,14 @@ export const stcodes = {
   CUSTOMS_END: 5,
   DELIVERED: 6,
   OUT_OF_COUNTRY_OF_ORIGIN: 7,
-  INTO_COUNTR_OF_TRANSIT: 8,
+  INTO_COUNTRY_OF_TRANSIT: 8,
   OUT_OF_COUNTRY_OF_TRANSIT: 9,
   INTO_COUNTRY_OF_DESTINATION: 10,
   WAITING_FOR_TRANSIT: 11,
   IN_TRANSIT: 12,
-  WAITING: 13
+  WAITING: 13,
+  WAITING_FOR_SHIPMENT: 14,
+  VERY_DELIVERED: 15
 }
 
 export const statuses = reactive({
@@ -68,9 +72,29 @@ export const statuses = reactive({
       icon: markRaw(RegisteredIcon)
     },
     {
+      id: stcodes.WAITING_FOR_SHIPMENT,
+      name: 'Ожидание готовности груза',
+      icon: markRaw(WaitingForShipmentIcon)
+    },
+    {
       id: stcodes.COLLECTED,
       name: 'Груз забран у отправителя',
       icon: markRaw(CollectedIcon)
+    },
+    {
+      id: stcodes.WAITING,
+      name: 'Ожидание',
+      icon: markRaw(WaitingIcon)
+    },
+    {
+      id: stcodes.WAITING_FOR_TRANSIT,
+      name: 'Ожидание отправления',
+      icon: markRaw(WaitingForTransitIcon)
+    },
+    {
+      id: stcodes.IN_TRANSIT,
+      name: 'Груз в пути',
+      icon: markRaw(InTransitIcon)
     },
     {
       id: stcodes.IN_STORAGE,
@@ -93,17 +117,12 @@ export const statuses = reactive({
       icon: markRaw(CustomsEndIcon)
     },
     {
-      id: stcodes.DELIVERED,
-      name: 'Груз прибыл в пункт назначения',
-      icon: markRaw(DeliveredIcon)
-    },
-    {
       id: stcodes.OUT_OF_COUNTRY_OF_ORIGIN,
       name: 'Груз покинул страну отправления',
       icon: markRaw(OutOfCountryOfOriginIcon)
     },
     {
-      id: stcodes.INTO_COUNTR_OF_TRANSIT,
+      id: stcodes.INTO_COUNTRY_OF_TRANSIT,
       name: 'Груз прибыл в страну транзита',
       icon: markRaw(IntoCountryOfTransitIcon)
     },
@@ -118,25 +137,27 @@ export const statuses = reactive({
       icon: markRaw(IntoCountryOfDestinationIcon)
     },
     {
-      id: stcodes.WAITING_FOR_TRANSIT,
-      name: 'Ожидание отправления',
-      icon: markRaw(WaitingForTransitIcon)
+      id: stcodes.DELIVERED,
+      name: 'Груз прибыл в пункт назначения',
+      icon: markRaw(DeliveredIcon)
     },
     {
-      id: stcodes.IN_TRANSIT,
-      name: 'Груз в пути',
-      icon: markRaw(InTransitIcon)
-    },
-    {
-      id: stcodes.WAITING,
-      name: 'Ожидание',
-      icon: markRaw(WaitingIcon)
+      id: stcodes.VERY_DELIVERED,
+      name: 'Перевозка завершена',
+      icon: markRaw(VeryDeliveredIcon)
     }
   ],
+
   getName(code) {
-    return code < this.items.length ? this.items[code].name : 'загружается...'
+    const item = this.items.find((obj) => {
+      return obj.id === code
+    })
+    return item ? item.name : 'неизвестный статус'
   },
   getIcon(code) {
-    return code < this.items.length ? this.items[code].icon : markRaw(LoadingIcon)
+    const item = this.items.find((obj) => {
+      return obj.id === code
+    })
+    return item ? item.icon : markRaw(UnknownIcon)
   }
 })

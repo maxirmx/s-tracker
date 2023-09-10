@@ -87,7 +87,7 @@ function exportData() {
     }
   ]
 
-  const rows = shipment.value?.status != stcodes.DELIVERED ? row0.concat(rowsm) : rowsm
+  const rows = shipment.value?.status != stcodes.VERY_DELIVERED ? row0.concat(rowsm) : rowsm
 
   const worksheet = utils.json_to_sheet(rows)
   const workbook = utils.book_new()
@@ -145,7 +145,7 @@ async function deleteStatus(item) {
 <template>
   <h1 class="orange btn-wrapper">
     <span>История отправления {{ shipment.number }}</span>
-    <button @click="$router.push('/shipments')">
+    <button @click="$router.go(-1)">
       <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-from-bracket" class="btn" />
     </button>
   </h1>
@@ -154,7 +154,7 @@ async function deleteStatus(item) {
   <hr class="hr" />
   <div class="wrapper">
     <router-link
-      v-if="shipment.status != stcodes.DELIVERED && authStore.user?.isManager"
+      v-if="shipment.status != stcodes.VERY_DELIVERED && authStore.user?.isManager"
       :to="'/status/add/' + props.shipmentId"
       class="link"
     >
@@ -163,7 +163,7 @@ async function deleteStatus(item) {
     </router-link>
     &nbsp;&nbsp;&nbsp;
     <router-link
-      v-if="!authStore.user?.isAdmin && authStore.user?.isManager"
+      v-if="!shipment.isArchieved && !authStore.user?.isAdmin && authStore.user?.isManager"
       :to="'/status/edit/' + shipment.id + '/' + shipment.statusId"
       class="link"
       ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить
@@ -177,7 +177,7 @@ async function deleteStatus(item) {
   </div>
   <br /><br />
 
-  <div v-if="shipment.status != stcodes.DELIVERED">
+  <div v-if="shipment.status != stcodes.VERY_DELIVERED">
     <HistoryItem>
       <template #icon>
         <component :is="DeliveryTimeIcon"></component>

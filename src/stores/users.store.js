@@ -45,7 +45,7 @@ export const useUsersStore = defineStore({
   }),
   getters: {
     getUserById: (state) => {
-      return (userId) => state.users.find((user) => user.id === userId)
+      return (id) => state.users.find((user) => user.id === id)
     }
   },
   actions: {
