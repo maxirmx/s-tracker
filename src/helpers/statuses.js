@@ -143,7 +143,7 @@ export const statuses = reactive({
     },
     {
       id: stcodes.VERY_DELIVERED,
-      name: 'Перевозка завершена',
+      name: 'Перевозка завершена. Груз доставлен получателю',
       icon: markRaw(VeryDeliveredIcon)
     }
   ],
