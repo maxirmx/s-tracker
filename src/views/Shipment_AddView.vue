@@ -28,7 +28,5 @@ import Shipment from '@/components/Shipment_Settings.vue'
 </script>
 
 <template>
-  <main>
-    <Shipment :create="true" />
-  </main>
+  <Shipment :create="true" />
 </template>

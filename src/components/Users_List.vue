@@ -136,11 +136,11 @@ const headers = [
 </script>
 
 <template>
-  <div class="settings">
+  <div class="settings table-2">
     <h1 class="orange">Пользователи</h1>
     <hr class="hr" />
 
-    <div class="wrapper">
+    <div class="link-crt">
       <router-link to="/register" class="link"
         ><font-awesome-icon
           size="1x"
@@ -189,11 +189,7 @@ const headers = [
         </template>
         <template v-slot:[`item.actions2`]="{ item }">
           <button @click="deleteUser(item.selectable)" class="anti-btn">
-            <font-awesome-icon
-              size="1x"
-              icon="fa-solid fa-trash-can"
-              class="anti-btn"
-            />
+            <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
           </button>
         </template>
       </v-data-table>

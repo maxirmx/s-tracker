@@ -31,7 +31,43 @@ body {
   display: flex;
   flex-direction: column;
   align-items: left;
-  margin-top: 2rem;
+}
+
+/* Forms: login, recover, org. new/edit */
+.form-1 {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+/* Forms: user settings/register, shipment new/edit, status new/edit */
+/* Tables: organizations */
+/* Lists: shipment history */
+.form-2,
+.table-1,
+.list-1 {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Tables: users */
+.table-2 {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Tables: shipments, archieve */
+.table-3 {
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+/* The link to create new entity (shipment, user, org, status */
+.link-crt {
+  margin-bottom: 1rem;
 }
 
 .title {
@@ -115,6 +151,7 @@ body {
   align-self: center;
   margin-bottom: 1rem;
   margin-right: 1rem;
+  max-width: 160px;
 }
 
 .anti-button {
@@ -182,12 +219,6 @@ a,
   width: 100%;
   padding-top: 10px;
   padding-right: 16px;
-}
-
-.logo {
-  max-width: 200px;
-  margin: 0 auto;
-  display: block;
 }
 
 .checkbox-styled {
@@ -292,11 +323,6 @@ a,
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
-  }
-
-  .logo {
-    max-width: 100%;
-    margin: 0;
   }
 }
 

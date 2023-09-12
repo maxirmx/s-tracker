@@ -91,7 +91,6 @@ h3 {
   .item:first-of-type:before {
     display: none;
   }
-
   .item:last-of-type:after {
     display: none;
   }

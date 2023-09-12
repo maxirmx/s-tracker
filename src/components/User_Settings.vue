@@ -183,7 +183,7 @@ function onSubmit(values, { setErrors }) {
 </script>
 
 <template>
-  <div class="settings">
+  <div class="settings form-2">
     <h1 class="orange">{{ getTitle() }}</h1>
     <hr class="hr" />
     <Form
@@ -330,7 +330,7 @@ function onSubmit(values, { setErrors }) {
       </div>
 
       <div class="form-group">
-        <button class="button" :disabled="isSubmitting">
+        <button class="button" type="submit" :disabled="isSubmitting">
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           {{ getButton() }}
         </button>

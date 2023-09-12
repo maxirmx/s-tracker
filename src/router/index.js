@@ -37,7 +37,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Вход',
-      component: () => import('@/views/LoginView.vue')
+      component: () => import('@/views/User_LoginView.vue')
     },
     {
       path: '/recover',
