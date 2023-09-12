@@ -28,7 +28,5 @@ import Archieve from '@/components/Archieve_List.vue'
 </script>
 
 <template>
-  <main>
     <Archieve />
-  </main>
 </template>

@@ -119,7 +119,9 @@ function deauth() {
       </nav>
     </div>
   </header>
-  <RouterView class ="vvv"/>
+  <main class ="vvv">
+  <RouterView />
+</main>
 </template>
 
 
@@ -136,6 +138,8 @@ function deauth() {
 
 .vvv {
  width: 80vw;
+ margin: 2rem;
+ min-width: 480px;
 }
 
 header {

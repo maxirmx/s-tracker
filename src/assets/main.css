@@ -31,8 +31,6 @@ body {
   display: flex;
   flex-direction: column;
   align-items: left;
-  align-self: center;
-  margin-top: 2rem;
 }
 
 /* Forms: login, recover, org. new/edit */
@@ -44,7 +42,8 @@ body {
 
 /* Forms: user settings/register, shipment new/edit, status new/edit */
 /* Tables: organizations */
-.form-2, .table-1 {
+/* Lists: shipment history */
+.form-2, .table-1, .list-1 {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;

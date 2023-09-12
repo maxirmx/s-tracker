@@ -36,7 +36,5 @@ const id = parseInt(props.orgId)
 </script>
 
 <template>
-  <main>
     <OrgSettings :register="false" :id="id" />
-  </main>
 </template>
