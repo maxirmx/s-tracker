@@ -153,7 +153,7 @@ async function deleteStatus(item) {
     <div class="orange customer">Маршрут: {{ shipment.origin }} - {{ shipment.dest }}</div>
     <div class="orange customer">Клиент: {{ shipment.name }}</div>
     <hr class="hr" />
-    <div class="wrapper">
+    <div class="link-crt">
       <router-link
         v-if="shipment.status != stcodes.VERY_DELIVERED && authStore.user?.isManager"
         :to="'/status/add/' + props.shipmentId"
@@ -162,7 +162,9 @@ async function deleteStatus(item) {
         <font-awesome-icon size="1x" icon="fa-solid fa-calendar-plus" class="link" />
         Добавить новый статус
       </router-link>
-      &nbsp;&nbsp;&nbsp;
+      <span v-if="shipment.status != stcodes.VERY_DELIVERED && authStore.user?.isManager"
+        >&nbsp;&nbsp;&nbsp;</span
+      >
       <router-link
         v-if="!shipment.isArchieved && !authStore.user?.isAdmin && authStore.user?.isManager"
         :to="'/status/edit/' + shipment.id + '/' + shipment.statusId"
@@ -170,7 +172,9 @@ async function deleteStatus(item) {
         ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить
         последний статус
       </router-link>
-      &nbsp;&nbsp;&nbsp;
+      <span v-if="!shipment.isArchieved && !authStore.user?.isAdmin && authStore.user?.isManager"
+        >&nbsp;&nbsp;&nbsp;</span
+      >
       <a class="link" @click="exportData()">
         <font-awesome-icon size="1x" icon="fa-solid fa-download" class="link" />
         Загрузить историю

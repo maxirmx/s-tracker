@@ -140,7 +140,7 @@ const headers = [
     <h1 class="orange">Пользователи</h1>
     <hr class="hr" />
 
-    <div class="wrapper">
+    <div class="link-crt">
       <router-link to="/register" class="link"
         ><font-awesome-icon
           size="1x"

@@ -65,6 +65,11 @@ body {
   margin: 0 auto;
 }
 
+/* The link to create new entity (shipment, user, org, status */
+.link-crt {
+  margin-bottom: 1rem;
+}
+
 .title {
   font-size: 2rem;
   margin-bottom: 1rem;
@@ -318,11 +323,6 @@ a,
     display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
-  }
-
-  .logo {
-    max-width: 100%;
-    margin: 0;
   }
 }
 

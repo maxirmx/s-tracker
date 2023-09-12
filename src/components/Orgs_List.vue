@@ -33,13 +33,14 @@ import { itemsPerPageOptions } from '@/helpers/items.per.page.js'
 import { mdiMagnify } from '@mdi/js'
 
 import { useAlertStore } from '@/stores/alert.store.js'
-const alertStore = useAlertStore()
-const { alert } = storeToRefs(alertStore)
+import { useAuthStore } from '@/stores/auth.store.js'
 
 import { useConfirm } from 'vuetify-use-dialog'
 const confirm = useConfirm()
 
-import { useAuthStore } from '@/stores/auth.store.js'
+const alertStore = useAlertStore()
+const { alert } = storeToRefs(alertStore)
+
 const authStore = useAuthStore()
 
 const orgsStore = useOrgsStore()
@@ -89,7 +90,7 @@ const headers = [
     <h1 class="orange">Организации</h1>
     <hr class="hr" />
 
-    <div class="wrapper">
+    <div class="link-crt">
       <router-link to="/org/add" class="link"
         ><font-awesome-icon
           size="1x"
