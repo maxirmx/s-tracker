@@ -36,5 +36,5 @@ const id = parseInt(props.shipmentId)
 </script>
 
 <template>
-    <ItemStatus :create="true" :shipmentId="id" />
+  <ItemStatus :create="true" :shipmentId="id" />
 </template>

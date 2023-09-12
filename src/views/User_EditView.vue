@@ -36,5 +36,5 @@ const id = parseInt(props.id)
 </script>
 
 <template>
-    <UserSettings :register="false" :id="id" />
+  <UserSettings :register="false" :id="id" />
 </template>

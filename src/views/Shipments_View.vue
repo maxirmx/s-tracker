@@ -28,5 +28,5 @@ import Shipments from '@/components/Shipments_List.vue'
 </script>
 
 <template>
-    <Shipments />
+  <Shipments />
 </template>

@@ -28,5 +28,5 @@ import OrgSettings from '@/components/Org_Settings.vue'
 </script>
 
 <template>
-    <OrgSettings :register="true" />
+  <OrgSettings :register="true" />
 </template>

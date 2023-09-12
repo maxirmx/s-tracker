@@ -24,134 +24,120 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import router from '@/router'
-import HelloScreen from '@/components/HelloScreen.vue'
+import { version } from '@/../package'
 
 import { useAuthStore } from '@/stores/auth.store.js'
 const authStore = useAuthStore()
+
+const drawer = ref(null)
 
 function deauth() {
   authStore.logout()
   router.push('')
 }
 
-/*
-
-<template>
-  <v-layout class="rounded rounded-md">
-    <v-app-bar>
-      <span v-if="authStore.user">
-        <RouterLink to="/shipments" class="link">Отправления</RouterLink>
-        <RouterLink to="/archieve" class="link">Архив</RouterLink>
-        <RouterLink
-          v-if="!authStore.user.isAdmin"
-          :to="'/user/edit/' + authStore.user.id"
-          class="link"
-          >Настройки</RouterLink
-        >
-        <RouterLink v-if="authStore.user.isAdmin" to="/users" class="link">Пользователи</RouterLink>
-        <RouterLink v-if="authStore.user.isAdmin" to="/orgs" class="link">Организации</RouterLink>
-        <RouterLink to="/login" custom v-slot="{ href }">
-          <a :href="href" @click="deauth()" class="link">Выход</a>
-        </RouterLink>
-      </span>
-      <span v-if="!authStore.user">
-        <v-btn>
-        <RouterLink to="/login" class="link">Вход</RouterLink>
-      </v-btn>
-    <v-btn>
-      <RouterLink to="/register" class="link">Регистрация</RouterLink>
-    </v-btn>
-    <v-btn>
-        <RouterLink to="/recover" class="link">Восстановление пароля</RouterLink>
-      </v-btn>
-      </span>
-
-      <v-btn value="recent">
-    <span>Recent</span>
-  </v-btn>
-
-  <v-btn value="favorites">
-    <span>Favorites</span>
-  </v-btn>
-
-  <v-btn value="nearby">
-    <span>Nearby</span>
-  </v-btn>    </v-app-bar>
-
-    <v-main>
-      <router-view class="vvv"/>
-    </v-main>
-  </v-layout>
-</template>
-*/
-
+function getUserName() {
+  return authStore.user
+    ? ' | ' +
+        authStore.user.lastName +
+        ' ' +
+        authStore.user.firstName +
+        ' ' +
+        authStore.user.patronimic
+    : ''
+}
 </script>
 
-
-
-
 <template>
-  <header>
-    <div class="wrapper">
-      <HelloScreen appName="Личный кабинет" />
+  <v-app class="rounded rounded-md">
+    <v-app-bar>
+      <template v-slot:prepend>
+        <v-app-bar-nav-icon @click.stop="drawer = !drawer" color="orange"></v-app-bar-nav-icon>
+      </template>
+      <v-app-bar-title class="orange">Track and trace {{ getUserName() }} </v-app-bar-title>
+      <v-spacer />
+    </v-app-bar>
+    <v-navigation-drawer v-model="drawer" elevation="4">
+      <template v-slot:prepend>
+        <div class="pa-2">
+          <img alt="Сargo Management" class="logo" src="@/assets/logo.svg" />
+        </div>
+      </template>
 
-      <nav v-if="authStore.user">
-        <RouterLink to="/shipments" class="link">Отправления</RouterLink>
-        <RouterLink to="/archieve" class="link">Архив</RouterLink>
-        <RouterLink
-          v-if="!authStore.user.isAdmin"
-          :to="'/user/edit/' + authStore.user.id"
-          class="link"
-          >Настройки</RouterLink
-        >
-        <RouterLink v-if="authStore.user.isAdmin" to="/users" class="link">Пользователи</RouterLink>
-        <RouterLink v-if="authStore.user.isAdmin" to="/orgs" class="link">Организации</RouterLink>
-        <RouterLink to="/login" custom v-slot="{ href }">
-          <a :href="href" @click="deauth()" class="link">Выход</a>
-        </RouterLink>
-      </nav>
-      <nav v-if="!authStore.user">
-        <RouterLink to="/login" class="link">Вход</RouterLink>
-        <RouterLink to="/register" class="link">Регистрация</RouterLink>
-        <RouterLink to="/recover" class="link">Восстановление пароля</RouterLink>
-      </nav>
-    </div>
-  </header>
-  <main class ="vvv">
-  <RouterView />
-</main>
+      <v-list v-if="authStore.user">
+        <v-list-item>
+          <RouterLink to="/shipments" class="link">Отправления</RouterLink>
+        </v-list-item>
+        <v-list-item>
+          <RouterLink to="/archieve" class="link">Архив</RouterLink>
+        </v-list-item>
+        <v-list-item v-if="!authStore.user.isAdmin">
+          <RouterLink :to="'/user/edit/' + authStore.user.id" class="link">Настройки</RouterLink>
+        </v-list-item>
+        <v-list-item v-if="authStore.user.isAdmin">
+          <RouterLink to="/users" class="link">Пользователи</RouterLink>
+        </v-list-item>
+        <v-list-item v-if="authStore.user.isAdmin">
+          <RouterLink to="/orgs" class="link">Организации</RouterLink>
+        </v-list-item>
+        <v-list-item>
+          <RouterLink to="/login" custom v-slot="{ href }">
+            <a :href="href" @click="deauth()" class="link">Выход</a>
+          </RouterLink>
+        </v-list-item>
+      </v-list>
+      <v-list v-if="!authStore.user">
+        <v-list-item>
+          <RouterLink to="/login" class="link">Вход</RouterLink>
+        </v-list-item>
+        <v-list-item>
+          <RouterLink to="/register" class="link">Регистрация</RouterLink>
+        </v-list-item>
+        <v-list-item>
+          <RouterLink to="/recover" class="link">Восстановление пароля</RouterLink>
+        </v-list-item>
+      </v-list>
+      <template v-slot:append>
+        <div class="pa-2">
+          <span class="orange version"> Версия {{ version }} </span>
+        </div>
+      </template>
+    </v-navigation-drawer>
+
+    <v-main class="d-flex align-center justify-center vvv">
+      <RouterView />
+    </v-main>
+  </v-app>
 </template>
 
-
-
-
-
-
-
-
-
-
-
 <style scoped>
-
 .vvv {
- width: 80vw;
- margin: 2rem;
- min-width: 480px;
+  width: 90vw;
+  margin: 1rem;
+  min-width: 480px;
 }
 
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+.logo {
+  margin: 2rem;
+  display: block;
+}
+
+.version {
+  margin: 2rem;
+  font-size: 1rem;
 }
 
 nav {
   width: 100%;
-  font-size: 12px;
-  text-align: center;
   margin-top: 2rem;
+  text-align: left;
+  margin-left: -1rem;
+  font-size: 1rem;
+  padding: 1rem 0;
+  margin-top: 1rem;
 }
 
 nav a.router-link-exact-active {
@@ -170,39 +156,5 @@ nav a {
 
 nav a:first-of-type {
   border: 0;
-}
-
-@media (min-width: 1400px) {
-  header {
-    display: flex;
-    place-items: center;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-
-h1 {
-  font-weight: 500;
-  font-size: 2.2rem;
-  position: relative;
-  top: -10px;
-}
-
-@media (min-width: 768px) {
-  h1 {
-    font-size: 2.6rem;
-  }
 }
 </style>

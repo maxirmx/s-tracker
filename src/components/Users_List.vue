@@ -189,11 +189,7 @@ const headers = [
         </template>
         <template v-slot:[`item.actions2`]="{ item }">
           <button @click="deleteUser(item.selectable)" class="anti-btn">
-            <font-awesome-icon
-              size="1x"
-              icon="fa-solid fa-trash-can"
-              class="anti-btn"
-            />
+            <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
           </button>
         </template>
       </v-data-table>

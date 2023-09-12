@@ -107,8 +107,8 @@ function getHeader() {
 
 <template>
   <div class="settings form-2">
-  <h1 class="orange">{{ getHeader() }} отправления {{ shipment.number }}</h1>
-  <hr class="hr" />
+    <h1 class="orange">{{ getHeader() }} отправления {{ shipment.number }}</h1>
+    <hr class="hr" />
     <Form
       @submit="onSubmit"
       :initial-values="sts"

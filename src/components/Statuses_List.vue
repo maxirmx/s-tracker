@@ -143,95 +143,96 @@ async function deleteStatus(item) {
 </script>
 
 <template>
-
   <div class="settings list-1">
-  <h1 class="orange btn-wrapper">
-    <span>История отправления {{ shipment.number }}</span>
-    <button @click="$router.go(-1)">
-      <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-from-bracket" class="btn" />
-    </button>
-  </h1>
-  <div class="orange customer">Маршрут: {{ shipment.origin }} - {{ shipment.dest }}</div>
-  <div class="orange customer">Клиент: {{ shipment.name }}</div>
-  <hr class="hr" />
-  <div class="wrapper">
-    <router-link
-      v-if="shipment.status != stcodes.VERY_DELIVERED && authStore.user?.isManager"
-      :to="'/status/add/' + props.shipmentId"
-      class="link"
-    >
-      <font-awesome-icon size="1x" icon="fa-solid fa-calendar-plus" class="link" />
-      Добавить новый статус
-    </router-link>
-    &nbsp;&nbsp;&nbsp;
-    <router-link
-      v-if="!shipment.isArchieved && !authStore.user?.isAdmin && authStore.user?.isManager"
-      :to="'/status/edit/' + shipment.id + '/' + shipment.statusId"
-      class="link"
-      ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить
-      последний статус
-    </router-link>
-    &nbsp;&nbsp;&nbsp;
-    <a class="link" @click="exportData()">
-      <font-awesome-icon size="1x" icon="fa-solid fa-download" class="link" />
-      Загрузить историю
-    </a>
-  </div>
-  <br /><br />
+    <h1 class="orange btn-wrapper">
+      <span>История отправления {{ shipment.number }}</span>
+      <button @click="$router.go(-1)">
+        <font-awesome-icon size="1x" icon="fa-solid fa-arrow-right-from-bracket" class="btn" />
+      </button>
+    </h1>
+    <div class="orange customer">Маршрут: {{ shipment.origin }} - {{ shipment.dest }}</div>
+    <div class="orange customer">Клиент: {{ shipment.name }}</div>
+    <hr class="hr" />
+    <div class="wrapper">
+      <router-link
+        v-if="shipment.status != stcodes.VERY_DELIVERED && authStore.user?.isManager"
+        :to="'/status/add/' + props.shipmentId"
+        class="link"
+      >
+        <font-awesome-icon size="1x" icon="fa-solid fa-calendar-plus" class="link" />
+        Добавить новый статус
+      </router-link>
+      &nbsp;&nbsp;&nbsp;
+      <router-link
+        v-if="!shipment.isArchieved && !authStore.user?.isAdmin && authStore.user?.isManager"
+        :to="'/status/edit/' + shipment.id + '/' + shipment.statusId"
+        class="link"
+        ><font-awesome-icon size="1x" icon="fa-solid fa-pen-to-square" class="link" /> Изменить
+        последний статус
+      </router-link>
+      &nbsp;&nbsp;&nbsp;
+      <a class="link" @click="exportData()">
+        <font-awesome-icon size="1x" icon="fa-solid fa-download" class="link" />
+        Загрузить историю
+      </a>
+    </div>
+    <br /><br />
 
-  <div v-if="shipment.status != stcodes.VERY_DELIVERED">
-    <HistoryItem>
+    <div v-if="shipment.status != stcodes.VERY_DELIVERED">
+      <HistoryItem>
+        <template #icon>
+          <component :is="DeliveryTimeIcon"></component>
+        </template>
+        <template #heading> Ожидаемая дата прибытия в пункт назначения</template>
+        <template #info>
+          {{
+            shipment.ddate ? moment(shipment.ddate, 'YYYY-MM-DD').format('DD.MM.YYYY') : ''
+          }}&nbsp;&nbsp;&nbsp;{{ shipment.dest }}
+        </template>
+      </HistoryItem>
+      <hr class="hr-light" />
+    </div>
+    <HistoryItem v-for="item in history" :key="item">
       <template #icon>
-        <component :is="DeliveryTimeIcon"></component>
+        <component :is="statuses.getIcon(item.status)"></component>
       </template>
-      <template #heading> Ожидаемая дата прибытия в пункт назначения</template>
+      <template #heading> {{ statuses.getName(item.status) }} </template>
       <template #info>
         {{
-          shipment.ddate ? moment(shipment.ddate, 'YYYY-MM-DD').format('DD.MM.YYYY') : ''
-        }}&nbsp;&nbsp;&nbsp;{{ shipment.dest }}
+          item.date ? moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY') : ''
+        }}&nbsp;&nbsp;&nbsp;
+        {{ item.location }}
+        <br />
+        <span v-if="item.comment">{{ item.comment }}</span>
+      </template>
+      <template #actions>
+        <button
+          v-if="authStore.user?.isAdmin"
+          @click="router.push('/status/edit/' + shipment.id + '/' + item.id)"
+          class="anti-btn"
+        >
+          <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />
+        </button>
+        <button v-if="authStore.user?.isAdmin" @click="deleteStatus(item)" class="anti-btn">
+          <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
+        </button>
       </template>
     </HistoryItem>
-    <hr class="hr-light" />
-  </div>
-  <HistoryItem v-for="item in history" :key="item">
-    <template #icon>
-      <component :is="statuses.getIcon(item.status)"></component>
-    </template>
-    <template #heading> {{ statuses.getName(item.status) }} </template>
-    <template #info>
-      {{ item.date ? moment(item.date, 'YYYY-MM-DD').format('DD.MM.YYYY') : '' }}&nbsp;&nbsp;&nbsp;
-      {{ item.location }}
-      <br />
-      <span v-if="item.comment">{{ item.comment }}</span>
-    </template>
-    <template #actions>
-      <button
-        v-if="authStore.user?.isAdmin"
-        @click="router.push('/status/edit/' + shipment.id + '/' + item.id)"
-        class="anti-btn"
-      >
-        <font-awesome-icon size="1x" icon="fa-solid fa-pen" class="anti-btn" />
-      </button>
-      <button v-if="authStore.user?.isAdmin" @click="deleteStatus(item)" class="anti-btn">
-        <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
-      </button>
-    </template>
-  </HistoryItem>
-  <div v-if="history?.loading || shipment?.loading" class="text-center m-5">
-    <span class="spinner-border spinner-border-lg align-center"></span>
-  </div>
-  <div v-if="history?.error" class="text-center m-5">
-    <div class="text-danger">Ошибка при загрузке истории отправления: {{ history.error }}</div>
-  </div>
-  <div v-if="shipment?.error" class="text-center m-5">
-    <div class="text-danger">
-      Ошибка при загрузке информации об отправлении: {{ shipment.error }}
+    <div v-if="history?.loading || shipment?.loading" class="text-center m-5">
+      <span class="spinner-border spinner-border-lg align-center"></span>
     </div>
-  </div>
-  <div v-if="alert" class="alert alert-dismissable mt-3 mb-0" :class="alert.type">
-    <button @click="alertStore.clear()" class="btn btn-link close">×</button>
-    {{ alert.message }}
-  </div>
+    <div v-if="history?.error" class="text-center m-5">
+      <div class="text-danger">Ошибка при загрузке истории отправления: {{ history.error }}</div>
+    </div>
+    <div v-if="shipment?.error" class="text-center m-5">
+      <div class="text-danger">
+        Ошибка при загрузке информации об отправлении: {{ shipment.error }}
+      </div>
+    </div>
+    <div v-if="alert" class="alert alert-dismissable mt-3 mb-0" :class="alert.type">
+      <button @click="alertStore.clear()" class="btn btn-link close">×</button>
+      {{ alert.message }}
+    </div>
   </div>
 </template>
 

@@ -65,11 +65,6 @@ h3 {
   text-align: center;
 }
 
-.version {
-  font-size: 1rem;
-  text-align: center;
-}
-
 .customer {
   font-size: 1.5 rem;
   font-weight: 500;

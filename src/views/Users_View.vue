@@ -28,5 +28,5 @@ import Users from '@/components/Users_List.vue'
 </script>
 
 <template>
-    <Users />
+  <Users />
 </template>

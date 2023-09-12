@@ -28,5 +28,5 @@ import Orgs from '@/components/Orgs_List.vue'
 </script>
 
 <template>
-    <Orgs />
+  <Orgs />
 </template>

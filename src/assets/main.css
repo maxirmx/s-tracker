@@ -43,7 +43,9 @@ body {
 /* Forms: user settings/register, shipment new/edit, status new/edit */
 /* Tables: organizations */
 /* Lists: shipment history */
-.form-2, .table-1, .list-1 {
+.form-2,
+.table-1,
+.list-1 {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
@@ -144,7 +146,7 @@ body {
   align-self: center;
   margin-bottom: 1rem;
   margin-right: 1rem;
-  max-width: 160px
+  max-width: 160px;
 }
 
 .anti-button {
@@ -212,12 +214,6 @@ a,
   width: 100%;
   padding-top: 10px;
   padding-right: 16px;
-}
-
-.logo {
-  max-width: 200px;
-  margin: 0 auto;
-  display: block;
 }
 
 .checkbox-styled {
