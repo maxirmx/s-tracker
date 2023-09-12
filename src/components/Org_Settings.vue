@@ -86,7 +86,7 @@ function onSubmit(values, { setErrors }) {
 </script>
 
 <template>
-  <div class="settings">
+  <div class="settings form-1">
     <h1 class="orange">{{ getTitle() }}</h1>
     <hr class="hr" />
     <Form

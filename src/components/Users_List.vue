@@ -136,7 +136,7 @@ const headers = [
 </script>
 
 <template>
-  <div class="settings">
+  <div class="settings table-2">
     <h1 class="orange">Пользователи</h1>
     <hr class="hr" />
 

@@ -108,10 +108,9 @@ const status = computed(() => {
 </script>
 
 <template>
-  <div class="settings">
+  <div class="settings form-2">
     <h1 class="orange">{{ getTitle() }}</h1>
     <hr class="hr" />
-    <div class="settings">
       <Form
         @submit="onSubmit"
         :initial-values="status"
@@ -232,23 +231,7 @@ const status = computed(() => {
         <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{ errors.apiError }}</div>
       </Form>
     </div>
-  </div>
   <div v-if="orgs?.loading" class="text-center m-5">
     <span class="spinner-border spinner-border-lg align-center"></span>
   </div>
 </template>
-
-<style>
-h1 {
-  font-weight: 500;
-  font-size: 2.2rem;
-  position: relative;
-  top: -10px;
-}
-
-@media (min-width: 768px) {
-  h1 {
-    font-size: 2.6rem;
-  }
-}
-</style>

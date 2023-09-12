@@ -28,7 +28,5 @@ import UserSettings from '@/components/User_Settings.vue'
 </script>
 
 <template>
-  <main>
-    <UserSettings :register="true" />
-  </main>
+    <UserSettings :register="true"/>
 </template>

@@ -57,10 +57,10 @@ function onSubmit(values, { setErrors }) {
 </script>
 
 <template>
-  <div class="settings">
+  <div class="settings form-1">
+    <h1 class="orange">Вход</h1>
+    <hr class="hr" />
     <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
-      <h1 class="orange">Вход</h1>
-      <hr class="hr" />
       <div class="form-group">
         <label for="login_email" class="label">Адрес электронной почты:</label>
         <Field
@@ -116,7 +116,7 @@ function onSubmit(values, { setErrors }) {
   </div>
 </template>
 
-<style>
+<style scoped>
 .form-group .label {
   width: 100%;
 }

@@ -35,7 +35,62 @@ function deauth() {
   authStore.logout()
   router.push('')
 }
+
+/*
+
+<template>
+  <v-layout class="rounded rounded-md">
+    <v-app-bar>
+      <span v-if="authStore.user">
+        <RouterLink to="/shipments" class="link">Отправления</RouterLink>
+        <RouterLink to="/archieve" class="link">Архив</RouterLink>
+        <RouterLink
+          v-if="!authStore.user.isAdmin"
+          :to="'/user/edit/' + authStore.user.id"
+          class="link"
+          >Настройки</RouterLink
+        >
+        <RouterLink v-if="authStore.user.isAdmin" to="/users" class="link">Пользователи</RouterLink>
+        <RouterLink v-if="authStore.user.isAdmin" to="/orgs" class="link">Организации</RouterLink>
+        <RouterLink to="/login" custom v-slot="{ href }">
+          <a :href="href" @click="deauth()" class="link">Выход</a>
+        </RouterLink>
+      </span>
+      <span v-if="!authStore.user">
+        <v-btn>
+        <RouterLink to="/login" class="link">Вход</RouterLink>
+      </v-btn>
+    <v-btn>
+      <RouterLink to="/register" class="link">Регистрация</RouterLink>
+    </v-btn>
+    <v-btn>
+        <RouterLink to="/recover" class="link">Восстановление пароля</RouterLink>
+      </v-btn>
+      </span>
+
+      <v-btn value="recent">
+    <span>Recent</span>
+  </v-btn>
+
+  <v-btn value="favorites">
+    <span>Favorites</span>
+  </v-btn>
+
+  <v-btn value="nearby">
+    <span>Nearby</span>
+  </v-btn>    </v-app-bar>
+
+    <v-main>
+      <router-view class="vvv"/>
+    </v-main>
+  </v-layout>
+</template>
+*/
+
 </script>
+
+
+
 
 <template>
   <header>
@@ -64,10 +119,25 @@ function deauth() {
       </nav>
     </div>
   </header>
-  <RouterView />
+  <RouterView class ="vvv"/>
 </template>
 
+
+
+
+
+
+
+
+
+
+
 <style scoped>
+
+.vvv {
+ width: 80vw;
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;

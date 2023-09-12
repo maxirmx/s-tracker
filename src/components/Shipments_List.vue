@@ -126,7 +126,7 @@ const headers = authStore.user?.isManager
 </script>
 
 <template>
-  <div class="settings">
+  <div class="settings table-3">
     <h1 class="orange">Отправления</h1>
     <hr class="hr" />
 
