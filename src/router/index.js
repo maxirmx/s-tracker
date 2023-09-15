@@ -27,6 +27,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.store.js'
 import { useAlertStore } from '@/stores/alert.store.js'
 
+function routeToLogin(to, auth) {
+  auth.returnUrl = to ? to.fullPath : null
+  return '/login'
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -140,17 +145,36 @@ router.beforeEach(async (to) => {
         })
       })
   }
+
   const publicPages = ['/login', '/recover', '/register']
   const authRequired = !publicPages.includes(to.path)
 
-  if (authRequired && !auth.user) {
-    auth.returnUrl = to.fullPath
-    return '/login'
+// (1) Route to login-like page
+// ... drop user (aka logout)
+// ... do what he wants
+  if (!authRequired) {
+    auth.user = null
+    return true
   }
 
-  //  if (!authRequired && auth.user) {
-  //    return '/shipments'
-  //  }
+// (2) No user and (implied) auth required
+  if (!auth.user) {
+    return routeToLogin(to, auth)
+  }
+
+// (3) (Implied) user and (implied) auth required
+
+  return auth
+      .check()
+      .then(() => {
+// (3.1) The check has passed, this is logged-in user
+        return true
+      })
+      .catch((error) => {
+// (3.2) The check has failed, now there is now user
+          alert.error(error)
+          return routeToLogin(to, auth)
+      })
 })
 
 export default router
