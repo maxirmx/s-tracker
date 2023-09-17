@@ -28,8 +28,13 @@ import { useAuthStore } from '@/stores/auth.store.js'
 import { useAlertStore } from '@/stores/alert.store.js'
 import { hideDrawer } from '@/helpers/drawer.js'
 
+const publicPages = ['/recover', '/register']
+const loginPages = ['/login']
 
 function routeToLogin(to, auth) {
+  if (loginPages.includes(to.path)) {
+    return true
+  }
   auth.returnUrl = to ? to.fullPath : null
   return '/login'
 }
@@ -148,13 +153,10 @@ router.beforeEach(async (to) => {
       })
   }
 
-  const publicPages = ['/login', '/recover', '/register']
-  const authRequired = !publicPages.includes(to.path)
-
-// (1) Route to login-like page
+// (1) Route to public pages
 // ... drop user (aka logout)
 // ... do what he wants
-  if (!authRequired) {
+  if (publicPages.includes(to.path)) {
     auth.user = null
     return true
   }
@@ -165,22 +167,25 @@ router.beforeEach(async (to) => {
   }
 
 // (3) (Implied) user and (implied) auth required
+  await auth.check()
 
-  return auth
-      .check()
-      .then(() => {
+  if (!auth.user) {
+    return routeToLogin(to, auth)
+  }
+
 // (3.1) The check has passed, this is logged-in user
+// (3.1.1) No need to login, fall thtrough to shipments
+        if (loginPages.includes(to.path)) {
+          hideDrawer()
+          return '/shipments'
+        }
+// (3.1.2) Do as requested
         const widePages = ['/shipments', '/archieve']
         if (widePages.includes(to.path)) {
           hideDrawer()
         }
         return true
-      })
-      .catch((error) => {
-// (3.2) The check has failed, now there is now user
-          alert.error(error)
-          return routeToLogin(to, auth)
-      })
+
 })
 
 export default router
