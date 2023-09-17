@@ -213,7 +213,7 @@ const status = computed(() => {
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           Сохранить
         </button>
-        <button class="button" @click="$router.go(-1)" :disabled="isSubmitting">
+        <button class="button" type="button" @click="$router.go(-1)" :disabled="isSubmitting">
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           Отменить
         </button>

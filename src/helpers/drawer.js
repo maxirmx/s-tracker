@@ -28,9 +28,9 @@ import { ref } from 'vue'
 export const drawer = ref(null)
 
 export function toggleDrawer() {
-    drawer.value = !drawer.value
+  drawer.value = !drawer.value
 }
 
 export function hideDrawer() {
-    drawer.value = false
+  drawer.value = false
 }

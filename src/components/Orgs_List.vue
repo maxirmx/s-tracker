@@ -24,6 +24,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
+import { ref } from 'vue'
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 
 import router from '@/router'
@@ -47,12 +48,15 @@ const orgsStore = useOrgsStore()
 const { orgs } = storeToRefs(orgsStore)
 orgsStore.getAll()
 
+const isDeleting = ref(false)
+
 function orgSettings(item) {
   var id = item.selectable.id
   router.push('org/edit/' + id)
 }
 
 async function deleteOrg(item) {
+  isDeleting.value = true
   const content = 'Удалить организацию "' + item.selectable.name + '" ?'
   const result = await confirm({
     title: 'Подтверждение',
@@ -65,7 +69,10 @@ async function deleteOrg(item) {
     content: content
   })
 
-  if (!result) return
+  if (!result) {
+    isDeleting.value = false
+    return
+  }
   orgsStore
     .delete(item.selectable.id)
     .then(() => {
@@ -74,12 +81,13 @@ async function deleteOrg(item) {
     .catch((error) => {
       alertStore.error(error)
     })
+  isDeleting.value = false
 }
 
 const headers = [
   { title: 'Организация', align: 'start', key: 'name', sortable: true },
   { title: 'Пользователей', align: 'center', key: 'num_users', sortable: true },
-  { title: 'Отправлений / В архиве', align: 'center', key: 'num_shipments', sortable: true },
+  { title: 'Отправлений / Архив', align: 'center', key: 'num_shipments', sortable: true },
   { title: '', align: 'center', key: 'actions1', sortable: false },
   { title: '', align: 'center', key: 'actions2', sortable: false }
 ]
@@ -124,6 +132,7 @@ const headers = [
               size="1x"
               icon="fa-solid fa-pen"
               class="anti-btn"
+              type="button"
             />
           </button>
         </template>
@@ -132,6 +141,7 @@ const headers = [
             @click="deleteOrg(item)"
             class="anti-btn"
             v-if="item.selectable.num_shipments == 0 && item.selectable.num_users == 0"
+            type="button"
           >
             <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="anti-btn" />
           </button>

@@ -153,39 +153,37 @@ router.beforeEach(async (to) => {
       })
   }
 
-// (1) Route to public pages
-// ... drop user (aka logout)
-// ... do what he wants
+  // (1) Route to public pages
+  // ... drop user (aka logout)
+  // ... do what he wants
   if (publicPages.includes(to.path)) {
     auth.user = null
     return true
   }
 
-// (2) No user and (implied) auth required
+  // (2) No user and (implied) auth required
   if (!auth.user) {
     return routeToLogin(to, auth)
   }
 
-// (3) (Implied) user and (implied) auth required
-  await auth.check()
+  // (3) (Implied) user and (implied) auth required
+  if (loginPages.includes(to.path)) {
+    await auth.check()
 
-  if (!auth.user) {
-    return routeToLogin(to, auth)
+    if (!auth.user) {
+      return true
+    }
+    // (3.1) No need to login, fall thtrough to shipments
+    hideDrawer()
+    return '/shipments'
   }
 
-// (3.1) The check has passed, this is logged-in user
-// (3.1.1) No need to login, fall thtrough to shipments
-        if (loginPages.includes(to.path)) {
-          hideDrawer()
-          return '/shipments'
-        }
-// (3.1.2) Do as requested
-        const widePages = ['/shipments', '/archieve']
-        if (widePages.includes(to.path)) {
-          hideDrawer()
-        }
-        return true
-
+  // (3.1) Do as requested
+  const widePages = ['/shipments', '/archieve']
+  if (widePages.includes(to.path)) {
+    hideDrawer()
+  }
+  return true
 })
 
 export default router
