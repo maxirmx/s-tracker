@@ -26,6 +26,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.store.js'
 import { useAlertStore } from '@/stores/alert.store.js'
+import { hideDrawer } from '@/helpers/drawer.js'
+
+const publicPages = ['/recover', '/register']
+const loginPages = ['/login']
+
+function routeToLogin(to, auth) {
+  if (loginPages.includes(to.path)) {
+    return true
+  }
+  auth.returnUrl = to ? to.fullPath : null
+  return '/login'
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -140,17 +152,38 @@ router.beforeEach(async (to) => {
         })
       })
   }
-  const publicPages = ['/login', '/recover', '/register']
-  const authRequired = !publicPages.includes(to.path)
 
-  if (authRequired && !auth.user) {
-    auth.returnUrl = to.fullPath
-    return '/login'
+  // (1) Route to public pages
+  // ... drop user (aka logout)
+  // ... do what he wants
+  if (publicPages.includes(to.path)) {
+    auth.user = null
+    return true
   }
 
-  //  if (!authRequired && auth.user) {
-  //    return '/shipments'
-  //  }
+  // (2) No user and (implied) auth required
+  if (!auth.user) {
+    return routeToLogin(to, auth)
+  }
+
+  // (3) (Implied) user and (implied) auth required
+  if (loginPages.includes(to.path)) {
+    await auth.check()
+
+    if (!auth.user) {
+      return true
+    }
+    // (3.1) No need to login, fall thtrough to shipments
+    hideDrawer()
+    return '/shipments'
+  }
+
+  // (3.1) Do as requested
+  const widePages = ['/shipments', '/archieve']
+  if (widePages.includes(to.path)) {
+    hideDrawer()
+  }
+  return true
 })
 
 export default router

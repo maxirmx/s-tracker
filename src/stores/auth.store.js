@@ -56,6 +56,9 @@ export const useAuthStore = defineStore({
     re_tgt: null
   }),
   actions: {
+    async check() {
+      await fetchWrapper.get(`${baseUrl}/check`)
+    },
     async register(user) {
       await fetchWrapper.post(`${baseUrl}/register`, user)
     },
@@ -73,6 +76,10 @@ export const useAuthStore = defineStore({
       const user = await fetchWrapper.post(`${baseUrl}/login`, { email, password })
       this.user = user
       localStorage.setItem('user', JSON.stringify(user))
+      if (this.returnUrl) {
+        router.push(this.returnUrl)
+        this.returnUrl = null
+      }
     },
     logout() {
       this.user = null

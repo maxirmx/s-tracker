@@ -66,8 +66,6 @@ library.add(
 
 import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
-//import * as components from 'vuetify/components'
-//import * as directives from 'vuetify/directives'
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 import VuetifyUseDialog from 'vuetify-use-dialog'
 //import { aliases, fa } from 'vuetify/iconsets/fa'
@@ -79,8 +77,9 @@ import router from '@/router'
 import { useAuthStore } from '@/stores/auth.store.js'
 
 const vuetify = createVuetify({
-  //  components,
-  //  directives,
+  breakpoint: {
+    mobileBreakpoint: 'xl' // This is the breakpoint for mobile devices
+  },
   icons: {
     defaultSet: 'mdi',
     aliases,
@@ -99,7 +98,6 @@ const app = createApp(App)
   .use(VuetifyUseDialog)
 
 const queryString = window.location.search
-console.log(queryString)
 const urlParams = new URLSearchParams(queryString)
 
 var jwt = null

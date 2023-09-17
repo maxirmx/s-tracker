@@ -24,15 +24,17 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { ref } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import router from '@/router'
 import { version } from '@/../package'
 
+import { useDisplay } from 'vuetify'
+const { height } = useDisplay()
+
 import { useAuthStore } from '@/stores/auth.store.js'
 const authStore = useAuthStore()
 
-const drawer = ref(null)
+import { drawer, toggleDrawer } from '@/helpers/drawer.js'
 
 function deauth() {
   authStore.logout()
@@ -55,18 +57,17 @@ function getUserName() {
   <v-app class="rounded rounded-md">
     <v-app-bar>
       <template v-slot:prepend>
-        <v-app-bar-nav-icon @click.stop="drawer = !drawer" color="orange"></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon @click.stop="toggleDrawer()" color="orange"></v-app-bar-nav-icon>
       </template>
       <v-app-bar-title class="orange">Track and trace {{ getUserName() }} </v-app-bar-title>
       <v-spacer />
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" elevation="4">
       <template v-slot:prepend>
-        <div class="pa-2">
+        <div class="pa-2" v-if="height > 480">
           <img alt="Сargo Management" class="logo" src="@/assets/logo.svg" />
         </div>
       </template>
-
       <v-list v-if="authStore.user">
         <v-list-item>
           <RouterLink to="/shipments" class="link">Отправления</RouterLink>
@@ -121,7 +122,7 @@ function getUserName() {
 }
 
 .logo {
-  margin: 2rem;
+  margin: 1rem;
   display: block;
 }
 

@@ -244,6 +244,7 @@ function onSubmit(values, { setErrors }) {
             }
           "
           class="button button-s"
+          type="button"
         >
           <font-awesome-icon v-if="!showPassword" icon="fa-solid fa-eye" />
           <font-awesome-icon v-if="showPassword" icon="fa-solid fa-eye-slash" />
@@ -267,6 +268,7 @@ function onSubmit(values, { setErrors }) {
             }
           "
           class="button button-s"
+          type="button"
         >
           <font-awesome-icon v-if="!showPassword2" icon="fa-solid fa-eye" />
           <font-awesome-icon v-if="showPassword2" icon="fa-solid fa-eye-slash" />
@@ -337,8 +339,8 @@ function onSubmit(values, { setErrors }) {
         <button
           v-if="!isRegister() || asAdmin()"
           class="button"
+          type="button"
           @click="$router.go(-1)"
-          :disabled="isSubmitting"
         >
           <span v-show="isSubmitting" class="spinner-border spinner-border-sm mr-1"></span>
           Отменить

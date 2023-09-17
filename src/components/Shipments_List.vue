@@ -155,6 +155,7 @@ const headers = authStore.user?.isManager
         v-model:sort-by="authStore.shipments_sort_by"
         item-value="number"
         class="elevation-1"
+        pa-0
       >
         <template v-slot:[`item.route`]="{ item }">
           {{ item.selectable.origin }} - {{ item.selectable.dest }}
