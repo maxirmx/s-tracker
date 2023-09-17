@@ -77,6 +77,9 @@ import router from '@/router'
 import { useAuthStore } from '@/stores/auth.store.js'
 
 const vuetify = createVuetify({
+  breakpoint: {
+    mobileBreakpoint: 'xl', // This is the breakpoint for mobile devices
+  },
   icons: {
     defaultSet: 'mdi',
     aliases,

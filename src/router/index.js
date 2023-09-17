@@ -26,6 +26,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.store.js'
 import { useAlertStore } from '@/stores/alert.store.js'
+import { hideDrawer } from '@/helpers/drawer.js'
+
 
 function routeToLogin(to, auth) {
   auth.returnUrl = to ? to.fullPath : null
@@ -168,6 +170,10 @@ router.beforeEach(async (to) => {
       .check()
       .then(() => {
 // (3.1) The check has passed, this is logged-in user
+        const widePages = ['/shipments', '/archieve']
+        if (widePages.includes(to.path)) {
+          hideDrawer()
+        }
         return true
       })
       .catch((error) => {
