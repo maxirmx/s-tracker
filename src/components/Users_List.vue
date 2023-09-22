@@ -58,18 +58,24 @@ function userSettings(item) {
   router.push('user/edit/' + id)
 }
 
-function getOrg(item) {
-  if (item.orgId == -1) {
-    return ''
-  }
-  let org = computed(() => {
-    let org = null
-    if (!orgs.value?.loading) {
-      org = orgs.value?.find((o) => o.id === item['orgId'])
+function getOrgs(item) {
+  const res = computed(() => {
+    if (orgs.value?.loading) {
+      return 'загружается...'
     }
-    return org ? org.name : 'загружается...'
+
+    var res = ''
+    var separator = ''
+    item.orgs.forEach((orgId) => {
+      const org = orgs.value.find((o) => o.id === orgId)
+      res = res + separator + org.name
+      separator = ';<br />'
+    })
+
+    return res
   })
-  return org.value
+
+  return res.value;
 }
 
 function getCredentials(item) {
@@ -128,7 +134,7 @@ async function deleteUser(item) {
 
 const headers = [
   { title: 'Пользователь', align: 'start', key: 'id' },
-  { title: 'Организация', align: 'start', key: 'orgId' },
+  { title: 'Организации', align: 'start', key: 'orgs' },
   { title: 'Права', align: 'start', key: 'credentials', sortable: false },
   { title: '', align: 'center', key: 'actions1', sortable: false },
   { title: '', align: 'center', key: 'actions2', sortable: false }
@@ -171,8 +177,8 @@ const headers = [
             item['selectable']['email']
           }})
         </template>
-        <template v-slot:[`item.orgId`]="{ item }">
-          {{ getOrg(item['selectable']) }}
+        <template v-slot:[`item.orgs`]="{ item }">
+          <span v-html="getOrgs(item['selectable'])"></span>
         </template>
         <template v-slot:[`item.credentials`]="{ item }">
           {{ getCredentials(item['selectable']) }}

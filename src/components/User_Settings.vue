@@ -294,8 +294,20 @@ function onSubmit(values, { setErrors }) {
             {{ org.name }}
           </option>
         </Field>
-      </div>
-
+        <label for="orgId1" class="label"></label>
+        <Field
+          name="orgId1"
+          id="orgId1"
+          as="select"
+          class="form-control input select"
+          :class="{ 'is-invalid': errors.orgId }"
+        >
+          <option value="">Выберите организацию:</option>
+          <option v-for="org in orgs" :key="org" :value="-1">
+            {{ org.name }}
+          </option>
+        </Field>
+    </div>
       <div v-if="showCredentials()" class="form-group">
         <label for="сredentials" class="label">Права:</label>
         <span id="сredentials"
