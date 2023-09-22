@@ -69,7 +69,7 @@ function getOrgs(item) {
     item.orgs.forEach((orgId) => {
       const org = orgs.value.find((o) => o.id === orgId)
       res = res + separator + org.name
-      separator = ';<br />'
+      separator = '<br />'
     })
 
     return res

@@ -24,10 +24,11 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+
 import router from '@/router'
 import { storeToRefs } from 'pinia'
-import { Form, Field } from 'vee-validate'
+import { Form, Field, FieldArray } from 'vee-validate'
 import * as Yup from 'yup'
 import { useUsersStore } from '@/stores/users.store.js'
 import { useAuthStore } from '@/stores/auth.store.js'
@@ -59,9 +60,9 @@ const schema = Yup.object().shape({
   email: Yup.string()
     .required('Необходимо указать электронную почту')
     .email('Неверный формат электронной почты'),
-  orgId: Yup.number().concat(
-    asAdmin() ? Yup.number().typeError(orgErr).required(orgErr).min(0, orgErr) : null
-  ),
+//  orgId: Yup.array().concat(
+//    asAdmin() ? Yup.number().typeError(orgErr).required(orgErr).min(0, orgErr) : null
+//  ),
   password: Yup.string().concat(
     isRegister() ? Yup.string().required('Необходимо указать пароль').matches(pwdReg, pwdErr) : null
   ),
@@ -78,25 +79,18 @@ const showPassword2 = ref(false)
 
 let user = {
   isEnabled: 'ENABLED',
-  orgId: -1
+  orgs: [ -1 ],
 }
 
 if (!isRegister()) {
-  ;({ user } = storeToRefs(usersStore))
+  ({ user } = storeToRefs(usersStore))
   usersStore.getById(props.id, true)
 }
 
 const orgsStore = useOrgsStore()
 const { orgs } = storeToRefs(orgsStore)
-const { org } = storeToRefs(orgsStore)
 
-if (asAdmin()) {
-  orgsStore.getAll()
-} else {
-  if (authStore.user) {
-    orgsStore.getById(authStore.user.orgId)
-  }
-}
+orgsStore.getAll()
 
 function isRegister() {
   return props.register
@@ -120,6 +114,20 @@ function showCredentials() {
 
 function showAndEditCredentials() {
   return asAdmin()
+}
+
+
+function getOrgName(orgId) {
+  const res = computed(() => {
+    if (orgs.value?.loading) {
+      return 'загружается...'
+    }
+
+    const org = orgs.value.find((o) => o.id === orgId)
+    return org.name ? org.name : 'не найдена'
+  })
+
+  return res.value;
 }
 
 function getCredentials() {
@@ -180,6 +188,7 @@ function onSubmit(values, { setErrors }) {
       .catch((error) => setErrors({ apiError: error }))
   }
 }
+
 </script>
 
 <template>
@@ -237,17 +246,16 @@ function onSubmit(values, { setErrors }) {
           placeholder="Пароль"
         />
         <button
+          type="button"
           @click="
             (event) => {
               event.preventDefault()
               showPassword = !showPassword
             }
           "
-          class="button button-s"
-          type="button"
-        >
-          <font-awesome-icon v-if="!showPassword" icon="fa-solid fa-eye" />
-          <font-awesome-icon v-if="showPassword" icon="fa-solid fa-eye-slash" />
+          class="button-o">
+            <font-awesome-icon size="1x" v-if="!showPassword" icon="fa-solid fa-eye" class="button-o-c"/>
+            <font-awesome-icon size="1x" v-if="showPassword" icon="fa-solid fa-eye-slash" class="button-o-c"/>
         </button>
       </div>
       <div class="form-group">
@@ -260,33 +268,36 @@ function onSubmit(values, { setErrors }) {
           :class="{ 'is-invalid': errors.password2 }"
           placeholder="Пароль"
         />
+
         <button
+          type="button"
           @click="
             (event) => {
               event.preventDefault()
               showPassword2 = !showPassword2
             }
           "
-          class="button button-s"
-          type="button"
-        >
-          <font-awesome-icon v-if="!showPassword2" icon="fa-solid fa-eye" />
-          <font-awesome-icon v-if="showPassword2" icon="fa-solid fa-eye-slash" />
+          class="button-o">
+            <font-awesome-icon size="1x" v-if="!showPassword2" icon="fa-solid fa-eye" class="button-o-c"/>
+            <font-awesome-icon size="1x" v-if="showPassword2" icon="fa-solid fa-eye-slash" class="button-o-c"/>
         </button>
       </div>
       <div v-if="showCredentials()" class="form-group">
-        <label for="orgId" class="label">Организация:</label>
-        <span id="orgId"
-          ><em>{{ org?.name }}</em></span
-        >
+        <span v-for="(field, idx) in user.orgs" :key="field.key">
+          <label :for="'org' + idx" class="label">{{ idx == 0 ? "Организации:" : "" }}</label>
+          <span :id="'org' + idx"><em>{{ getOrgName(field) }}<br/></em></span>
+        </span>
       </div>
       <div v-if="showAndEditCredentials()" class="form-group">
-        <label for="orgId" class="label">Организация:</label>
+
+        <FieldArray name="orgs" v-slot="{ fields, push, remove }">
+         <span v-for="(field, idx) in fields"  :key="field.key">
+        <label :for="'org' + idx" class="label">{{ idx == 0 ? "Организации:" : "" }}</label>
         <Field
-          name="orgId"
-          id="orgId"
+          :name="`orgs[${idx}]`"
+          :id="'org' + idx"
           as="select"
-          class="form-control input select"
+          class="form-control input select select-o"
           :class="{ 'is-invalid': errors.orgId }"
         >
           <option value="">Выберите организацию:</option>
@@ -294,25 +305,19 @@ function onSubmit(values, { setErrors }) {
             {{ org.name }}
           </option>
         </Field>
-        <label for="orgId1" class="label"></label>
-        <Field
-          name="orgId1"
-          id="orgId1"
-          as="select"
-          class="form-control input select"
-          :class="{ 'is-invalid': errors.orgId }"
-        >
-          <option value="">Выберите организацию:</option>
-          <option v-for="org in orgs" :key="org" :value="-1">
-            {{ org.name }}
-          </option>
-        </Field>
+
+        <button v-if="idx != 0" type="button" @click="remove(idx)"  class="button-o">
+          <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="button-o-c"/>
+        </button>
+        </span>
+        <button type="button" @click="push(-1)">Add</button>
+    </FieldArray>
+
     </div>
       <div v-if="showCredentials()" class="form-group">
-        <label for="сredentials" class="label">Права:</label>
-        <span id="сredentials"
-          ><em>{{ getCredentials() }}</em></span
-        >
+        <label for="crd" class="label">Права:</label>
+        <span id="crd"
+          ><em>{{ getCredentials() }}</em></span>
       </div>
 
       <div v-if="showAndEditCredentials()" class="form-group">
