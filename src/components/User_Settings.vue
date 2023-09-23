@@ -64,7 +64,7 @@ const schema = Yup.object().shape({
          .when('lastName', (lastName, schema) => {
           if (asAdmin() && lastName && lastName != '') {
             return schema.of(Yup.object().shape({orgId: Yup.number() })).
-                   compact((o) => o.orgId == -1).min(1, orgErr)
+                   compact((o) => o.orgId === -1).min(1, orgErr)
           }
          }),
   password: Yup.string().concat(
@@ -125,9 +125,8 @@ function getOrgName(orgId) {
     if (orgs.value?.loading) {
       return 'загружается...'
     }
-
     const org = orgs.value.find((o) => o.id === orgId)
-    return org.name ? org.name : 'не найдена'
+    return org?.name ? org.name : 'не найдена'
   })
 
   return res.value
@@ -307,10 +306,10 @@ function onSubmit(values, { setErrors }) {
         </button>
       </div>
       <div v-if="showCredentials()" class="form-group">
-        <span v-for="(field, idx) in user.orgs" :key="field.key">
-          <label :for="'org' + idx" class="label">{{ idx == 0 ? 'Организации:' : '' }}</label>
+        <span v-for="(field, idx) in user.orgs" :key="field.orgId">
+          <label :for="'org' + idx" class="label">{{ idx === 0 ? 'Организации:' : '' }}</label>
           <span :id="'org' + idx"
-            ><em>{{ getOrgName(field) }}<br /></em
+            ><em>{{ getOrgName(field.orgId) }}<br /></em
           ></span>
         </span>
       </div>
@@ -319,10 +318,10 @@ function onSubmit(values, { setErrors }) {
           <span v-for="(field, idx) in fields" :key="field.orgId">
 
             <label :for="'org' + idx"  :class="idx > 0 ? 'label' : 'label-o-f'">
-              {{ idx == 0 ? 'Организации:' : '' }}
+              {{ idx === 0 ? 'Организации:' : '' }}
             </label>
 
-            <button v-if="idx == 0" type="button" @click="push({ orgId: -1 })" class="button-o">
+            <button v-if="idx === 0" type="button" @click="push({ orgId: -1 })" class="button-o">
               <font-awesome-icon size="1x" icon="fa-solid fa-plus" class="button-o-c" />
             </button>
 
@@ -342,7 +341,7 @@ function onSubmit(values, { setErrors }) {
             <button
               v-if="fields.length > 1"
               type="button"
-              @click="console.log(idx); console.log(fields[idx]); remove(idx)"
+              @click="remove(idx)"
               class="button-o"
             >
               <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="button-o-c" />

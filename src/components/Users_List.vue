@@ -78,15 +78,15 @@ function getOrgs(item) {
   return res.value
 }
 
-function getCredentials(item) {
+function getCredentials(item, nobr = false) {
   let crd = null
   if (item) {
     crd = 'Пользователь'
-    if (item['isManager']) {
-      crd += '; менеджер'
+    if (item.isManager) {
+      crd += ((nobr ? '' :'<br/>') + 'Менеджер')
     }
-    if (item['isAdmin']) {
-      crd += '; aдминистратор'
+    if (item.isAdmin) {
+      crd += ((nobr ? '' :'<br/>') + 'Администратор')
     }
   }
   return crd
@@ -102,10 +102,22 @@ function filterUsers(value, query, item) {
       u.firstName.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.patronimic.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.email.toLocaleUpperCase().indexOf(q) !== -1)
-  )
+  ) {
     return true
-  const o = orgs.value?.loading ? null : orgs.value?.find((x) => x.id === item.orgId)
-  return o != null && o.name.toLocaleUpperCase().indexOf(q) !== -1
+  }
+  if (getCredentials(u, true).toLocaleUpperCase().indexOf(q) !== -1) {
+    return true
+  }
+
+  if (!orgs.value?.loading) {
+    for (let i = 0; i < item.orgs.length; i++) {
+      const o = orgs.value.find((x) => x.id === item.orgs[i].orgId)
+      if (o != null && o.name.toLocaleUpperCase().indexOf(q) !== -1) {
+        return true
+      }
+    }
+  }
+  return false
 }
 
 async function deleteUser(item) {
@@ -181,7 +193,7 @@ const headers = [
           <span v-html="getOrgs(item['selectable'])"></span>
         </template>
         <template v-slot:[`item.credentials`]="{ item }">
-          {{ getCredentials(item['selectable']) }}
+          <span v-html="getCredentials(item['selectable'])"></span>
         </template>
         <template v-slot:[`item.actions1`]="{ item }">
           <button @click="userSettings(item.selectable)" class="anti-btn">
