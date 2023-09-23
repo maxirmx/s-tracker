@@ -60,9 +60,13 @@ const schema = Yup.object().shape({
   email: Yup.string()
     .required('Необходимо указать электронную почту')
     .email('Неверный формат электронной почты'),
-//  orgId: Yup.array().concat(
-//    asAdmin() ? Yup.number().typeError(orgErr).required(orgErr).min(0, orgErr) : null
-//  ),
+  orgs: Yup.array()
+         .when('lastName', (lastName, schema) => {
+          if (asAdmin() && lastName && lastName != '') {
+            return schema.of(Yup.object().shape({orgId: Yup.number() })).
+                   compact((o) => o.orgId == -1).min(1, orgErr)
+          }
+         }),
   password: Yup.string().concat(
     isRegister() ? Yup.string().required('Необходимо указать пароль').matches(pwdReg, pwdErr) : null
   ),
@@ -77,10 +81,10 @@ const schema = Yup.object().shape({
 const showPassword = ref(false)
 const showPassword2 = ref(false)
 
-let user = {
+let user = ref({
   isEnabled: 'ENABLED',
-  orgs: [ -1 ],
-}
+  orgs: [ { orgId: -1 } ]
+})
 
 if (!isRegister()) {
   ({ user } = storeToRefs(usersStore))
@@ -116,7 +120,6 @@ function showAndEditCredentials() {
   return asAdmin()
 }
 
-
 function getOrgName(orgId) {
   const res = computed(() => {
     if (orgs.value?.loading) {
@@ -127,12 +130,12 @@ function getOrgName(orgId) {
     return org.name ? org.name : 'не найдена'
   })
 
-  return res.value;
+  return res.value
 }
 
 function getCredentials() {
   let crd = null
-  if (user) {
+  if (user.value) {
     crd = 'Пользователь'
     if (user.value.isManager === 'MANAGER') {
       crd += '; менеджер'
@@ -146,7 +149,7 @@ function getCredentials() {
 
 function onSubmit(values, { setErrors }) {
   // Если там было отчество, то мы его сохраним
-  values.patronimic = user.patronimic
+  values.patronimic = user.value.patronimic
   if (isRegister()) {
     if (asAdmin()) {
       return usersStore
@@ -188,14 +191,13 @@ function onSubmit(values, { setErrors }) {
       .catch((error) => setErrors({ apiError: error }))
   }
 }
-
 </script>
 
 <template>
   <div class="settings form-2">
     <h1 class="orange">{{ getTitle() }}</h1>
     <hr class="hr" />
-    <Form
+    <Form novalidate
       @submit="onSubmit"
       :initial-values="user"
       :validation-schema="schema"
@@ -253,9 +255,20 @@ function onSubmit(values, { setErrors }) {
               showPassword = !showPassword
             }
           "
-          class="button-o">
-            <font-awesome-icon size="1x" v-if="!showPassword" icon="fa-solid fa-eye" class="button-o-c"/>
-            <font-awesome-icon size="1x" v-if="showPassword" icon="fa-solid fa-eye-slash" class="button-o-c"/>
+          class="button-o"
+        >
+          <font-awesome-icon
+            size="1x"
+            v-if="!showPassword"
+            icon="fa-solid fa-eye"
+            class="button-o-c"
+          />
+          <font-awesome-icon
+            size="1x"
+            v-if="showPassword"
+            icon="fa-solid fa-eye-slash"
+            class="button-o-c"
+          />
         </button>
       </div>
       <div class="form-group">
@@ -277,47 +290,72 @@ function onSubmit(values, { setErrors }) {
               showPassword2 = !showPassword2
             }
           "
-          class="button-o">
-            <font-awesome-icon size="1x" v-if="!showPassword2" icon="fa-solid fa-eye" class="button-o-c"/>
-            <font-awesome-icon size="1x" v-if="showPassword2" icon="fa-solid fa-eye-slash" class="button-o-c"/>
+          class="button-o"
+        >
+          <font-awesome-icon
+            size="1x"
+            v-if="!showPassword2"
+            icon="fa-solid fa-eye"
+            class="button-o-c"
+          />
+          <font-awesome-icon
+            size="1x"
+            v-if="showPassword2"
+            icon="fa-solid fa-eye-slash"
+            class="button-o-c"
+          />
         </button>
       </div>
       <div v-if="showCredentials()" class="form-group">
         <span v-for="(field, idx) in user.orgs" :key="field.key">
-          <label :for="'org' + idx" class="label">{{ idx == 0 ? "Организации:" : "" }}</label>
-          <span :id="'org' + idx"><em>{{ getOrgName(field) }}<br/></em></span>
+          <label :for="'org' + idx" class="label">{{ idx == 0 ? 'Организации:' : '' }}</label>
+          <span :id="'org' + idx"
+            ><em>{{ getOrgName(field) }}<br /></em
+          ></span>
         </span>
       </div>
       <div v-if="showAndEditCredentials()" class="form-group">
-
         <FieldArray name="orgs" v-slot="{ fields, push, remove }">
-         <span v-for="(field, idx) in fields"  :key="field.key">
-        <label :for="'org' + idx" class="label">{{ idx == 0 ? "Организации:" : "" }}</label>
-        <Field
-          :name="`orgs[${idx}]`"
-          :id="'org' + idx"
-          as="select"
-          class="form-control input select select-o"
-          :class="{ 'is-invalid': errors.orgId }"
-        >
-          <option value="">Выберите организацию:</option>
-          <option v-for="org in orgs" :key="org" :value="org.id">
-            {{ org.name }}
-          </option>
-        </Field>
+          <span v-for="(field, idx) in fields" :key="field.orgId">
 
-        <button v-if="idx != 0" type="button" @click="remove(idx)"  class="button-o">
-          <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="button-o-c"/>
-        </button>
-        </span>
-        <button type="button" @click="push(-1)">Add</button>
-    </FieldArray>
+            <label :for="'org' + idx"  :class="idx > 0 ? 'label' : 'label-o-f'">
+              {{ idx == 0 ? 'Организации:' : '' }}
+            </label>
 
-    </div>
+            <button v-if="idx == 0" type="button" @click="push({ orgId: -1 })" class="button-o">
+              <font-awesome-icon size="1x" icon="fa-solid fa-plus" class="button-o-c" />
+            </button>
+
+            <Field
+              :name="`orgs[${idx}].orgId`"
+              :id="'org' + idx"
+              as="select"
+              class="form-control input select select-o"
+              :class="{ 'is-invalid': errors.orgs }"
+            >
+              <option value=-1>Выберите организацию:</option>
+              <option v-for="org in orgs" :key="org" :value="org.id">
+                {{ org.name }}
+              </option>
+            </Field>
+
+            <button
+              v-if="fields.length > 1"
+              type="button"
+              @click="console.log(idx); console.log(fields[idx]); remove(idx)"
+              class="button-o"
+            >
+              <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="button-o-c" />
+            </button>
+
+          </span>
+        </FieldArray>
+      </div>
       <div v-if="showCredentials()" class="form-group">
         <label for="crd" class="label">Права:</label>
         <span id="crd"
-          ><em>{{ getCredentials() }}</em></span>
+          ><em>{{ getCredentials() }}</em></span
+        >
       </div>
 
       <div v-if="showAndEditCredentials()" class="form-group">
@@ -366,7 +404,7 @@ function onSubmit(values, { setErrors }) {
       <div v-if="errors.lastName" class="alert alert-danger mt-3 mb-0">{{ errors.lastName }}</div>
       <div v-if="errors.firstName" class="alert alert-danger mt-3 mb-0">{{ errors.firstName }}</div>
       <div v-if="errors.email" class="alert alert-danger mt-3 mb-0">{{ errors.email }}</div>
-      <div v-if="errors.orgId" class="alert alert-danger mt-3 mb-0">{{ errors.orgId }}</div>
+      <div v-if="errors.orgs" class="alert alert-danger mt-3 mb-0">{{ errors.orgs }}</div>
       <div v-if="errors.password" class="alert alert-danger mt-3 mb-0">{{ errors.password }}</div>
       <div v-if="errors.password2" class="alert alert-danger mt-3 mb-0">{{ errors.password2 }}</div>
       <div v-if="errors.apiError" class="alert alert-danger mt-3 mb-0">{{ errors.apiError }}</div>

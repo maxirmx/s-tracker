@@ -90,9 +90,20 @@ function onSubmit(values, { setErrors }) {
               showPassword = !showPassword
             }
           "
-          class="button-o">
-            <font-awesome-icon size="1x" v-if="!showPassword" icon="fa-solid fa-eye" class="button-o-c"/>
-            <font-awesome-icon size="1x" v-if="showPassword" icon="fa-solid fa-eye-slash" class="button-o-c"/>
+          class="button-o"
+        >
+          <font-awesome-icon
+            size="1x"
+            v-if="!showPassword"
+            icon="fa-solid fa-eye"
+            class="button-o-c"
+          />
+          <font-awesome-icon
+            size="1x"
+            v-if="showPassword"
+            icon="fa-solid fa-eye-slash"
+            class="button-o-c"
+          />
         </button>
       </div>
       <div class="form-group">

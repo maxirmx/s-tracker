@@ -154,10 +154,7 @@ router.beforeEach(async (to) => {
   }
 
   // (1) Route to public pages
-  // ... drop user (aka logout)
-  // ... do what he wants
   if (publicPages.includes(to.path)) {
-    auth.user = null
     return true
   }
 

@@ -66,8 +66,8 @@ function getOrgs(item) {
 
     var res = ''
     var separator = ''
-    item.orgs.forEach((orgId) => {
-      const org = orgs.value.find((o) => o.id === orgId)
+    item.orgs.forEach((oo) => {
+      const org = orgs.value.find((o) => o.id === oo.orgId)
       res = res + separator + org.name
       separator = '<br />'
     })
@@ -75,7 +75,7 @@ function getOrgs(item) {
     return res
   })
 
-  return res.value;
+  return res.value
 }
 
 function getCredentials(item) {

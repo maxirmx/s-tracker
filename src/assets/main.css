@@ -101,7 +101,7 @@
 
 .input:focus {
   outline: none;
-  box-shadow: 0px 2px 10px  #ef7d00;
+  box-shadow: 0px 2px 10px #ef7d00;
 }
 
 .input::placeholder {
@@ -120,6 +120,10 @@
   width: 55%;
 }
 
+.label-o-f {
+  width: 25%;
+}
+
 .button-o {
   width: 10%;
   text-decoration: none;
@@ -129,7 +133,7 @@
 
 .button-o:focus {
   outline: none;
-  box-shadow: 0px 2px 10px  #ef7d00;
+  box-shadow: 0px 2px 10px #ef7d00;
 }
 
 .button-o-c {
@@ -314,7 +318,8 @@ a,
     color: rgb(30, 30, 30);
     background-color: white;
   }
-  .anti-btn:hover, .button-o-c:hover {
+  .anti-btn:hover,
+  .button-o-c:hover {
     color: #ef7d00;
     background-color: white;
   }
