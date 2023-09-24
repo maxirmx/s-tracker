@@ -101,7 +101,7 @@
 
 .input:focus {
   outline: none;
-  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 2px 10px #ef7d00;
 }
 
 .input::placeholder {
@@ -109,12 +109,35 @@
 }
 
 .password {
-  width: 50%;
+  width: 55%;
 }
 
 .select {
   padding-top: 0.1rem;
-  font-size: 1.1rem;
+}
+
+.select-o {
+  width: 55%;
+}
+
+.label-o-f {
+  width: 25%;
+}
+
+.button-o {
+  width: 10%;
+  text-decoration: none;
+  transition: 0.4s;
+  font-size: 120%;
+}
+
+.button-o:focus {
+  outline: none;
+  box-shadow: 0px 2px 10px #ef7d00;
+}
+
+.button-o-c {
+  color: rgb(75, 75, 75);
 }
 
 .button {
@@ -131,30 +154,6 @@
   margin-bottom: 1rem;
   margin-right: 1rem;
   max-width: 160px;
-}
-
-.anti-button {
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  border: none;
-  background-color: #eca75e;
-  color: white;
-  font-size: 1.4rem;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-  width: 45%;
-  align-self: center;
-  margin-bottom: 1rem;
-  margin-right: 1rem;
-}
-
-.button-s {
-  min-width: 0;
-  width: 40px;
-  align-self: right;
-  margin-top: 0rem;
-  margin-right: 0;
-  font-size: 1rem;
 }
 
 a:hover {
@@ -243,36 +242,14 @@ a,
   opacity: 1;
 }
 
-@media (hover: hover) {
-  a:hover {
-    color: #975102;
-    background-color: #fcf5ed;
-  }
-
-  .button:hover {
-    background-color: #eca75e;
-  }
-
-  .anti-button:hover {
-    background-color: #ef7d00;
-    color: #fcf5ed;
-  }
-}
-
-@media (focus: focus) {
-  .button:focus {
-    outline: none;
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
-  }
+.button:focus {
+  outline: none;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 @media (min-width: 768px) {
   #app {
     padding: 2rem;
-  }
-  .button-s {
-    margin-right: 1rem;
-    width: 10%;
   }
   .link {
     font-size: 1.2rem;
@@ -328,11 +305,21 @@ a,
 }
 
 @media (hover: hover) {
+  a:hover {
+    color: #975102;
+    background-color: #fcf5ed;
+  }
+
+  .button:hover {
+    background-color: #eca75e;
+  }
+
   .btn:hover {
     color: rgb(30, 30, 30);
     background-color: white;
   }
-  .anti-btn:hover {
+  .anti-btn:hover,
+  .button-o-c:hover {
     color: #ef7d00;
     background-color: white;
   }

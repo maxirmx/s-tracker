@@ -58,29 +58,35 @@ function userSettings(item) {
   router.push('user/edit/' + id)
 }
 
-function getOrg(item) {
-  if (item.orgId == -1) {
-    return ''
-  }
-  let org = computed(() => {
-    let org = null
-    if (!orgs.value?.loading) {
-      org = orgs.value?.find((o) => o.id === item['orgId'])
+function getOrgs(item) {
+  const res = computed(() => {
+    if (orgs.value?.loading) {
+      return 'Загружается...'
     }
-    return org ? org.name : 'загружается...'
+
+    var res = ''
+    var separator = ''
+    item.orgs.forEach((oo) => {
+      const org = orgs.value.find((o) => o.id === oo.orgId)
+      res = res + separator + (org ? org.name : 'Не найдена')
+      separator = '<br />'
+    })
+
+    return res
   })
-  return org.value
+
+  return res.value
 }
 
-function getCredentials(item) {
+function getCredentials(item, nobr = false) {
   let crd = null
   if (item) {
     crd = 'Пользователь'
-    if (item['isManager']) {
-      crd += '; менеджер'
+    if (item.isManager) {
+      crd += (nobr ? '' : '<br/>') + 'Менеджер'
     }
-    if (item['isAdmin']) {
-      crd += '; aдминистратор'
+    if (item.isAdmin) {
+      crd += (nobr ? '' : '<br/>') + 'Администратор'
     }
   }
   return crd
@@ -96,10 +102,22 @@ function filterUsers(value, query, item) {
       u.firstName.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.patronimic.toLocaleUpperCase().indexOf(q) !== -1 ||
       u.email.toLocaleUpperCase().indexOf(q) !== -1)
-  )
+  ) {
     return true
-  const o = orgs.value?.loading ? null : orgs.value?.find((x) => x.id === item.orgId)
-  return o != null && o.name.toLocaleUpperCase().indexOf(q) !== -1
+  }
+  if (getCredentials(u, true).toLocaleUpperCase().indexOf(q) !== -1) {
+    return true
+  }
+
+  if (!orgs.value?.loading) {
+    for (let i = 0; i < item.orgs.length; i++) {
+      const o = orgs.value.find((x) => x.id === item.orgs[i].orgId)
+      if (o != null && o.name.toLocaleUpperCase().indexOf(q) !== -1) {
+        return true
+      }
+    }
+  }
+  return false
 }
 
 async function deleteUser(item) {
@@ -128,7 +146,7 @@ async function deleteUser(item) {
 
 const headers = [
   { title: 'Пользователь', align: 'start', key: 'id' },
-  { title: 'Организация', align: 'start', key: 'orgId' },
+  { title: 'Организации', align: 'start', key: 'orgs' },
   { title: 'Права', align: 'start', key: 'credentials', sortable: false },
   { title: '', align: 'center', key: 'actions1', sortable: false },
   { title: '', align: 'center', key: 'actions2', sortable: false }
@@ -171,11 +189,11 @@ const headers = [
             item['selectable']['email']
           }})
         </template>
-        <template v-slot:[`item.orgId`]="{ item }">
-          {{ getOrg(item['selectable']) }}
+        <template v-slot:[`item.orgs`]="{ item }">
+          <span v-html="getOrgs(item['selectable'])"></span>
         </template>
         <template v-slot:[`item.credentials`]="{ item }">
-          {{ getCredentials(item['selectable']) }}
+          <span v-html="getCredentials(item['selectable'])"></span>
         </template>
         <template v-slot:[`item.actions1`]="{ item }">
           <button @click="userSettings(item.selectable)" class="anti-btn">

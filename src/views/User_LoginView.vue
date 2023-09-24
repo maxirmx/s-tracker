@@ -83,16 +83,27 @@ function onSubmit(values, { setErrors }) {
           placeholder="Пароль"
         />
         <button
+          type="button"
           @click="
             (event) => {
               event.preventDefault()
               showPassword = !showPassword
             }
           "
-          class="button button-s"
+          class="button-o"
         >
-          <font-awesome-icon v-if="!showPassword" icon="fa-solid fa-eye" />
-          <font-awesome-icon v-if="showPassword" icon="fa-solid fa-eye-slash" />
+          <font-awesome-icon
+            size="1x"
+            v-if="!showPassword"
+            icon="fa-solid fa-eye"
+            class="button-o-c"
+          />
+          <font-awesome-icon
+            size="1x"
+            v-if="showPassword"
+            icon="fa-solid fa-eye-slash"
+            class="button-o-c"
+          />
         </button>
       </div>
       <div class="form-group">
@@ -115,34 +126,3 @@ function onSubmit(values, { setErrors }) {
     </Form>
   </div>
 </template>
-
-<style scoped>
-.form-group .label {
-  width: 100%;
-}
-@media (min-width: 768px) {
-  .form-group .label {
-    width: 35%;
-  }
-}
-
-.form-group .input {
-  width: 100%;
-}
-
-@media (min-width: 768px) {
-  .form-group .input {
-    width: 60%;
-  }
-}
-
-.form-group .input.password {
-  width: calc(100% - 40px);
-}
-
-@media (min-width: 768px) {
-  .form-group .input.password {
-    width: 50%;
-  }
-}
-</style>

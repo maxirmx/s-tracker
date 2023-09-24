@@ -154,10 +154,7 @@ router.beforeEach(async (to) => {
   }
 
   // (1) Route to public pages
-  // ... drop user (aka logout)
-  // ... do what he wants
   if (publicPages.includes(to.path)) {
-    auth.user = null
     return true
   }
 
@@ -168,8 +165,11 @@ router.beforeEach(async (to) => {
 
   // (3) (Implied) user and (implied) auth required
   if (loginPages.includes(to.path)) {
-    await auth.check()
-
+    try {
+      await auth.check()
+    } catch {
+      return true
+    }
     if (!auth.user) {
       return true
     }

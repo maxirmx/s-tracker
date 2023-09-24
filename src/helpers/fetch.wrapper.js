@@ -68,23 +68,26 @@ function authHeader(url) {
 
 function handleResponse(response) {
   return response.text().then((text) => {
-    const data = text && JSON.parse(text)
-    if (enableLog) {
-      console.log(response.status, response.statusText, data)
-    }
-    if (!response.ok) {
-      const { user, logout } = useAuthStore()
-      if ([401].includes(response.status)) {
-        // auto logout if 401 Unauthorized response returned from api
-        if (user) {
-          logout()
-        }
+    try {
+      const data = JSON.parse(text)
+      if (enableLog) {
+        console.log(response.status, response.statusText, data)
       }
+      if (!response.ok) {
+        const { user, logout } = useAuthStore()
+        if ([401].includes(response.status)) {
+          // auto logout if 401 Unauthorized response returned from api
+          if (user) {
+            logout()
+          }
+        }
 
-      const error = (data && data.message) || response.statusText
-      return Promise.reject(error)
+        const error = (data && data.message) || response.statusText
+        return Promise.reject(error)
+      }
+      return data
+    } catch {
+      return Promise.reject(text)
     }
-
-    return data
   })
 }
