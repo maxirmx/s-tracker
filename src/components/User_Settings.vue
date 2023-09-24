@@ -24,7 +24,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 
 import router from '@/router'
 import { storeToRefs } from 'pinia'
@@ -60,13 +60,14 @@ const schema = Yup.object().shape({
   email: Yup.string()
     .required('Необходимо указать электронную почту')
     .email('Неверный формат электронной почты'),
-  orgs: Yup.array()
-         .when('lastName', (lastName, schema) => {
-          if (asAdmin() && lastName && lastName != '') {
-            return schema.of(Yup.object().shape({orgId: Yup.number() })).
-                   compact((o) => o.orgId === -1).min(1, orgErr)
-          }
-         }),
+  orgs: Yup.array().when('lastName', (lastName, schema) => {
+    if (asAdmin() && lastName && lastName != '') {
+      return schema
+        .of(Yup.object().shape({ orgId: Yup.number() }))
+        .compact((o) => o.orgId === -1)
+        .min(1, orgErr)
+    }
+  }),
   password: Yup.string().concat(
     isRegister() ? Yup.string().required('Необходимо указать пароль').matches(pwdReg, pwdErr) : null
   ),
@@ -78,23 +79,22 @@ const schema = Yup.object().shape({
     .oneOf([Yup.ref('password')], 'Пароли должны совпадать')
 })
 
+const orgsStore = useOrgsStore()
+const oorgs = storeToRefs(orgsStore).orgs
+orgsStore.getAll()
+
 const showPassword = ref(false)
 const showPassword2 = ref(false)
 
 let user = ref({
   isEnabled: 'ENABLED',
-  orgs: [ { orgId: -1 } ]
+  orgs: [{ orgId: -1 }]
 })
 
 if (!isRegister()) {
-  ({ user } = storeToRefs(usersStore))
-  usersStore.getById(props.id, true)
+  ;({ user } = storeToRefs(usersStore))
+  await usersStore.getById(props.id, true)
 }
-
-const orgsStore = useOrgsStore()
-const { orgs } = storeToRefs(orgsStore)
-
-orgsStore.getAll()
 
 function isRegister() {
   return props.register
@@ -121,11 +121,11 @@ function showAndEditCredentials() {
 }
 
 function getOrgName(orgId) {
-  const res = computed(() => {
-    if (orgs.value?.loading) {
+  const res = ref(() => {
+    if (oorgs.value?.loading) {
       return 'загружается...'
     }
-    const org = orgs.value.find((o) => o.id === orgId)
+    const org = oorgs.value.find((o) => o.id === orgId)
     return org?.name ? org.name : 'не найдена'
   })
 
@@ -196,7 +196,7 @@ function onSubmit(values, { setErrors }) {
   <div class="settings form-2">
     <h1 class="orange">{{ getTitle() }}</h1>
     <hr class="hr" />
-    <Form novalidate
+    <Form
       @submit="onSubmit"
       :initial-values="user"
       :validation-schema="schema"
@@ -229,7 +229,8 @@ function onSubmit(values, { setErrors }) {
         <Field
           name="email"
           id="email"
-          type="text"
+          autocomplete="off"
+          type="email"
           class="form-control input"
           :class="{ 'is-invalid': errors.email }"
           placeholder="Адрес электронной почты"
@@ -315,9 +316,8 @@ function onSubmit(values, { setErrors }) {
       </div>
       <div v-if="showAndEditCredentials()" class="form-group">
         <FieldArray name="orgs" v-slot="{ fields, push, remove }">
-          <span v-for="(field, idx) in fields" :key="field.orgId">
-
-            <label :for="'org' + idx"  :class="idx > 0 ? 'label' : 'label-o-f'">
+          <div v-for="(field, idx) in fields" :key="field.key">
+            <label :for="'org' + idx" :class="idx > 0 ? 'label' : 'label-o-f'">
               {{ idx === 0 ? 'Организации:' : '' }}
             </label>
 
@@ -332,22 +332,16 @@ function onSubmit(values, { setErrors }) {
               class="form-control input select select-o"
               :class="{ 'is-invalid': errors.orgs }"
             >
-              <option value=-1>Выберите организацию:</option>
-              <option v-for="org in orgs" :key="org" :value="org.id">
+              <option value="-1">Выберите организацию:</option>
+              <option v-for="org in oorgs" :key="org" :value="org.id">
                 {{ org.name }}
               </option>
             </Field>
 
-            <button
-              v-if="fields.length > 1"
-              type="button"
-              @click="remove(idx)"
-              class="button-o"
-            >
+            <button v-if="fields.length > 1" type="button" @click="remove(idx)" class="button-o">
               <font-awesome-icon size="1x" icon="fa-solid fa-trash-can" class="button-o-c" />
             </button>
-
-          </span>
+          </div>
         </FieldArray>
       </div>
       <div v-if="showCredentials()" class="form-group">

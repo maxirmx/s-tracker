@@ -83,10 +83,10 @@ function getCredentials(item, nobr = false) {
   if (item) {
     crd = 'Пользователь'
     if (item.isManager) {
-      crd += ((nobr ? '' :'<br/>') + 'Менеджер')
+      crd += (nobr ? '' : '<br/>') + 'Менеджер'
     }
     if (item.isAdmin) {
-      crd += ((nobr ? '' :'<br/>') + 'Администратор')
+      crd += (nobr ? '' : '<br/>') + 'Администратор'
     }
   }
   return crd

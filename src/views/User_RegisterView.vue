@@ -28,5 +28,7 @@ import UserSettings from '@/components/User_Settings.vue'
 </script>
 
 <template>
-  <UserSettings :register="true" />
+  <Suspense>
+    <UserSettings :register="true" />
+  </Suspense>
 </template>
