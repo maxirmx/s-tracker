@@ -95,23 +95,21 @@ function getCredentials(item, nobr = false) {
 function filterUsers(value, query, item) {
   if (query == null) return false
   const q = query.toLocaleUpperCase()
-  const u = users.value?.loading ? null : users.value?.find((x) => x.id === item.id)
   if (
-    u != null &&
-    (u.lastName.toLocaleUpperCase().indexOf(q) !== -1 ||
-      u.firstName.toLocaleUpperCase().indexOf(q) !== -1 ||
-      u.patronimic.toLocaleUpperCase().indexOf(q) !== -1 ||
-      u.email.toLocaleUpperCase().indexOf(q) !== -1)
+    item.selectable.lastName.toLocaleUpperCase().indexOf(q) !== -1 ||
+    item.selectable.firstName.toLocaleUpperCase().indexOf(q) !== -1 ||
+    item.selectable.patronimic.toLocaleUpperCase().indexOf(q) !== -1 ||
+    item.selectable.email.toLocaleUpperCase().indexOf(q) !== -1
   ) {
     return true
   }
-  if (getCredentials(u, true).toLocaleUpperCase().indexOf(q) !== -1) {
+  const crd = getCredentials(item.selectable, true)
+  if (crd.toLocaleUpperCase().indexOf(q) !== -1) {
     return true
   }
-
   if (!orgs.value?.loading) {
-    for (let i = 0; i < item.orgs.length; i++) {
-      const o = orgs.value.find((x) => x.id === item.orgs[i].orgId)
+    for (let i = 0; i < item.selectable.orgs.length; i++) {
+      const o = orgs.value.find((x) => x.id === item.selectable.orgs[i].orgId)
       if (o != null && o.name.toLocaleUpperCase().indexOf(q) !== -1) {
         return true
       }

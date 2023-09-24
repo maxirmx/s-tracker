@@ -89,22 +89,20 @@ async function deleteShipment(item) {
     })
 }
 
-function filterShipments(value, query, item) {
+function filterArchieve(value, query, item) {
   if (query == null) return false
   const q = query.toLocaleUpperCase()
-  const u = shipments.value?.loading ? null : shipments.value?.find((x) => x.number === item.number)
   if (
-    u != null &&
-    (u.origin.toLocaleUpperCase().indexOf(q) !== -1 ||
-      u.dest.toLocaleUpperCase().indexOf(q) !== -1 ||
-      u.number.toLocaleUpperCase().indexOf(q) !== -1 ||
-      (u.name.toLocaleUpperCase().indexOf(q) !== -1 && authStore.user?.isManager) ||
-      u.date.toLocaleUpperCase().indexOf(q) !== -1 ||
-      u.location.toLocaleUpperCase().indexOf(q) !== -1 ||
-      getStatus(u).toLocaleUpperCase().indexOf(q) !== -1)
-  )
+    item.selectable.origin.toLocaleUpperCase().indexOf(q) !== -1 ||
+    item.selectable.dest.toLocaleUpperCase().indexOf(q) !== -1 ||
+    item.selectable.number.toLocaleUpperCase().indexOf(q) !== -1 ||
+    (item.selectable.name.toLocaleUpperCase().indexOf(q) !== -1 && authStore.user?.isManager) ||
+    moment(item.selectable.date, 'YYYY-MM-DD').format('DD.MM.YYYY').indexOf(q) !== -1 ||
+    item.selectable.location.toLocaleUpperCase().indexOf(q) !== -1 ||
+    getStatus(item.selectable).toLocaleUpperCase().indexOf(q) !== -1
+  ) {
     return true
-
+  }
   return false
 }
 
@@ -139,7 +137,7 @@ const headers = authStore.user?.isManager
         :headers="headers"
         :items="shipments"
         :search="authStore.archieve_search"
-        :custom-filter="filterShipments"
+        :custom-filter="filterArchieve"
         v-model:sort-by="authStore.archieve_sort_by"
         item-value="number"
         class="elevation-1"
@@ -186,7 +184,7 @@ const headers = authStore.user?.isManager
       </v-data-table>
       <v-spacer></v-spacer>
       <v-text-field
-        v-model="authStore.shipments_search"
+        v-model="authStore.archieve_search"
         :append-inner-icon="mdiMagnify"
         label="Поиск по любой информации об отправлении"
         variant="solo"

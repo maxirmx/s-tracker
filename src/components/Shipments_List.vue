@@ -92,20 +92,18 @@ async function deleteShipment(item) {
 function filterShipments(value, query, item) {
   if (query == null) return false
   const q = query.toLocaleUpperCase()
-  const u = shipments.value?.loading ? null : shipments.value?.find((x) => x.number === item.number)
   if (
-    u != null &&
-    (u.origin.toLocaleUpperCase().indexOf(q) !== -1 ||
-      u.dest.toLocaleUpperCase().indexOf(q) !== -1 ||
-      u.number.toLocaleUpperCase().indexOf(q) !== -1 ||
-      (u.name.toLocaleUpperCase().indexOf(q) !== -1 && authStore.user?.isManager) ||
-      u.ddate.toLocaleUpperCase().indexOf(q) !== -1 ||
-      u.date.toLocaleUpperCase().indexOf(q) !== -1 ||
-      u.location.toLocaleUpperCase().indexOf(q) !== -1 ||
-      getStatus(u).toLocaleUpperCase().indexOf(q) !== -1)
-  )
+    item.selectable.origin.toLocaleUpperCase().indexOf(q) !== -1 ||
+    item.selectable.dest.toLocaleUpperCase().indexOf(q) !== -1 ||
+    item.selectable.number.toLocaleUpperCase().indexOf(q) !== -1 ||
+    (item.selectable.name.toLocaleUpperCase().indexOf(q) !== -1 && authStore.user?.isManager) ||
+    moment(item.selectable.ddate, 'YYYY-MM-DD').format('DD.MM.YYYY').indexOf(q) !== -1 ||
+    moment(item.selectable.date, 'YYYY-MM-DD').format('DD.MM.YYYY').indexOf(q) !== -1 ||
+    item.selectable.location.toLocaleUpperCase().indexOf(q) !== -1 ||
+    getStatus(item.selectable).toLocaleUpperCase().indexOf(q) !== -1
+  ) {
     return true
-
+  }
   return false
 }
 
