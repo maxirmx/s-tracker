@@ -61,14 +61,14 @@ function userSettings(item) {
 function getOrgs(item) {
   const res = computed(() => {
     if (orgs.value?.loading) {
-      return 'загружается...'
+      return 'Загружается...'
     }
 
     var res = ''
     var separator = ''
     item.orgs.forEach((oo) => {
       const org = orgs.value.find((o) => o.id === oo.orgId)
-      res = res + separator + org.name
+      res = res + separator + (org ? org.name : 'Не найдена')
       separator = '<br />'
     })
 

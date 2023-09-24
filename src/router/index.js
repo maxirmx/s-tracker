@@ -165,8 +165,12 @@ router.beforeEach(async (to) => {
 
   // (3) (Implied) user and (implied) auth required
   if (loginPages.includes(to.path)) {
-    await auth.check()
-
+    try {
+      await auth.check()
+    }
+    catch {
+      return true
+    }
     if (!auth.user) {
       return true
     }

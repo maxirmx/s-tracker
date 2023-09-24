@@ -24,7 +24,7 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 import router from '@/router'
 import { storeToRefs } from 'pinia'
@@ -64,7 +64,7 @@ const schema = Yup.object().shape({
     if (asAdmin() && lastName && lastName != '') {
       return schema
         .of(Yup.object().shape({ orgId: Yup.number() }))
-        .compact((o) => o.orgId === -1)
+        .compact((o) => o.orgId == -1)
         .min(1, orgErr)
     }
   }),
@@ -121,12 +121,12 @@ function showAndEditCredentials() {
 }
 
 function getOrgName(orgId) {
-  const res = ref(() => {
+  const res = computed(() => {
     if (oorgs.value?.loading) {
-      return 'загружается...'
+      return 'Загружается...'
     }
     const org = oorgs.value.find((o) => o.id === orgId)
-    return org?.name ? org.name : 'не найдена'
+    return org?.name ? org.name : 'Не найдена'
   })
 
   return res.value
