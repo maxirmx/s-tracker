@@ -167,8 +167,7 @@ router.beforeEach(async (to) => {
   if (loginPages.includes(to.path)) {
     try {
       await auth.check()
-    }
-    catch {
+    } catch {
       return true
     }
     if (!auth.user) {
