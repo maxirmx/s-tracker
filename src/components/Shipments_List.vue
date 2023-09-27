@@ -75,20 +75,23 @@ async function deleteShipment(item) {
       width: '30%',
       minWidth: '250px'
     },
+    confirmationButtonProps: {
+      color: 'orange-darken-3'
+    },
     content: content
   })
 
-  if (!result) return
-  shipmentsStore
-    .delete(item['id'])
-    .then(() => {
-      shipmentsStore.getAll()
-    })
-    .catch((error) => {
-      alertStore.error(error)
-    })
+  if (result) {
+    shipmentsStore
+      .delete(item['id'])
+      .then(() => {
+        shipmentsStore.getAll()
+      })
+      .catch((error) => {
+        alertStore.error(error)
+      })
+  }
 }
-
 function filterShipments(value, query, item) {
   if (query == null) return false
   const q = query.toLocaleUpperCase()

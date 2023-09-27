@@ -11,6 +11,12 @@
   align-items: left;
 }
 
+.btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
 /* Forms: login, recover, org. new/edit */
 .form-1 {
   width: 100%;
@@ -75,7 +81,7 @@
   border: none;
   height: 2px;
   background: gray;
-  margin-bottom: 50px;
+  margin-bottom: 20px;
 }
 
 .input {

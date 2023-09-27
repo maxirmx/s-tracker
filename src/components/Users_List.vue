@@ -128,18 +128,22 @@ async function deleteUser(item) {
       width: '30%',
       minWidth: '250px'
     },
+    confirmationButtonProps: {
+      color: 'orange-darken-3'
+    },
     content: content
   })
 
-  if (!result) return
-  usersStore
-    .delete(item.id)
-    .then(() => {
-      usersStore.getAll()
-    })
-    .catch((error) => {
-      alertStore.error(error)
-    })
+  if (result) {
+    usersStore
+      .delete(item.id)
+      .then(() => {
+        usersStore.getAll()
+      })
+      .catch((error) => {
+        alertStore.error(error)
+      })
+  }
 }
 
 const headers = [
