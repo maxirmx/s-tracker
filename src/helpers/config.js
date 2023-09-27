@@ -24,4 +24,4 @@
 // POSSIBILITY OF SUCH DAMAGE.
 
 export const apiUrl = `${import.meta.env.VITE_API_URL}`
-export const enableLog = true
+export const enableLog = false

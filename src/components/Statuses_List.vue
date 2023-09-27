@@ -127,6 +127,9 @@ async function deleteStatus(item) {
       width: '50%',
       minWidth: '250px'
     },
+    confirmationButtonProps: {
+      color: 'orange-darken-3'
+    },
     content: content
   })
 
