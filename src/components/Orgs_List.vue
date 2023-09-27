@@ -24,7 +24,6 @@
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 
-import { ref } from 'vue'
 import { VDataTable } from 'vuetify/lib/labs/components.mjs'
 
 import router from '@/router'
@@ -48,15 +47,12 @@ const orgsStore = useOrgsStore()
 const { orgs } = storeToRefs(orgsStore)
 orgsStore.getAll()
 
-const isDeleting = ref(false)
-
 function orgSettings(item) {
   var id = item.selectable.id
   router.push('org/edit/' + id)
 }
 
 async function deleteOrg(item) {
-  isDeleting.value = true
   const content = 'Удалить организацию "' + item.selectable.name + '" ?'
   const result = await confirm({
     title: 'Подтверждение',
@@ -66,22 +62,21 @@ async function deleteOrg(item) {
       width: '30%',
       minWidth: '250px'
     },
+    confirmationButtonProps: {
+      color: 'orange-darken-3'
+    },
     content: content
   })
-
-  if (!result) {
-    isDeleting.value = false
-    return
+  if (result) {
+    orgsStore
+      .delete(item.selectable.id)
+      .then(() => {
+        orgsStore.getAll()
+      })
+      .catch((error) => {
+        alertStore.error(error)
+      })
   }
-  orgsStore
-    .delete(item.selectable.id)
-    .then(() => {
-      orgsStore.getAll()
-    })
-    .catch((error) => {
-      alertStore.error(error)
-    })
-  isDeleting.value = false
 }
 
 const headers = [
